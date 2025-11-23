@@ -6,8 +6,7 @@
 
 -- 1. CRIAR BANCO DE DADOS
 -- =====================================================
-DROP DATABASE IF EXISTS plataforma_ong;
-CREATE DATABASE plataforma_ong 
+CREATE DATABASE IF NOT EXISTS plataforma_ong 
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_unicode_ci;
 
