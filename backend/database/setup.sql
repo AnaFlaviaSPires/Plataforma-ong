@@ -15,11 +15,8 @@ USE plataforma_ong;
 
 -- 2. CRIAR USUÁRIO PARA A APLICAÇÃO
 -- =====================================================
--- Remover usuário se existir
-DROP USER IF EXISTS 'ong_user'@'localhost';
-
--- Criar novo usuário
-CREATE USER 'ong_user'@'localhost' IDENTIFIED BY '123456';
+-- Criar usuário (caso não exista) e garantir permissões
+CREATE USER IF NOT EXISTS 'ong_user'@'localhost' IDENTIFIED BY '123456';
 GRANT ALL PRIVILEGES ON plataforma_ong.* TO 'ong_user'@'localhost';
 FLUSH PRIVILEGES;
 
