@@ -1,0 +1,136 @@
+/* Padrão de fundo geométrico */
+.bg-pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.4;
+    background-color: #f8f4ff;
+    background-image: 
+        radial-gradient(#ba68c8 0.5px, transparent 0.5px),
+        radial-gradient(#ba68c8 0.5px, #f8f4ff 0.5px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
+/* Gradiente suave no topo */
+.top-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(180deg, rgba(186, 104, 200, 0.15) 0%, transparent 100%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Círculos decorativos */
+.decoration-circle {
+    position: fixed;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(186, 104, 200, 0.12), rgba(186, 104, 200, 0.06));
+    z-index: -1;
+    pointer-events: none;
+}
+
+.circle-1 {
+    width: 300px;
+    height: 300px;
+    top: 20%;
+    left: -100px;
+    animation: float 15s infinite ease-in-out;
+}
+
+.circle-2 {
+    width: 200px;
+    height: 200px;
+    bottom: 10%;
+    right: -50px;
+    animation: float 12s infinite ease-in-out reverse;
+}
+
+/* Animação suave */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+    }
+}
+
+/* Melhorias na seção de boas-vindas */
+.welcome-section {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-section h2 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+}
+
+.welcome-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Efeito de destaque nos cards */
+.menu-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-card::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.5s ease;
+    pointer-events: none;
+}
+
+.menu-card:hover::before {
+    top: -50%;
+    left: -50%;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .welcome-section {
+        padding: 1.5rem 1rem 2rem;
+    }
+
+    .welcome-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .circle-1, .circle-2 {
+        opacity: 0.5;
+    }
+}

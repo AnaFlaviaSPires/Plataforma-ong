@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Controle de Doações - ONG Novo Amanhã</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="../css/config-styles.css" rel="stylesheet"/>
+<link href="../css/doacoes.css" rel="stylesheet"/>
+<link href="../css/global.css" rel="stylesheet"/>
+<link href="../css/navbar.css" rel="stylesheet"/>
+<link href="../css/cards.css" rel="stylesheet"/>
+<link href="../css/background-pattern.css" rel="stylesheet"/>
+<link href="../css/themes.css" rel="stylesheet"/>
+<!-- jQuery (opcional, caso use comportamentos semelhantes a alunos) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Navbar Centralizada -->
+<script src="../js/navbar.js"></script>
+</head>
+<body>
+<!-- Conteúdo principal -->
+<div class="container py-5 mt-5">
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">
+        <i class="bi bi-gift me-2"></i>
+        Controle de Doações
+    </h1>
+    <button class="btn btn-primary text-white" data-bs-target="#novaDoacaoModal" data-bs-toggle="modal">
+        <i class="bi bi-plus-lg me-1"></i>
+        Nova Doação
+    </button>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+
+<div class="donation-filters mb-3">
+    <div class="filter-group d-flex flex-wrap gap-2 align-items-center">
+        <div class="input-group" style="max-width: 250px;">
+            <span class="input-group-text">
+                <i class="bi bi-search"></i>
+            </span>
+            <input class="form-control" id="searchInput" placeholder="Buscar por doador ou descrição..." type="text" />
+        </div>
+        <select class="form-select" id="tipoFilter" style="max-width: 200px;">
+            <option value="">Todos os tipos</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="alimento">Alimento</option>
+            <option value="material_escolar">Material escolar</option>
+            <option value="higiene">Produtos de higiene</option>
+            <option value="outros">Outros</option>
+        </select>
+        <input class="form-control" id="dataFilter" style="max-width: 200px;" type="date" />
+        <select class="form-select" id="ordenacaoSelect" style="max-width: 220px;">
+            <option value="">Ordenar por...</option>
+            <option value="dataRecente">Data (mais recente)</option>
+            <option value="dataAntiga">Data (mais antiga)</option>
+            <option value="nomeAZ">Nome do doador (A-Z)</option>
+            <option value="nomeZA">Nome do doador (Z-A)</option>
+            <option value="valorMaior">Valor (maior primeiro)</option>
+            <option value="valorMenor">Valor (menor primeiro)</option>
+        </select>
+        <button class="btn btn-outline-secondary" id="limparFiltros">
+            <i class="bi bi-x-lg"></i> Limpar Filtros
+        </button>
+    </div>
+</div>
+
+<div class="donation-table">
+<div class="table-responsive">
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Doador</th>
+            <th>Tipo</th>
+            <th>Descrição</th>
+            <th>Valor</th>
+        </tr>
+    </thead>
+    <tbody id="doacoesTableBody">
+    </tbody>
+</table>
+</div>
+<div class="text-center py-5" id="emptyState" style="display: none;">
+<i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+<p class="text-muted mt-3">Nenhuma doação encontrada</p>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="novaDoacaoModal" tabindex="-1">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header bg-purple text-white">
+<h5 class="modal-title">
+<i class="bi bi-gift"></i> Nova Doação
+                    </h5>
+<button class="btn-close btn-close-white" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<form class="donation-form" id="doacaoForm">
+
+<h6 class="mb-3">Informações do Doador</h6>
+<div class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label">Nome do Doador <small class="text-muted">(opcional)</small></label>
+        <input class="form-control" id="doadorNome" type="text" />
+    </div>
+</div>
+<hr class="my-4"/>
+
+<h6 class="mb-3">Informações da Doação</h6>
+<div class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label">Tipo de Doação</label>
+        <select class="form-select" id="doacaoTipo" required>
+            <option value="">Selecione...</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="alimento">Alimento</option>
+            <option value="material_escolar">Material escolar</option>
+            <option value="higiene">Produtos de higiene</option>
+            <option value="outros">Outros</option>
+        </select>
+    </div>
+    <div class="col-md-6" id="valorField" style="display: none;">
+        <label class="form-label">Valor</label>
+        <div class="input-group">
+            <span class="input-group-text">R$</span>
+            <input class="form-control" id="doacaoValor" type="text" inputmode="decimal" placeholder="0,00" />
+        </div>
+    </div>
+    <div class="col-12" id="descricaoField" style="display: none;">
+        <label class="form-label">O que foi doado?</label>
+        <textarea class="form-control" id="doacaoDescricao" rows="2" placeholder="Ex.: 5 cestas básicas, 10 cadernos, 3 kits de higiene..."></textarea>
+    </div>
+</div>
+</form>
+</div>
+<div class="modal-footer">
+<button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+<button class="btn btn-purple" id="salvarDoacao" type="button">
+<i class="bi bi-check-lg"></i> Salvar Doação
+                    </button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Modal de Configurações (copiado de menu.html) -->
+<div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <div>
+          <h5 class="modal-title" id="configModalLabel">
+            <i class="bi bi-gear"></i> Configurações
+          </h5>
+          <small class="text-muted">Gerencie sua conta, preferências e acessibilidade</small>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-3">
+        <div class="row g-3">
+          <!-- Menu lateral de abas -->
+          <div class="col-md-3 border-end">
+            <div class="nav flex-column nav-pills gap-2" id="configTabs" role="tablist" aria-orientation="vertical">
+              <button class="nav-link active d-flex align-items-center gap-2" id="tab-pessoal" data-bs-toggle="pill" data-bs-target="#pane-pessoal" type="button" role="tab" aria-controls="pane-pessoal" aria-selected="true">
+                <i class="bi bi-person-circle"></i>
+                <span>Pessoal</span>
+              </button>
+              <button class="nav-link d-flex align-items-center gap-2" id="tab-geral" data-bs-toggle="pill" data-bs-target="#pane-geral" type="button" role="tab" aria-controls="pane-geral" aria-selected="false">
+                <i class="bi bi-sliders"></i>
+                <span>Geral</span>
+              </button>
+              <button class="nav-link d-flex align-items-center gap-2" id="tab-seguranca" data-bs-toggle="pill" data-bs-target="#pane-seguranca" type="button" role="tab" aria-controls="pane-seguranca" aria-selected="false">
+                <i class="bi bi-shield-lock"></i>
+                <span>Segurança</span>
+              </button>
+              <button class="nav-link d-flex align-items-center gap-2" id="tab-acessibilidade" data-bs-toggle="pill" data-bs-target="#pane-acessibilidade" type="button" role="tab" aria-controls="pane-acessibilidade" aria-selected="false">
+                <i class="bi bi-universal-access"></i>
+                <span>Acessibilidade</span>
+              </button>
+              <button class="nav-link d-flex align-items-center gap-2" id="tab-historico" data-bs-toggle="pill" data-bs-target="#pane-historico" type="button" role="tab" aria-controls="pane-historico" aria-selected="false">
+                <i class="bi bi-clock-history"></i>
+                <span>Histórico</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Conteúdo das abas -->
+          <div class="col-md-9">
+            <div class="tab-content" id="configTabsContent">
+              <!-- Aba Pessoal -->
+              <div class="tab-pane fade show active" id="pane-pessoal" role="tabpanel" aria-labelledby="tab-pessoal">
+                <div class="mb-4 d-flex align-items-center gap-3">
+                  <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width:64px;height:64px;font-size:1.75rem;" id="configAvatarPreview">U</div>
+                  <div>
+                    <h6 class="mb-1" id="configUserName">Nome do Usuário</h6>
+                    <small class="text-muted" id="configUserEmail">email@exemplo.com</small>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Foto de perfil</h6>
+                        <p class="small text-muted">Escolha um avatar ou envie uma foto do seu computador.</p>
+                        <div class="d-flex flex-wrap gap-2 mb-3" id="configAvatarList">
+                          <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle" style="width:40px;height:40px;">A</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle" style="width:40px;height:40px;">B</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle" style="width:40px;height:40px;">C</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary">Enviar foto do computador</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Dados pessoais</h6>
+                        <div class="mb-2">
+                          <label class="form-label">Nome completo</label>
+                          <input type="text" class="form-control" placeholder="Seu nome" />
+                        </div>
+                        <div class="mb-2">
+                          <label class="form-label">Telefone <small class="text-muted">(requer senha)</small></label>
+                          <input type="text" class="form-control" placeholder="(00) 00000-0000" />
+                        </div>
+                        <div class="mb-2">
+                          <label class="form-label">E-mail <small class="text-muted">(requer senha)</small></label>
+                          <input type="email" class="form-control" placeholder="voce@exemplo.com" />
+                        </div>
+                        <small class="text-muted">Alterações em telefone e e-mail solicitarão sua senha para confirmação.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba Geral -->
+              <div class="tab-pane fade" id="pane-geral" role="tabpanel" aria-labelledby="tab-geral">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-title mb-3">Idioma do sistema</h6>
+                    <p class="small text-muted">Escolha o idioma padrão da plataforma. Esta configuração será aplicada a todas as páginas e módulos.</p>
+                    <div class="row g-3 align-items-center">
+                      <div class="col-md-6">
+                        <label class="form-label">Idioma</label>
+                        <select class="form-select">
+                          <option value="pt-BR" selected>Português (Brasil)</option>
+                          <option value="es">Español</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <small class="text-muted">Mais idiomas poderão ser adicionados futuramente.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba Segurança -->
+              <div class="tab-pane fade" id="pane-seguranca" role="tabpanel" aria-labelledby="tab-seguranca">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Sessões ativas</h6>
+                        <p class="small text-muted">Veja em quais dispositivos sua conta está conectada e encerre sessões se necessário.</p>
+                        <ul class="list-group small">
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                              <strong>Chrome - Windows</strong><br/>
+                              <span class="text-muted">Último acesso hoje às 10:23</span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-danger">Encerrar</button>
+                          </li>
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                              <strong>Android</strong><br/>
+                              <span class="text-muted">Último acesso ontem às 21:10</span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-danger">Encerrar</button>
+                          </li>
+                        </ul>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mt-2">Encerrar todas as outras sessões</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Alterar senha</h6>
+                        <p class="small text-muted">Por segurança, a troca de senha será confirmada por e-mail.</p>
+                        <button type="button" class="btn btn-sm btn-primary">Iniciar troca de senha</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba Acessibilidade -->
+              <div class="tab-pane fade" id="pane-acessibilidade" role="tabpanel" aria-labelledby="tab-acessibilidade">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Tamanho da fonte</h6>
+                        <p class="small text-muted">Ajuste o tamanho dos textos em toda a plataforma.</p>
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-outline-secondary btn-sm">Pequena</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm active">Padrão</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm">Grande</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Modos visuais</h6>
+                        <div class="form-check form-switch mb-2">
+                          <input class="form-check-input" type="checkbox" id="accDarkMode" />
+                          <label class="form-check-label" for="accDarkMode">Modo escuro</label>
+                        </div>
+                        <div class="form-check form-switch mb-2">
+                          <input class="form-check-input" type="checkbox" id="accColorblind" />
+                          <label class="form-check-label" for="accColorblind">Modo para daltônicos</label>
+                        </div>
+                        <small class="text-muted">Essas opções serão aplicadas em todas as páginas e módulos.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba Histórico -->
+              <div class="tab-pane fade" id="pane-historico" role="tabpanel" aria-labelledby="tab-historico">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-title mb-3">Histórico de atividades</h6>
+                    <p class="small text-muted">Veja um resumo das principais ações realizadas com sua conta.</p>
+                    <ul class="list-group small">
+                      <li class="list-group-item">
+                        <strong>Login realizado</strong>
+                        <span class="text-muted d-block">Hoje às 10:23</span>
+                      </li>
+                      <li class="list-group-item">
+                        <strong>Perfil atualizado</strong>
+                        <span class="text-muted d-block">Hoje às 11:35</span>
+                      </li>
+                      <li class="list-group-item">
+                        <strong>Senha alterada</strong>
+                        <span class="text-muted d-block">Ontem às 19:00</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary" style="background-color:#6f42c1;border-color:#6f42c1;">Salvar alterações</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/doacoes.js"></script>
+</body>
+</html>

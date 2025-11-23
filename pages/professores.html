@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Professores - ONG Novo Amanhã</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+    <link href="../css/config-styles.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <link href="../css/navbar.css" rel="stylesheet"/>
+    <link href="../css/cards.css" rel="stylesheet"/>
+    <link href="../css/background-pattern.css" rel="stylesheet"/>
+    <link href="../css/themes.css" rel="stylesheet"/>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow" style="background-color: var(--primary-color);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" style="display: flex; align-items: center; gap: 10px;">
+                <i class="bi bi-person-badge"></i>
+                <span class="h5 mb-0">Gestão de Professores</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="menu.html" class="btn btn-outline-light me-3">
+                    <i class="bi bi-house-door"></i>
+                    Início
+                </a>
+                <div class="dropdown">
+                    <div class="user-profile" id="userProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="avatar" id="userAvatar">UT</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Usuário</span>
+                            <i class="bi bi-chevron-down dropdown-arrow"></i>
+                        </div>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
+                        <li>
+                            <a class="dropdown-item" href="perfil.html">
+                                <i class="bi bi-person-circle"></i>
+                                Perfil
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="configuracoes.html">
+                                <i class="bi bi-gear"></i>
+                                Configurações
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="../index.html">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Sair
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5 mt-5">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="h3 mb-0">Gestão de Professores</h1>
+                <p class="text-muted">Cadastre e gerencie os professores da ONG</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProfessor">
+                    <i class="bi bi-person-plus"></i>
+                    Novo Professor
+                </button>
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people fs-1 text-primary"></i>
+                        <h3 class="mt-2 mb-0" id="totalProfessores">0</h3>
+                        <p class="text-muted mb-0">Total de Professores</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-check-circle fs-1 text-success"></i>
+                        <h3 class="mt-2 mb-0" id="professoresAtivos">0</h3>
+                        <p class="text-muted mb-0">Ativos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-book fs-1 text-info"></i>
+                        <h3 class="mt-2 mb-0" id="totalEspecialidades">0</h3>
+                        <p class="text-muted mb-0">Especialidades</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-calendar-event fs-1 text-warning"></i>
+                        <h3 class="mt-2 mb-0" id="professorMes">0</h3>
+                        <p class="text-muted mb-0">Novos este mês</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Professores -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Lista de Professores</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tabelaProfessores" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Especialidade</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dados carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cadastro/Edição Professor -->
+    <div class="modal fade" id="modalProfessor" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProfessorTitle">Novo Professor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formProfessor">
+                        <input type="hidden" id="professorId">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome" class="form-label">Nome Completo *</label>
+                                <input type="text" class="form-control" id="nome" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="tel" class="form-control" id="telefone">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="data_nasc" class="form-label">Data de Nascimento</label>
+                                <input type="date" class="form-control" id="data_nasc">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="especialidade" class="form-label">Especialidade *</label>
+                                <select class="form-select" id="especialidade" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Matemática">Matemática</option>
+                                    <option value="Português">Português</option>
+                                    <option value="História">História</option>
+                                    <option value="Geografia">Geografia</option>
+                                    <option value="Ciências">Ciências</option>
+                                    <option value="Educação Física">Educação Física</option>
+                                    <option value="Artes">Artes</option>
+                                    <option value="Informática">Informática</option>
+                                    <option value="Inglês">Inglês</option>
+                                    <option value="Reforço Escolar">Reforço Escolar</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="data_contratacao" class="form-label">Data de Contratação</label>
+                                <input type="date" class="form-control" id="data_contratacao">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="endereco" class="form-label">Endereço</label>
+                            <textarea class="form-control" id="endereco" rows="2"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="salario" class="form-label">Salário</label>
+                                <input type="number" class="form-control" id="salario" step="0.01">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status">
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                    <option value="licenca">Em Licença</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="salvarProfessor()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Visualizar Professor -->
+    <div class="modal fade" id="modalVisualizarProfessor" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes do Professor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detalheProfessor">
+                    <!-- Conteúdo carregado via JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="../js/translations.js"></script>
+    <script src="../js/settings.js"></script>
+    <script src="../js/session-timeout.js"></script>
+    <script src="../js/professores-mysql.js"></script>
+</body>
+</html>

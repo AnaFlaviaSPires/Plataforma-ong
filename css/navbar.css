@@ -1,0 +1,256 @@
+.navbar {
+    background-color: var(--primary-color);
+    padding: 1.2rem 2rem;
+    height: 80px;
+    transition: all 0.3s ease;
+}
+
+/* Avatar e nome do usuário */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    padding: 0.5rem 0.8rem;
+    border-radius: 30px;
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.avatar, .avatar-small {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-small {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.user-name {
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.dropdown-arrow {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.user-profile:hover .dropdown-arrow {
+    transform: translateY(2px);
+}
+
+#userDropdown.show + .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    padding: 0;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    min-width: 280px;
+    z-index: 1050;
+    background-color: var(--card-bg) !important;
+    margin-top: 10px !important;
+}
+
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 20px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--card-bg);
+    transform: rotate(45deg);
+    border-left: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color);
+    z-index: -1;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.dropdown-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #7A288A;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #F7F7F7;
+    border-radius: 12px 12px 0 0;
+}
+
+.header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.header-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.header-email {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.08);
+    margin: 0.5rem -0.75rem;
+}
+
+.dropdown-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #333;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #7A288A;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+    border-radius: 0 0 12px 12px;
+}
+
+.dropdown-item i {
+    font-size: 1.2rem;
+    color: #7A288A;
+    width: 24px;
+    text-align: center;
+}
+
+.item-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.item-title {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.item-description {
+    font-size: 0.85rem;
+    color: #333;
+    opacity: 0.7;
+}
+
+.dropdown-item:hover {
+    background-color: #F2F2F2;
+    transform: translateX(4px);
+}
+
+.dropdown-item:hover i {
+    transform: scale(1.1);
+}
+
+.dropdown-item:hover .item-description {
+    color: #7A288A;
+    opacity: 0.7;
+}
+
+.dropdown-item i {
+    font-size: 1.3rem;
+    color: #7A288A;
+    opacity: 0.9;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-item:hover i {
+    transform: scale(1.1);
+}
+
+.logout-item {
+    color: #dc3545;
+}
+
+.logout-item i {
+    color: #dc3545;
+}
+
+.logout-item:hover {
+    background: rgba(220, 53, 69, 0.08);
+}
+
+.logout-item:hover .item-title,
+.logout-item:hover .item-description {
+    color: #dc3545;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: white !important;
+    transition: all 0.2s ease;
+}
+
+.navbar-brand i {
+    font-size: 2rem;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover i {
+    transform: rotate(-10deg);
+}
+
+.navbar-brand .beta-tag {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 1.2rem;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-brand:hover .beta-tag {
+    background-color: rgba(255, 255, 255, 0.3);
+}

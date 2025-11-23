@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Documentos - ONG Novo Amanhã</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="../css/config-styles.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <link href="../css/navbar.css" rel="stylesheet"/>
+    <link href="../css/cards.css" rel="stylesheet"/>
+    <link href="../css/background-pattern.css" rel="stylesheet"/>
+    <link href="../css/themes.css" rel="stylesheet"/>
+    <!-- Navbar Centralizada -->
+    <script src="../js/navbar.js"></script>
+</head>
+<body>
+    <!-- Navbar removida (injetada via navbar.js) -->
+    
+    <div class="loading-overlay" id="loadingOverlay">
+<div class="loading-spinner"></div>
+</div>
+<div class="container py-5 mt-5">
+
+<div class="row mb-4 favoritos-section d-none">
+<div class="col-12">
+<h4 class="mb-3">
+<i class="bi bi-star-fill text-warning"></i> Favoritos
+                </h4>
+<div class="row" id="favoritosList"></div>
+</div>
+</div>
+
+<div class="row mb-4">
+<div class="col-12">
+<div class="d-flex justify-content-between align-items-center mb-3">
+<h4><i class="bi bi-folder2"></i> Pastas</h4>
+<button class="btn btn-purple btn-sm" onclick="criarPasta()">
+<i class="bi bi-folder-plus"></i> Nova Pasta
+                    </button>
+</div>
+<div class="row" id="pastasList">
+
+</div>
+</div>
+</div>
+<div class="row">
+
+<div class="col-md-3">
+<div class="filter-sidebar">
+<h5 class="mb-4">Filtros</h5>
+
+<div class="mb-4">
+<h6>Tipo de Documento</h6>
+<div class="form-check">
+<input class="form-check-input" id="filterPdf" type="checkbox" value="pdf"/>
+<label class="form-check-label" for="filterPdf">PDF</label>
+</div>
+<div class="form-check">
+<input class="form-check-input" id="filterDocx" type="checkbox" value="docx"/>
+<label class="form-check-label" for="filterDocx">Word (DOCX)</label>
+</div>
+<div class="form-check">
+<input class="form-check-input" id="filterXlsx" type="checkbox" value="xlsx"/>
+<label class="form-check-label" for="filterXlsx">Excel (XLSX)</label>
+</div>
+<div class="form-check">
+<input class="form-check-input" id="filterImage" type="checkbox" value="image"/>
+<label class="form-check-label" for="filterImage">Imagens</label>
+</div>
+</div>
+
+<div class="mb-4">
+<h6>Período</h6>
+<select class="form-select" id="filterDate">
+<option value="all">Todos</option>
+<option value="today">Hoje</option>
+<option value="week">Última Semana</option>
+<option value="month">Último Mês</option>
+<option value="custom">Personalizado</option>
+</select>
+<div class="mt-2 d-none" id="customDateRange">
+<input class="form-control mb-2" id="dateStart" type="date"/>
+<input class="form-control" id="dateEnd" type="date"/>
+</div>
+</div>
+
+<div class="mb-4">
+<h6>Tags</h6>
+<input class="form-control" id="filterTags" placeholder="Filtrar por tags" type="text"/>
+</div>
+</div>
+</div>
+
+<div class="col-md-9">
+
+<div class="search-bar d-flex align-items-center mb-4">
+<i class="bi bi-search me-2"></i>
+<input class="flex-grow-1" id="searchInput" placeholder="Busque por título, autor ou palavra-chave" type="text"/>
+</div>
+
+<div class="upload-area mb-4" id="dropZone">
+<i class="bi bi-cloud-upload document-icon mb-3"></i>
+<h4>Arraste e solte arquivos aqui</h4>
+<p class="text-muted">ou</p>
+<input accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" class="d-none" id="fileInput" multiple="" type="file"/>
+<button class="btn btn-purple" onclick="document.getElementById('fileInput').click()">
+<i class="bi bi-plus-lg me-2"></i>Selecionar Arquivos
+                    </button>
+<p class="mt-2 small text-muted">Formatos suportados: PDF, DOCX, XLS, JPEG, etc.</p>
+</div>
+
+<div class="row" id="documentsList">
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="modal fade document-preview-modal" id="previewModal" tabindex="-1">
+<div class="modal-dialog modal-xl">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title">Preview do Documento</h5>
+<button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<div class="row">
+<div class="col-md-9">
+<div class="bg-light rounded p-3" id="documentPreview" style="min-height: 500px;"></div>
+
+<div class="mt-4">
+<h6>Comentários</h6>
+<div class="comentarios-container" id="comentariosList">
+
+</div>
+<div class="mt-3">
+<textarea class="form-control" id="novoComentario" placeholder="Adicione um comentário..." rows="2"></textarea>
+<button class="btn btn-purple btn-sm mt-2" onclick="adicionarComentario()">
+<i class="bi bi-chat-dots"></i> Comentar
+                                    </button>
+</div>
+</div>
+</div>
+<div class="col-md-3">
+<div class="document-info">
+<h6>Informações</h6>
+<p class="mb-1"><strong>Nome:</strong> <span id="previewFileName"></span></p>
+<p class="mb-1"><strong>Tipo:</strong> <span id="previewFileType"></span></p>
+<p class="mb-1"><strong>Tamanho:</strong> <span id="previewFileSize"></span></p>
+<p class="mb-3"><strong>Modificado:</strong> <span id="previewLastModified"></span></p>
+<h6>Tags</h6>
+<div class="mb-3" id="previewTags"></div>
+<h6>Histórico de Versões</h6>
+<div class="version-history" id="versionHistory"></div>
+<h6>Permissões</h6>
+<div class="permissions-section">
+<div class="mb-2">
+<label class="permission-toggle">
+<input id="permissionView" type="checkbox"/>
+<span class="permission-slider"></span>
+</label>
+<span class="ms-2">Visualizar</span>
+</div>
+<div class="mb-2">
+<label class="permission-toggle">
+<input id="permissionEdit" type="checkbox"/>
+<span class="permission-slider"></span>
+</label>
+<span class="ms-2">Editar</span>
+</div>
+<div class="mb-2">
+<label class="permission-toggle">
+<input id="permissionDownload" type="checkbox"/>
+<span class="permission-slider"></span>
+</label>
+<span class="ms-2">Baixar</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-footer">
+<div class="btn-group">
+<button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button">
+                            Exportar como
+                        </button>
+<ul class="dropdown-menu">
+<li><a class="dropdown-item" data-format="pdf" href="#">PDF</a></li>
+<li><a class="dropdown-item" data-format="docx" href="#">Word</a></li>
+<li><a class="dropdown-item" data-format="xlsx" href="#">Excel</a></li>
+</ul>
+</div>
+<button class="btn btn-outline-secondary" id="printDocument" type="button">
+<i class="bi bi-printer"></i> Imprimir
+                    </button>
+<button class="btn btn-outline-primary" id="shareDocument" type="button">
+<i class="bi bi-share"></i> Compartilhar
+                    </button>
+<button class="btn btn-purple" id="downloadDocument" type="button">
+<i class="bi bi-download"></i> Download
+                    </button>
+</div>
+</div>
+</div>
+</div>
+
+<script type="module">
+        // Variáveis globais
+        let currentUser = null;
+        let darkMode = localStorage.getItem('darkMode') === 'true';
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // Configuração inicial
+        function inicializarApp() {
+            // Aplicar modo escuro se necessário
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeToggle').checked = true;
+            }
+
+            // Inicializar Tagify para tags
+            new Tagify(document.getElementById('filterTags'));
+
+            // Configurar listeners de eventos
+            configurarEventListeners();
+        }
+
+        // Configurar todos os event listeners
+        function configurarEventListeners() {
+            // Toggle modo escuro
+            document.getElementById('darkModeToggle').addEventListener('change', (e) => {
+                darkMode = e.target.checked;
+                document.body.classList.toggle('dark-mode', darkMode);
+                localStorage.setItem('darkMode', darkMode);
+            });
+
+            // Filtro de data personalizado
+            document.getElementById('filterDate').addEventListener('change', (e) => {
+                const customDateRange = document.getElementById('customDateRange');
+                customDateRange.classList.toggle('d-none', e.target.value !== 'custom');
+            });
+
+            // Busca em tempo real
+            document.getElementById('searchInput').addEventListener('input', debounce(realizarBusca, 300));
+
+            // Filtros de tipo de documento
+            document.querySelectorAll('.form-check-input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', aplicarFiltros);
+            });
+        }
+
+        // Função para debounce da busca
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Mostrar/ocultar overlay de carregamento
+        function toggleLoading(show) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
+
+        // Auth state observer
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                currentUser = user;
+                inicializarApp();
+                carregarDocumentos();
+            }
+        });
+
+        // Logout handler
+        document.getElementById('logoutButton').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+        });
+
+        // Função para processar o upload de documentos
+        async function processarUpload(file) {
+            try {
+                toggleLoading(true);
+
+                // Gerar nome único para o arquivo
+                const timestamp = new Date().getTime();
+                const nomeArquivo = `${timestamp}_${file.name}`;
+                const storageRef = ref(storage, `documents/${currentUser.uid}/${nomeArquivo}`);
+
+                // Fazer upload para o Storage
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+
+                // Extrair tags sugeridas baseadas no nome e tipo do arquivo
+                const tagsAutomaticas = gerarTagsAutomaticas(file);
+
+                // Salvar metadados no Firestore
+                const docRef = await addDoc(collection(db, 'documentos'), {
+                    nome: file.name,
+                    nomeArquivo: nomeArquivo,
+                    tipo: file.type,
+                    tamanho: file.size,
+                    url: downloadURL,
+                    userId: currentUser.uid,
+                    dataCriacao: new Date(),
+                    dataModificacao: new Date(),
+                    tags: tagsAutomaticas,
+                    permissoes: {
+                        visualizar: true,
+                        editar: true,
+                        baixar: true
+                    },
+                    versoes: [{
+                        data: new Date(),
+                        autor: currentUser.email,
+                        tamanho: file.size
+                    }]
+                });
+
+                exibirNotificacao('Sucesso', 'Documento enviado com sucesso!');
+                await carregarDocumentos(); // Recarregar lista
+
+            } catch (error) {
+                console.error('Erro no upload:', error);
+                exibirNotificacao('Erro', 'Erro ao enviar documento. Tente novamente.');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // Gerar tags automáticas baseadas no arquivo
+        function gerarTagsAutomaticas(file) {
+            const tags = [];
+            
+            // Adicionar tag do tipo de arquivo
+            const tipoBase = file.type.split('/')[0];
+            const extensao = file.name.split('.').pop().toLowerCase();
+            
+            if (tipoBase === 'image') tags.push('imagem');
+            if (extensao === 'pdf') tags.push('pdf');
+            if (['doc', 'docx'].includes(extensao)) tags.push('documento');
+            if (['xls', 'xlsx'].includes(extensao)) tags.push('planilha');
+            
+            // Adicionar tags baseadas no nome do arquivo
+            const nomeArquivo = file.name.toLowerCase();
+            if (nomeArquivo.includes('relatorio')) tags.push('relatorio');
+            if (nomeArquivo.includes('contrato')) tags.push('contrato');
+            if (nomeArquivo.includes('foto')) tags.push('foto');
+            
+            return tags;
+        }
+
+        // Função para exibir notificações
+        function exibirNotificacao(titulo, mensagem) {
+            const toastHTML = `
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">${titulo}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">${mensagem}</div>
+                </div>
+            `;
+            
+            const toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            toastContainer.innerHTML = toastHTML;
+            document.body.appendChild(toastContainer);
+            
+            const toast = new bootstrap.Toast(toastContainer.querySelector('.toast'));
+            toast.show();
+            
+            // Remover após fechar
+            toastContainer.addEventListener('hidden.bs.toast', () => {
+                toastContainer.remove();
+            });
+        }
+
+        // Variáveis para busca e filtros
+        let todosDocumentos = [];
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const documentsList = document.getElementById('documentsList');
+        const searchInput = document.getElementById('searchInput');
+
+        // Função de busca inteligente
+        async function realizarBusca(evento) {
+            const termoBusca = evento.target.value.toLowerCase();
+            const resultados = todosDocumentos.filter(doc => {
+                // Busca no nome do arquivo
+                if (doc.nome.toLowerCase().includes(termoBusca)) return true;
+                
+                // Busca nas tags
+                if (doc.tags.some(tag => tag.toLowerCase().includes(termoBusca))) return true;
+                
+                // Busca com tolerância a erros de digitação (distância de Levenshtein)
+                if (doc.tags.some(tag => calcularDistanciaLevenshtein(tag.toLowerCase(), termoBusca) <= 2)) return true;
+                
+                // Busca por sinônimos comuns
+                const sinonimos = getSinonimos(termoBusca);
+                if (doc.tags.some(tag => sinonimos.includes(tag.toLowerCase()))) return true;
+                
+                return false;
+            });
+            
+            renderizarDocumentos(resultados);
+        }
+
+        // Função para calcular distância de Levenshtein (tolerância a erros de digitação)
+        function calcularDistanciaLevenshtein(a, b) {
+            if (a.length === 0) return b.length;
+            if (b.length === 0) return a.length;
+
+            const matrix = [];
+
+            for (let i = 0; i <= b.length; i++) {
+                matrix[i] = [i];
+            }
+
+            for (let j = 0; j <= a.length; j++) {
+                matrix[0][j] = j;
+            }
+
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+
+            return matrix[b.length][a.length];
+        }
+
+        // Função para obter sinônimos comuns
+        function getSinonimos(termo) {
+            const dicionarioSinonimos = {
+                'foto': ['imagem', 'figura', 'fotografia'],
+                'documento': ['doc', 'arquivo', 'documentacao'],
+                'planilha': ['excel', 'xls', 'xlsx', 'tabela'],
+                'contrato': ['acordo', 'termo', 'documentacao'],
+                'relatorio': ['report', 'registro', 'relato']
+            };
+
+            return dicionarioSinonimos[termo] || [];
+        }
+
+        // Função para aplicar filtros
+        function aplicarFiltros() {
+            const tiposSelecionados = Array.from(document.querySelectorAll('.form-check-input:checked'))
+                .map(checkbox => checkbox.value);
+            
+            const filtroData = document.getElementById('filterDate').value;
+            const dataInicio = document.getElementById('dateStart').value;
+            const dataFim = document.getElementById('dateEnd').value;
+            
+            const tagsInput = document.getElementById('filterTags');
+            const tagsSelecionadas = tagsInput.value ? JSON.parse(tagsInput.value).map(t => t.value) : [];
+
+            const resultados = todosDocumentos.filter(doc => {
+                // Filtro por tipo
+                if (tiposSelecionados.length > 0) {
+                    const extensao = doc.nome.split('.').pop().toLowerCase();
+                    const tipoCorresponde = tiposSelecionados.some(tipo => {
+                        if (tipo === 'pdf') return extensao === 'pdf';
+                        if (tipo === 'docx') return ['doc', 'docx'].includes(extensao);
+                        if (tipo === 'xlsx') return ['xls', 'xlsx'].includes(extensao);
+                        if (tipo === 'image') return ['jpg', 'jpeg', 'png', 'gif'].includes(extensao);
+                        return false;
+                    });
+                    if (!tipoCorresponde) return false;
+                }
+
+                // Filtro por data
+                if (filtroData !== 'all') {
+                    const dataDoc = doc.dataModificacao.toDate();
+                    const hoje = new Date();
+                    
+                    if (filtroData === 'today') {
+                        if (dataDoc.toDateString() !== hoje.toDateString()) return false;
+                    } else if (filtroData === 'week') {
+                        const umaSemanaAtras = new Date(hoje.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        if (dataDoc < umaSemanaAtras) return false;
+                    } else if (filtroData === 'month') {
+                        const umMesAtras = new Date(hoje.getFullYear(), hoje.getMonth() - 1, hoje.getDate());
+                        if (dataDoc < umMesAtras) return false;
+                    } else if (filtroData === 'custom' && dataInicio && dataFim) {
+                        const inicio = new Date(dataInicio);
+                        const fim = new Date(dataFim);
+                        if (dataDoc < inicio || dataDoc > fim) return false;
+                    }
+                }
+
+                // Filtro por tags
+                if (tagsSelecionadas.length > 0) {
+                    if (!tagsSelecionadas.some(tag => doc.tags.includes(tag))) return false;
+                }
+
+                return true;
+            });
+
+            renderizarDocumentos(resultados);
+        }
+
+        // Event listeners para upload de arquivos
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.background = 'var(--bg-light)';
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.background = 'var(--bg-white)';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.background = 'var(--bg-white)';
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                processarUpload(file);
+            });
+        }
+
+        // Função para carregar e exibir documentos
+        async function carregarDocumentos() {
+            try {
+                toggleLoading(true);
+                const q = query(collection(db, 'documentos'), where('userId', '==', currentUser.uid));
+                const querySnapshot = await getDocs(q);
+                
+                todosDocumentos = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                renderizarDocumentos(todosDocumentos);
+            } catch (error) {
+                console.error('Erro ao carregar documentos:', error);
+                exibirNotificacao('Erro', 'Erro ao carregar documentos. Tente novamente.');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // Função para renderizar documentos na tela
+        function renderizarDocumentos(documentos) {
+            documentsList.innerHTML = '';
+            
+            if (documentos.length === 0) {
+                documentsList.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-folder2-open document-icon mb-3"></i>
+                        <h4>Nenhum documento encontrado</h4>
+                        <p class="text-muted">Faça upload de documentos ou ajuste seus filtros de busca.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            documentos.forEach(doc => {
+                const extensao = doc.nome.split('.').pop().toLowerCase();
+                let icone = 'bi-file-earmark-text';
+                
+                if (['jpg', 'jpeg', 'png', 'gif'].includes(extensao)) icone = 'bi-file-earmark-image';
+                if (['pdf'].includes(extensao)) icone = 'bi-file-earmark-pdf';
+                if (['doc', 'docx'].includes(extensao)) icone = 'bi-file-earmark-word';
+                if (['xls', 'xlsx'].includes(extensao)) icone = 'bi-file-earmark-spreadsheet';
+
+                const card = `
+                    <div class="col-md-6 col-lg-4 mb-4" draggable="true" data-doc-id="${doc.id}">
+                        <div class="document-card p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <button class="btn btn-link p-0 favorite-btn" onclick="toggleFavorito('${doc.id}')">
+                                    <i class="bi ${doc.favorito ? 'bi-star-fill text-warning' : 'bi-star'}"></i>
+                                </button>
+                                <div>
+                                    <i class="bi ${icone} document-icon"></i>
+                                    <h5 class="mt-2 mb-1">${doc.nome}</h5>
+                                    <p class="text-muted small mb-2">
+                                        Modificado em: ${formatarData(doc.dataModificacao.toDate())}
+                                    </p>
+                                    <div class="tags-container">
+                                        ${doc.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="abrirPreview('${doc.id}')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                documentsList.innerHTML += card;
+            });
+        }
+
+        // Função para formatar data
+        function formatarData(data) {
+            return new Intl.DateTimeFormat('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).format(data);
+        }
+
+        // Função para abrir preview do documento
+        async function abrirPreview(docId) {
+            try {
+                toggleLoading(true);
+                const docRef = doc(db, 'documentos', docId);
+                const docSnap = await getDocs(docRef);
+                const documento = { id: docSnap.id, ...docSnap.data() };
+
+                // Preencher informações do documento no modal
+                document.getElementById('previewFileName').textContent = documento.nome;
+                document.getElementById('previewFileType').textContent = documento.tipo;
+                document.getElementById('previewFileSize').textContent = formatarTamanho(documento.tamanho);
+                document.getElementById('previewLastModified').textContent = formatarData(documento.dataModificacao.toDate());
+
+                // Preencher tags
+                const tagsContainer = document.getElementById('previewTags');
+                tagsContainer.innerHTML = documento.tags
+                    .map(tag => `<span class="tag">${tag}</span>`)
+                    .join('');
+
+                // Preencher histórico de versões
+                const versionsContainer = document.getElementById('versionHistory');
+                versionsContainer.innerHTML = documento.versoes
+                    .map(versao => `
+                        <div class="version-item">
+                            <p class="mb-1"><strong>${formatarData(versao.data.toDate())}</strong></p>
+                            <p class="mb-0 small text-muted">Por: ${versao.autor}</p>
+                            <p class="mb-0 small text-muted">Tamanho: ${formatarTamanho(versao.tamanho)}</p>
+                        </div>
+                    `)
+                    .join('');
+
+                // Configurar permissões
+                document.getElementById('permissionView').checked = documento.permissoes.visualizar;
+                document.getElementById('permissionEdit').checked = documento.permissoes.editar;
+                document.getElementById('permissionDownload').checked = documento.permissoes.baixar;
+
+                // Carregar preview do documento
+                const previewContainer = document.getElementById('documentPreview');
+                if (documento.tipo.startsWith('image/')) {
+                    previewContainer.innerHTML = `<img src="${documento.url}" class="img-fluid" alt="${documento.nome}">`;
+                } else if (documento.tipo === 'application/pdf') {
+                    // Usar PDF.js para renderizar PDF
+                    const loadingTask = pdfjsLib.getDocument(documento.url);
+                    const pdf = await loadingTask.promise;
+                    const page = await pdf.getPage(1);
+                    const viewport = page.getViewport({ scale: 1.5 });
+
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    await page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    }).promise;
+
+                    previewContainer.innerHTML = '';
+                    previewContainer.appendChild(canvas);
+                } else {
+                    previewContainer.innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="bi bi-file-earmark document-icon mb-3"></i>
+                            <h5>Preview não disponível</h5>
+                            <p>Faça o download para visualizar este tipo de arquivo.</p>
+                        </div>
+                    `;
+                }
+
+                // Abrir modal
+                const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+                previewModal.show();
+
+            } catch (error) {
+                console.error('Erro ao abrir preview:', error);
+                exibirNotificacao('Erro', 'Erro ao abrir preview do documento.');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // Função para formatar tamanho do arquivo
+        function formatarTamanho(bytes) {
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let size = bytes;
+            let unitIndex = 0;
+
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+
+            return `${size.toFixed(1)} ${units[unitIndex]}`;
+        }
+
+        // Função para excluir documento
+        async function excluirDocumento(docId) {
+            if (!confirm('Tem certeza que deseja excluir este documento?')) return;
+
+            try {
+                toggleLoading(true);
+                const docRef = doc(db, 'documentos', docId);
+                const docSnap = await getDocs(docRef);
+                const documento = docSnap.data();
+
+                // Excluir arquivo do Storage
+                const storageRef = ref(storage, `documents/${currentUser.uid}/${documento.nomeArquivo}`);
+                await deleteObject(storageRef);
+
+                // Excluir documento do Firestore
+                await deleteDoc(docRef);
+
+                exibirNotificacao('Sucesso', 'Documento excluído com sucesso!');
+                await carregarDocumentos();
+
+            } catch (error) {
+                console.error('Erro ao excluir documento:', error);
+                exibirNotificacao('Erro', 'Erro ao excluir documento. Tente novamente.');
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // Inicializar PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+
+        // Eventos do modal de preview
+        document.getElementById('downloadDocument').addEventListener('click', async () => {
+            const docId = document.getElementById('previewModal').getAttribute('data-doc-id');
+            const docRef = doc(db, 'documentos', docId);
+            const docSnap = await getDocs(docRef);
+            const documento = docSnap.data();
+
+            if (documento.permissoes.baixar) {
+                window.open(documento.url, '_blank');
+            } else {
+                exibirNotificacao('Erro', 'Você não tem permissão para baixar este documento.');
+            }
+        });
+
+        document.getElementById('printDocument').addEventListener('click', async () => {
+            const docId = document.getElementById('previewModal').getAttribute('data-doc-id');
+            const docRef = doc(db, 'documentos', docId);
+            const docSnap = await getDocs(docRef);
+            const documento = docSnap.data();
+
+            if (documento.permissoes.visualizar) {
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Imprimir - ${documento.nome}</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; padding: 20px; }
+                                img { max-width: 100%; height: auto; }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>${documento.nome}</h1>
+                            ${document.getElementById('documentPreview').innerHTML}
+                        </body>
+                    </html>
+                `);
+                printWindow.document.close();
+                printWindow.print();
+            } else {
+                exibirNotificacao('Erro', 'Você não tem permissão para imprimir este documento.');
+            }
+        });
+
+        document.getElementById('shareDocument').addEventListener('click', async () => {
+            const docId = document.getElementById('previewModal').getAttribute('data-doc-id');
+            const docRef = doc(db, 'documentos', docId);
+            const docSnap = await getDocs(docRef);
+            const documento = docSnap.data();
+
+            // Criar link temporário de compartilhamento
+            const linkCompartilhamento = `${window.location.origin}/visualizar.html?doc=${docId}`;
+            
+            // Copiar para clipboard
+            navigator.clipboard.writeText(linkCompartilhamento)
+                .then(() => {
+                    exibirNotificacao('Sucesso', 'Link de compartilhamento copiado para a área de transferência!');
+                })
+                .catch(() => {
+                    exibirNotificacao('Erro', 'Não foi possível copiar o link.');
+                });
+        });
+
+        // Eventos de permissões
+        ['View', 'Edit', 'Download'].forEach(tipo => {
+            document.getElementById(`permission${tipo}`).addEventListener('change', async (e) => {
+                const docId = document.getElementById('previewModal').getAttribute('data-doc-id');
+                const docRef = doc(db, 'documentos', docId);
+                
+                try {
+                    await updateDoc(docRef, {
+                        [`permissoes.${tipo.toLowerCase()}`]: e.target.checked
+                    });
+                    
+                    exibirNotificacao('Sucesso', 'Permissões atualizadas com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao atualizar permissões:', error);
+                    exibirNotificacao('Erro', 'Erro ao atualizar permissões.');
+                    e.target.checked = !e.target.checked; // Reverter checkbox
+                }
+            });
+        });
+
+        // Atalhos de teclado
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + F para focar na busca
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+
+            // Esc para fechar modal
+            if (e.key === 'Escape') {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('previewModal'));
+                if (modal) modal.hide();
+            }
+        });
+
+        // Observador de tema do sistema
+        window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
+            if (!localStorage.getItem('darkMode')) { // Só mudar se usuário não definiu preferência
+                document.body.classList.toggle('dark-mode', e.matches);
+                document.getElementById('darkModeToggle').checked = e.matches;
+            }
+        });
+
+        // Funções para Favoritos
+        async function toggleFavorito(docId) {
+            try {
+                const docRef = doc(db, 'documentos', docId);
+                const docSnap = await getDocs(docRef);
+                const documento = docSnap.data();
+                
+                await updateDoc(docRef, {
+                    favorito: !documento.favorito
+                });
+                
+                await carregarDocumentos();
+                exibirNotificacao('Sucesso', documento.favorito ? 'Removido dos favoritos!' : 'Adicionado aos favoritos!');
+            } catch (error) {
+                console.error('Erro ao atualizar favorito:', error);
+                exibirNotificacao('Erro', 'Erro ao atualizar favoritos.');
+            }
+        }
+
+        // Funções para Pastas
+        async function criarPasta() {
+            const nomePasta = prompt('Digite o nome da nova pasta:');
+            if (!nomePasta) return;
+
+            try {
+                await addDoc(collection(db, 'pastas'), {
+                    nome: nomePasta,
+                    userId: currentUser.uid,
+                    dataCriacao: new Date()
+                });
+
+                carregarPastas();
+                exibirNotificacao('Sucesso', 'Pasta criada com sucesso!');
+            } catch (error) {
+                console.error('Erro ao criar pasta:', error);
+                exibirNotificacao('Erro', 'Erro ao criar pasta.');
+            }
+        }
+
+        async function carregarPastas() {
+            try {
+                const q = query(collection(db, 'pastas'), where('userId', '==', currentUser.uid));
+                const querySnapshot = await getDocs(q);
+                const pastasList = document.getElementById('pastasList');
+                
+                pastasList.innerHTML = '';
+                querySnapshot.forEach(doc => {
+                    const pasta = doc.data();
+                    pastasList.innerHTML += `
+                        <div class="col-md-3 mb-3">
+                            <div class="document-card p-3" data-pasta-id="${doc.id}" ondragover="event.preventDefault()" ondrop="moverParaPasta(event, '${doc.id}')">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-folder2 document-icon me-2"></i>
+                                    <h6 class="mb-0">${pasta.nome}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Erro ao carregar pastas:', error);
+            }
+        }
+
+        async function moverParaPasta(event, pastaId) {
+            event.preventDefault();
+            const docId = event.dataTransfer.getData('text/plain');
+            
+            try {
+                const docRef = doc(db, 'documentos', docId);
+                await updateDoc(docRef, { pastaId });
+                
+                exibirNotificacao('Sucesso', 'Documento movido com sucesso!');
+                await carregarDocumentos();
+            } catch (error) {
+                console.error('Erro ao mover documento:', error);
+                exibirNotificacao('Erro', 'Erro ao mover documento.');
+            }
+        }
+
+        // Funções para Comentários
+        async function adicionarComentario() {
+            const texto = document.getElementById('novoComentario').value.trim();
+            if (!texto) return;
+
+            const docId = document.getElementById('previewModal').getAttribute('data-doc-id');
+            try {
+                const docRef = doc(db, 'documentos', docId);
+                const comentario = {
+                    texto,
+                    autor: currentUser.email,
+                    data: new Date(),
+                    userId: currentUser.uid
+                };
+
+                await updateDoc(docRef, {
+                    comentarios: arrayUnion(comentario)
+                });
+
+                document.getElementById('novoComentario').value = '';
+                await carregarComentarios(docId);
+                exibirNotificacao('Sucesso', 'Comentário adicionado!');
+            } catch (error) {
+                console.error('Erro ao adicionar comentário:', error);
+                exibirNotificacao('Erro', 'Erro ao adicionar comentário.');
+            }
+        }
+
+        async function carregarComentarios(docId) {
+            try {
+                const docRef = doc(db, 'documentos', docId);
+                const docSnap = await getDocs(docRef);
+                const documento = docSnap.data();
+                const comentariosList = document.getElementById('comentariosList');
+
+                comentariosList.innerHTML = '';
+                if (documento.comentarios && documento.comentarios.length > 0) {
+                    documento.comentarios.forEach(comentario => {
+                        comentariosList.innerHTML += `
+                            <div class="comentario-item mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <strong>${comentario.autor}</strong>
+                                    <small class="text-muted">${formatarData(comentario.data.toDate())}</small>
+                                </div>
+                                <p class="mb-0">${comentario.texto}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    comentariosList.innerHTML = '<p class="text-muted">Nenhum comentário ainda.</p>';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar comentários:', error);
+            }
+        }
+
+        // Configurar drag and drop para documentos
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.hasAttribute('data-doc-id')) {
+                e.dataTransfer.setData('text/plain', e.target.getAttribute('data-doc-id'));
+            }
+        });
+
+        // Inicializar tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Carregar pastas ao iniciar
+        carregarPastas();
+    </script>
+<!-- Modal de Configurações (copiado de menu.html) -->
+<div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <div>
+          <h5 class="modal-title" id="configModalLabel">
+            <i class="bi bi-gear"></i> Configurações
+          </h5>
+          <small class="text-muted">Gerencie sua conta, preferências e acessibilidade</small>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-3">
+        <div class="row g-3">
+          <!-- Menu lateral de abas -->
+          <div class="col-md-3 border-end">
+            <div class="nav flex-column nav-pills gap-2" id="configTabs" role="tablist" aria-orientation="vertical">
+              <button class="nav-link active d-flex align-items-center gap-2" id="tab-pessoal" data-bs-toggle="pill" data-bs-target="#pane-pessoal" type="button" role="tab" aria-controls="pane-pessoal" aria-selected="true">
+                <i class="bi bi-person-circle"></i>
+                <span>Pessoal</span>
+              </button>
+              <button class="nav-link d-flex align-items-center gap-2" id="tab-geral" data-bs-toggle="pill" data-bs-target="#pane-geral" type="button" role="tab" aria-controls="pane-geral" aria-selected="false">
+                <i class="bi bi-sliders"></i>
+                <span>Geral</span>
+              </button>
+              <button class="nav-link d-flex align-items-center gap-2" id="tab-seguranca" data-bs-toggle="pill" data-bs-target="#pane-seguranca" type="button" role="tab" aria-controls="pane-seguranca" aria-selected="false">
+                <i class="bi bi-shield-lock"></i>
+                <span>Segurança</span>
+              </button>
+              <button class="nav-link d-flex align-items-center gap-2" id="tab-acessibilidade" data-bs-toggle="pill" data-bs-target="#pane-acessibilidade" type="button" role="tab" aria-controls="pane-acessibilidade" aria-selected="false">
+                <i class="bi bi-universal-access"></i>
+                <span>Acessibilidade</span>
+              </button>
+              <button class="nav-link d-flex align-items-center gap-2" id="tab-historico" data-bs-toggle="pill" data-bs-target="#pane-historico" type="button" role="tab" aria-controls="pane-historico" aria-selected="false">
+                <i class="bi bi-clock-history"></i>
+                <span>Histórico</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Conteúdo das abas -->
+          <div class="col-md-9">
+            <div class="tab-content" id="configTabsContent">
+              <!-- Aba Pessoal -->
+              <div class="tab-pane fade show active" id="pane-pessoal" role="tabpanel" aria-labelledby="tab-pessoal">
+                <div class="mb-4 d-flex align-items-center gap-3">
+                  <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width:64px;height:64px;font-size:1.75rem;" id="configAvatarPreview">U</div>
+                  <div>
+                    <h6 class="mb-1" id="configUserName">Nome do Usuário</h6>
+                    <small class="text-muted" id="configUserEmail">email@exemplo.com</small>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Foto de perfil</h6>
+                        <p class="small text-muted">Escolha um avatar ou envie uma foto do seu computador.</p>
+                        <div class="d-flex flex-wrap gap-2 mb-3" id="configAvatarList">
+                          <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle" style="width:40px;height:40px;">A</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle" style="width:40px;height:40px;">B</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle" style="width:40px;height:40px;">C</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary">Enviar foto do computador</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Dados pessoais</h6>
+                        <div class="mb-2">
+                          <label class="form-label">Nome completo</label>
+                          <input type="text" class="form-control" placeholder="Seu nome" />
+                        </div>
+                        <div class="mb-2">
+                          <label class="form-label">Telefone <small class="text-muted">(requer senha)</small></label>
+                          <input type="text" class="form-control" placeholder="(00) 00000-0000" />
+                        </div>
+                        <div class="mb-2">
+                          <label class="form-label">E-mail <small class="text-muted">(requer senha)</small></label>
+                          <input type="email" class="form-control" placeholder="voce@exemplo.com" />
+                        </div>
+                        <small class="text-muted">Alterações em telefone e e-mail solicitarão sua senha para confirmação.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba Geral -->
+              <div class="tab-pane fade" id="pane-geral" role="tabpanel" aria-labelledby="tab-geral">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-title mb-3">Idioma do sistema</h6>
+                    <p class="small text-muted">Escolha o idioma padrão da plataforma. Esta configuração será aplicada a todas as páginas e módulos.</p>
+                    <div class="row g-3 align-items-center">
+                      <div class="col-md-6">
+                        <label class="form-label">Idioma</label>
+                        <select class="form-select">
+                          <option value="pt-BR" selected>Português (Brasil)</option>
+                          <option value="es">Español</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <small class="text-muted">Mais idiomas poderão ser adicionados futuramente.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba Segurança -->
+              <div class="tab-pane fade" id="pane-seguranca" role="tabpanel" aria-labelledby="tab-seguranca">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Sessões ativas</h6>
+                        <p class="small text-muted">Veja em quais dispositivos sua conta está conectada e encerre sessões se necessário.</p>
+                        <ul class="list-group small">
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                              <strong>Chrome - Windows</strong><br/>
+                              <span class="text-muted">Último acesso hoje às 10:23</span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-danger">Encerrar</button>
+                          </li>
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                              <strong>Android</strong><br/>
+                              <span class="text-muted">Último acesso ontem às 21:10</span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-danger">Encerrar</button>
+                          </li>
+                        </ul>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mt-2">Encerrar todas as outras sessões</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Alterar senha</h6>
+                        <p class="small text-muted">Por segurança, a troca de senha será confirmada por e-mail.</p>
+                        <button type="button" class="btn btn-sm btn-primary">Iniciar troca de senha</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba Acessibilidade -->
+              <div class="tab-pane fade" id="pane-acessibilidade" role="tabpanel" aria-labelledby="tab-acessibilidade">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Tamanho da fonte</h6>
+                        <p class="small text-muted">Ajuste o tamanho dos textos em toda a plataforma.</p>
+                        <div class="btn-group" role="group">
+                          <button type="button" class="btn btn-outline-secondary btn-sm">Pequena</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm active">Padrão</button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm">Grande</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h6 class="card-title mb-3">Modos visuais</h6>
+                        <div class="form-check form-switch mb-2">
+                          <input class="form-check-input" type="checkbox" id="accDarkMode" />
+                          <label class="form-check-label" for="accDarkMode">Modo escuro</label>
+                        </div>
+                        <div class="form-check form-switch mb-2">
+                          <input class="form-check-input" type="checkbox" id="accColorblind" />
+                          <label class="form-check-label" for="accColorblind">Modo para daltônicos</label>
+                        </div>
+                        <small class="text-muted">Essas opções serão aplicadas em todas as páginas e módulos.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba Histórico -->
+              <div class="tab-pane fade" id="pane-historico" role="tabpanel" aria-labelledby="tab-historico">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-title mb-3">Histórico de atividades</h6>
+                    <p class="small text-muted">Veja um resumo das principais ações realizadas com sua conta.</p>
+                    <ul class="list-group small">
+                      <li class="list-group-item">
+                        <strong>Login realizado</strong>
+                        <span class="text-muted d-block">Hoje às 10:23</span>
+                      </li>
+                      <li class="list-group-item">
+                        <strong>Perfil atualizado</strong>
+                        <span class="text-muted d-block">Hoje às 11:35</span>
+                      </li>
+                      <li class="list-group-item">
+                        <strong>Senha alterada</strong>
+                        <span class="text-muted d-block">Ontem às 19:00</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary" style="background-color:#6f42c1;border-color:#6f42c1;">Salvar alterações</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 1rem;">
+<a href="menu.html"><button>Voltar ao Início</button></a>
+</div>
+<script src="../utils/default.js"></script><script src="../data/simulacoes.js"></script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  const lista = document.getElementById("documentosLista");
+  const input = document.getElementById("uploadDocumento");
+  const btnSalvar = document.getElementById("btnSalvarDocumento");
+
+  let documentos = carregarLocal("simulacaoDocumentos") || [];
+
+  function renderizarDocumentos() {
+    lista.innerHTML = "";
+    documentos.forEach((doc, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = \`
+        <div>
+          📄 \${doc.nome} - <em>\${doc.data}</em>
+        </div>
+      \`;
+      lista.appendChild(li);
+    });
+  }
+
+  renderizarDocumentos();
+
+  btnSalvar?.addEventListener("click", () => {
+    if (!input.files.length) return alert("Selecione um arquivo!");
+    const nome = input.files[0].name;
+    const data = new Date().toISOString().split("T")[0];
+    documentos.push({ nome, data });
+    salvarLocal("simulacaoDocumentos", documentos);
+    renderizarDocumentos();
+    input.value = "";
+  });
+});
+</script></body>
+</html>

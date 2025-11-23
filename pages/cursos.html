@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Cursos - ONG Novo Amanhã</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+    <link href="../css/config-styles.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <link href="../css/navbar.css" rel="stylesheet"/>
+    <link href="../css/cards.css" rel="stylesheet"/>
+    <link href="../css/background-pattern.css" rel="stylesheet"/>
+    <link href="../css/themes.css" rel="stylesheet"/>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow" style="background-color: var(--primary-color);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" style="display: flex; align-items: center; gap: 10px;">
+                <i class="bi bi-book"></i>
+                <span class="h5 mb-0">Gestão de Cursos</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="menu.html" class="btn btn-outline-light me-3">
+                    <i class="bi bi-house-door"></i>
+                    Início
+                </a>
+                <div class="dropdown">
+                    <div class="user-profile" id="userProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="avatar" id="userAvatar">UT</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Usuário</span>
+                            <i class="bi bi-chevron-down dropdown-arrow"></i>
+                        </div>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
+                        <li>
+                            <a class="dropdown-item" href="perfil.html">
+                                <i class="bi bi-person-circle"></i>
+                                Perfil
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="configuracoes.html">
+                                <i class="bi bi-gear"></i>
+                                Configurações
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="../index.html">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Sair
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5 mt-5">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="h3 mb-0">Gestão de Cursos</h1>
+                <p class="text-muted">Cadastre e gerencie os cursos oferecidos pela ONG</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCurso">
+                    <i class="bi bi-plus-circle"></i>
+                    Novo Curso
+                </button>
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-book fs-1 text-primary"></i>
+                        <h3 class="mt-2 mb-0" id="totalCursos">0</h3>
+                        <p class="text-muted mb-0">Total de Cursos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-play-circle fs-1 text-success"></i>
+                        <h3 class="mt-2 mb-0" id="cursosAtivos">0</h3>
+                        <p class="text-muted mb-0">Ativos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people fs-1 text-info"></i>
+                        <h3 class="mt-2 mb-0" id="totalAlunos">0</h3>
+                        <p class="text-muted mb-0">Alunos Matriculados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-person-badge fs-1 text-warning"></i>
+                        <h3 class="mt-2 mb-0" id="totalProfessores">0</h3>
+                        <p class="text-muted mb-0">Professores</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Cursos -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Lista de Cursos</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tabelaCursos" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Professor</th>
+                                <th>Carga Horária</th>
+                                <th>Vagas</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dados carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cadastro/Edição Curso -->
+    <div class="modal fade" id="modalCurso" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCursoTitle">Novo Curso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCurso">
+                        <input type="hidden" id="cursoId">
+                        
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="nome" class="form-label">Nome do Curso *</label>
+                                <input type="text" class="form-control" id="nome" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="codigo" class="form-label">Código</label>
+                                <input type="text" class="form-control" id="codigo">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="descricao" rows="3"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="professor_id" class="form-label">Professor Responsável</label>
+                                <select class="form-select" id="professor_id">
+                                    <option value="">Selecione um professor...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="categoria" class="form-label">Categoria</label>
+                                <select class="form-select" id="categoria">
+                                    <option value="">Selecione...</option>
+                                    <option value="Educação Básica">Educação Básica</option>
+                                    <option value="Profissionalizante">Profissionalizante</option>
+                                    <option value="Artístico">Artístico</option>
+                                    <option value="Esportivo">Esportivo</option>
+                                    <option value="Tecnologia">Tecnologia</option>
+                                    <option value="Idiomas">Idiomas</option>
+                                    <option value="Reforço Escolar">Reforço Escolar</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="carga_horaria" class="form-label">Carga Horária (horas)</label>
+                                <input type="number" class="form-control" id="carga_horaria" min="1">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="vagas" class="form-label">Número de Vagas</label>
+                                <input type="number" class="form-control" id="vagas" min="1">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="idade_minima" class="form-label">Idade Mínima</label>
+                                <input type="number" class="form-control" id="idade_minima" min="0">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="data_inicio" class="form-label">Data de Início</label>
+                                <input type="date" class="form-control" id="data_inicio">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="data_fim" class="form-label">Data de Fim</label>
+                                <input type="date" class="form-control" id="data_fim">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="horario" class="form-label">Horário</label>
+                                <input type="text" class="form-control" id="horario" placeholder="Ex: Segunda a Sexta, 14h às 16h">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status">
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                    <option value="planejado">Planejado</option>
+                                    <option value="concluido">Concluído</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="requisitos" class="form-label">Requisitos</label>
+                            <textarea class="form-control" id="requisitos" rows="2" placeholder="Requisitos necessários para participar do curso"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="salvarCurso()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Visualizar Curso -->
+    <div class="modal fade" id="modalVisualizarCurso" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes do Curso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detalheCurso">
+                    <!-- Conteúdo carregado via JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="../js/translations.js"></script>
+    <script src="../js/settings.js"></script>
+    <script src="../js/session-timeout.js"></script>
+    <script src="../js/cursos-mysql.js"></script>
+</body>
+</html>

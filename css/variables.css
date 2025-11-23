@@ -1,0 +1,84 @@
+/* Variáveis globais do sistema */
+:root {
+    /* Cores principais */
+    --primary-color: #9b59b6;
+    --secondary-color: #8e44ad;
+    --accent-color: #f1c40f;
+    --background-color: #ffffff;
+    --text-color: #2c3e50;
+    --text-muted: rgba(44, 62, 80, 0.6);
+    
+    /* Cores de estado */
+    --success-color: #2ecc71;
+    --warning-color: #f1c40f;
+    --error-color: #e74c3c;
+    --info-color: #3498db;
+    
+    /* Cores de interface */
+    --card-bg: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(155, 89, 182, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    
+    /* Formulários */
+    --input-bg: #ffffff;
+    --input-text: #2c3e50;
+    --input-border: #ddd;
+    --input-focus: #9b59b6;
+    
+    /* Botões */
+    --btn-primary-bg: var(--primary-color);
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #f8f9fa;
+    --btn-secondary-text: #2c3e50;
+    
+    /* Dropdown */
+    --dropdown-bg: #ffffff;
+    --dropdown-text: #2c3e50;
+    --dropdown-hover: var(--hover-bg);
+    
+    /* Links */
+    --link-color: var(--primary-color);
+    --link-hover: var(--secondary-color);
+    
+    /* Espaçamento */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    
+    /* Tipografia */
+    --font-family: 'Poppins', sans-serif;
+    --font-size-base: 16px;
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.125rem;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 600;
+    
+    /* Bordas */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+    --border-radius-full: 9999px;
+    
+    /* Animações */
+    --transition-speed: 0.2s;
+    --transition-timing: ease-in-out;
+    
+    /* Z-index */
+    --z-index-dropdown: 1000;
+    --z-index-sticky: 1020;
+    --z-index-fixed: 1030;
+    --z-index-modal-backdrop: 1040;
+    --z-index-modal: 1050;
+    --z-index-popover: 1060;
+    --z-index-tooltip: 1070;
+    
+    /* Acessibilidade */
+    --focus-ring-color: rgba(155, 89, 182, 0.5);
+    --focus-ring-width: 3px;
+    --focus-ring-offset: 2px;
+}

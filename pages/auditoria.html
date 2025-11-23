@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Auditoria - ONG Novo Amanhã</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+<!-- Google Fonts - Poppins -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="../css/config-styles.css" rel="stylesheet"/>
+<link href="../css/global.css" rel="stylesheet"/></head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+<div class="container-fluid px-4">
+<a class="navbar-brand" href="menu.html">
+<img alt="Logo ONG Novo Amanhã" height="40" src="assets/logo.png"/>
+</a>
+<button class="navbar-toggler" data-bs-target="#navbarContent" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarContent">
+<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+<!-- Configurações Dropdown -->
+<li class="nav-item dropdown">
+<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
+<i class="bi bi-gear-fill"></i>
+<span class="d-lg-none ms-2">Configurações</span>
+</a>
+<div class="dropdown-menu dropdown-menu-end config-menu">
+<!-- Aparência & Acessibilidade -->
+<div class="config-section">
+<div class="config-title">Aparência &amp; Acessibilidade</div>
+<div class="config-description">Personalize a aparência do sistema</div>
+<a class="dropdown-item config-toggle" href="#" id="toggleTheme">
+<i class="bi bi-circle-half"></i>
+                  Tema Claro/Escuro
+                </a>
+<a class="dropdown-item config-toggle" href="#" id="toggleReadingMode">
+<i class="bi bi-book"></i>
+                  Modo Leitura
+                </a>
+<a class="dropdown-item config-toggle" href="#" id="toggleColorblindMode">
+<i class="bi bi-eye"></i>
+                  Modo Daltônico
+                </a>
+<a class="dropdown-item config-toggle" href="#" id="toggleSimpleText">
+<i class="bi bi-text-left"></i>
+                  Texto Simplificado
+                </a>
+</div>
+<!-- Idioma & Inclusão -->
+<div class="config-section">
+<div class="config-title">Idioma &amp; Inclusão</div>
+<div class="config-description">Ajuste preferências de idioma e inclusão</div>
+<select class="config-select mb-2" id="languageSelect">
+<option value="pt-BR">Português (BR)</option>
+<option value="en">English</option>
+</select>
+<a class="dropdown-item config-toggle" href="#" id="togglePronouns">
+<i class="bi bi-person-badge"></i>
+                  Exibir Pronomes
+                </a>
+<a class="dropdown-item config-toggle" href="#" id="toggleTechVocab">
+<i class="bi bi-translate"></i>
+                  Vocabulário Técnico
+                </a>
+</div>
+<!-- Notificações -->
+<div class="config-section">
+<div class="config-title">Notificações</div>
+<div class="config-description">Configure alertas e lembretes</div>
+<a class="dropdown-item config-toggle" href="#" id="toggleSounds">
+<i class="bi bi-volume-up"></i>
+                  Sons
+                </a>
+<a class="dropdown-item config-toggle" href="#" id="togglePopups">
+<i class="bi bi-bell"></i>
+                  Pop-ups Visuais
+                </a>
+</div>
+<!-- Mascote Virtual -->
+<div class="config-section">
+<div class="config-title">Mascote Virtual</div>
+<div class="config-description">Configure o assistente virtual</div>
+<a class="dropdown-item config-toggle" href="#" id="toggleMascot">
+<i class="bi bi-emoji-smile"></i>
+                  Ativar Mascote
+                </a>
+<select aria-label="Nível de Interação do Mascote" class="config-select">
+<option value="polite">Discreto</option>
+<option value="normal">Normal</option>
+<option value="active">Ativo</option>
+</select>
+</div>
+</div>
+</li>
+<!-- Usuário Dropdown -->
+<li class="nav-item dropdown ms-3">
+<a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" href="#" role="button">
+<img alt="Avatar" class="rounded-circle me-2" height="32" src="assets/default-avatar.png" width="32"/>
+<span id="userName">Carregando...</span>
+</a>
+<ul class="dropdown-menu dropdown-menu-end">
+<li><a class="dropdown-item" href="perfil.html"><i class="bi bi-person me-2"></i>Meu Perfil</a></li>
+<li><hr class="dropdown-divider"/></li>
+<li><a class="dropdown-item" href="#" id="btnLogout"><i class="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<div class="container my-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
+<h2>
+<i class="bi bi-clock-history me-2"></i>
+        Histórico de Alterações
+      </h2>
+</div>
+<!-- Filtros -->
+<div class="card mb-4">
+<div class="card-body">
+<form class="row g-3" id="formFiltros">
+<div class="col-md-3">
+<label class="form-label">Data Inicial</label>
+<input class="form-control" id="dataInicial" type="date"/>
+</div>
+<div class="col-md-3">
+<label class="form-label">Data Final</label>
+<input class="form-control" id="dataFinal" type="date"/>
+</div>
+<div class="col-md-3">
+<label class="form-label">Usuário</label>
+<select class="form-select" id="usuario">
+<option value="">Todos</option>
+<!-- Preenchido dinamicamente -->
+</select>
+</div>
+<div class="col-md-3">
+<label class="form-label">Página/Seção</label>
+<select class="form-select" id="secao">
+<option value="">Todas</option>
+<option value="registro_presenca">Registro de Presença</option>
+<option value="cadastro_alunos">Cadastro de Alunos</option>
+<option value="dashboard">Dashboard</option>
+<option value="calendario">Calendário</option>
+<option value="documentos">Documentos</option>
+<option value="galeria">Galeria de Fotos</option>
+</select>
+</div>
+<div class="col-md-3">
+<label class="form-label">Tipo de Ação</label>
+<select class="form-select" id="tipoAcao">
+<option value="">Todas</option>
+<option value="criacao">Criação</option>
+<option value="edicao">Edição</option>
+<option value="exclusao">Exclusão</option>
+<option value="visualizacao">Visualização</option>
+<option value="clique">Clique de Botão</option>
+</select>
+</div>
+<div class="col-md-3">
+<label class="form-label">Oficina/Entidade</label>
+<select class="form-select" id="oficina">
+<option value="">Todas</option>
+<!-- Preenchido dinamicamente -->
+</select>
+</div>
+<div class="col-12">
+<button class="btn btn-primary" type="submit">
+<i class="bi bi-search me-2"></i>Filtrar
+            </button>
+<div class="btn-group ms-2">
+<button aria-expanded="false" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<i class="bi bi-download me-2"></i>Exportar
+              </button>
+<ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#" id="btnExportarCSV"><i class="bi bi-filetype-csv me-2"></i>CSV</a></li>
+<li><a class="dropdown-item" href="#" id="btnExportarJSON"><i class="bi bi-filetype-json me-2"></i>JSON</a></li>
+</ul>
+</div>
+</div>
+</form>
+</div>
+</div>
+<!-- Tabela de Logs -->
+<div class="table-responsive">
+<table class="table table-hover">
+<thead>
+<tr>
+<th>Data/Hora</th>
+<th>Usuário</th>
+<th>Página/Seção</th>
+<th>Ação</th>
+<th>Entidade Afetada</th>
+<th>Antes</th>
+<th>Depois</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody id="logsList">
+<!-- Preenchido dinamicamente -->
+</tbody>
+</table>
+<!-- Loading Spinner -->
+<div class="text-center py-4 d-none" id="loadingSpinner">
+<div class="spinner-border text-primary" role="status">
+<span class="visually-hidden">Carregando...</span>
+</div>
+</div>
+<!-- Sem Resultados -->
+<div class="text-center py-4 d-none" id="semResultados">
+<i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
+<p class="text-muted mt-2">Nenhum registro encontrado</p>
+</div>
+<!-- Paginação -->
+<div class="d-flex justify-content-between align-items-center mt-4">
+<div class="text-muted">
+<span id="totalRegistros">0</span> registros encontrados
+        </div>
+<nav aria-label="Navegação de páginas">
+<ul class="pagination mb-0">
+<li class="page-item" id="btnPaginaAnterior">
+<a aria-label="Anterior" class="page-link" href="#">
+<i class="bi bi-chevron-left"></i>
+</a>
+</li>
+<li class="page-item disabled">
+<span class="page-link" id="paginaAtual">Página 1</span>
+</li>
+<li class="page-item" id="btnProximaPagina">
+<a aria-label="Próxima" class="page-link" href="#">
+<i class="bi bi-chevron-right"></i>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<!-- Modal para visualização de dados -->
+<div class="modal fade" id="modalDados" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title">Detalhes da Alteração</h5>
+<button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body" id="modalDadosConteudo">
+<!-- Preenchido dinamicamente -->
+</div>
+</div>
+</div>
+</div>
+<!-- Scripts -->
+
+
+<script type="module">
+    // Função para verificar autenticação
+    document.addEventListener('DOMContentLoaded', () => {
+        // Verificar se o usuário está logado
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById('userName').textContent = user.email || 'Usuário';
+            carregarLogs();
+            carregarOficinas();
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+
+    // Logout
+    document.getElementById('btnLogout').addEventListener('click', () => {
+        localStorage.removeItem('user');
+        window.location.href = 'index.html';
+    });
+
+    // Carregar usuários para o filtro
+    async function carregarUsuarios() {
+        try {
+            // Carregar usuários do localStorage ou array vazio
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const select = document.getElementById('usuario');
+            
+            if (!select) return;
+            
+            // Limpar opções existentes
+            select.innerHTML = '<option value="">Todos os usuários</option>';
+            
+            // Usar um Set para armazenar emails únicos
+            const usuarios = new Set();
+            
+            // Adicionar usuários ao select
+            users.forEach(user => {
+                if (user.email) {
+                    usuarios.add(user.email);
+                }
+            });
+            
+            // Ordenar e adicionar ao select
+            Array.from(usuarios).sort().forEach(email => {
+                const option = document.createElement('option');
+                option.value = email;
+                option.textContent = email;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Erro ao carregar usuários:', error);
+        }
+    }
+
+    // Variáveis de paginação
+    let lastVisible = null;
+    let firstVisible = null;
+    let itemsPerPage = 20;
+    let currentPage = 1;
+
+    // Carregar logs
+    async function carregarLogs(filtros = {}, direction = 'next') {
+        try {
+            // Mostrar loading
+            document.getElementById('loadingSpinner').classList.remove('d-none');
+            document.getElementById('semResultados').classList.add('d-none');
+            
+            // Carregar logs do localStorage ou array vazio
+            let logs = JSON.parse(localStorage.getItem('logs')) || [];
+            
+            // Aplicar filtros
+            if (filtros.usuario) {
+                logs = logs.filter(log => log.usuarioId === filtros.usuario);
+            }
+            
+            if (filtros.acao) {
+                logs = logs.filter(log => log.acao === filtros.acao);
+            }
+            
+            if (filtros.dataInicio && filtros.dataFim) {
+                const inicio = new Date(filtros.dataInicio).getTime();
+                const fim = new Date(filtros.dataFim).getTime();
+                logs = logs.filter(log => {
+                    const logDate = new Date(log.data).getTime();
+                    return logDate >= inicio && logDate <= fim;
+                });
+            }
+            
+            // Ordenar por data (mais recente primeiro)
+            logs.sort((a, b) => new Date(b.data) - new Date(a.data));
+            
+            // Processar resultados
+            const logsTable = document.getElementById('logsTable')?.getElementsByTagName('tbody')[0];
+            if (!logsTable) return;
+            
+            logsTable.innerHTML = '';
+            
+            if (logs.length === 0) {
+                document.getElementById('semResultados').classList.remove('d-none');
+                return;
+            }
+            
+            logs.forEach(log => {
+                const row = logsTable.insertRow();
+                
+                const cellData = row.insertCell(0);
+                const cellUsuario = row.insertCell(1);
+                const cellAcao = row.insertCell(2);
+                const cellDetalhes = row.insertCell(3);
+                
+                cellData.textContent = new Date(log.data).toLocaleString();
+                cellUsuario.textContent = log.usuarioEmail || 'N/A';
+                cellAcao.textContent = log.acao || 'N/A';
+                
+                // Exibir detalhes formatados
+                if (typeof log.detalhes === 'object') {
+                    cellDetalhes.textContent = Object.entries(log.detalhes)
+                        .map(([key, value]) => `${key}: ${value}`)
+                        .join(', ');
+                } else {
+                    cellDetalhes.textContent = log.detalhes || '';
+                }
+            });
+            
+        } catch (error) {
+            console.error('Erro ao carregar logs:', error);
+            alert('Erro ao carregar logs. Consulte o console para mais detalhes.');
+        } finally {
+            document.getElementById('loadingSpinner')?.classList.add('d-none');
+        }
+    }
+
+    // Carregar oficinas para o filtro
+    async function carregarOficinas() {
+        try {
+            // Carregar oficinas do localStorage ou array vazio
+            const oficinas = JSON.parse(localStorage.getItem('oficinas')) || [];
+            const select = document.getElementById('oficina');
+            
+            if (!select) return;
+            
+            // Limpar opções existentes
+            select.innerHTML = '<option value="">Todas as oficinas</option>';
+            
+            // Adicionar opções
+            oficinas.forEach(oficina => {
+                const option = document.createElement('option');
+                option.value = oficina.id;
+                option.textContent = oficina.nome || `Oficina ${oficina.id}`;
+                select.appendChild(option);
+            });
+            
+        } catch (error) {
+            console.error('Erro ao carregar oficinas:', error);
+        }
+    }
+
+    // Formatar data
+    function formatarData(timestamp) {
+      const data = timestamp.toDate();
+      return data.toLocaleString('pt-BR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    }
+
+    // Formatar tipo de ação
+    function formatarTipoAcao(tipo) {
+      const tipos = {
+        'inclusao': 'Inclusão',
+        'remocao': 'Remoção',
+        'transferencia': 'Transferência'
+      };
+      return tipos[tipo] || tipo;
+    }
+
+    // Filtrar logs
+    document.getElementById('formFiltros').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const filtros = {
+        dataInicial: document.getElementById('dataInicial').value,
+        dataFinal: document.getElementById('dataFinal').value,
+        tipoAcao: document.getElementById('tipoAcao').value,
+        oficina: document.getElementById('oficina').value
+      };
+      carregarLogs(filtros);
+    });
+
+    // Função para mostrar dados em modal
+    window.mostrarDados = function(dadosJson) {
+      const dados = JSON.parse(decodeURIComponent(dadosJson));
+      const modal = new bootstrap.Modal(document.getElementById('modalDados'));
+      document.getElementById('modalDadosConteudo').innerHTML = `
+        <pre class="bg-light p-3 rounded">${JSON.stringify(dados, null, 2)}</pre>
+      `;
+      modal.show();
+    };
+
+    // Exportar logs em CSV
+    document.getElementById('btnExportarCSV').addEventListener('click', async () => {
+      try {
+        const logsRef = collection(db, 'logs');
+        const querySnapshot = await getDocs(query(logsRef, orderBy('dataHora', 'desc')));
+        
+        let csv = 'Data/Hora,Usuário,Página/Seção,Ação,Entidade Afetada,Motivo\n';
+        
+        querySnapshot.forEach((doc) => {
+          const log = doc.data();
+          csv += `${formatarData(log.dataHora)},${log.usuario},${log.secao},${formatarTipoAcao(log.tipoAcao)},${log.entidadeAfetada || ''},${log.motivo || ''}\n`;
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', `logs_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error('Erro ao exportar logs:', error);
+        alert('Erro ao exportar logs em CSV. Por favor, tente novamente.');
+      }
+    });
+
+    // Exportar logs em JSON
+    document.getElementById('btnExportarJSON').addEventListener('click', async () => {
+      try {
+        const logsRef = collection(db, 'logs');
+        const querySnapshot = await getDocs(query(logsRef, orderBy('dataHora', 'desc')));
+        
+        const logs = [];
+        querySnapshot.forEach((doc) => {
+          const log = doc.data();
+          logs.push({
+            dataHora: formatarData(log.dataHora),
+            usuario: log.usuario,
+            secao: log.secao,
+            tipoAcao: formatarTipoAcao(log.tipoAcao),
+            entidadeAfetada: log.entidadeAfetada,
+            dadosAnteriores: log.dadosAnteriores,
+            dadosPosteriores: log.dadosPosteriores,
+            motivo: log.motivo
+          });
+        });
+
+        const blob = new Blob([JSON.stringify(logs, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', `logs_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error('Erro ao exportar logs:', error);
+        alert('Erro ao exportar logs em JSON. Por favor, tente novamente.');
+      }
+    });
+  </script>
+<div style="margin-top: 1rem;">
+<a href="menu.html"><button>Voltar ao Início</button></a>
+</div>
+<script src="../utils/default.js"></script><script src="../data/simulacoes.js"></script></body>
+</html>

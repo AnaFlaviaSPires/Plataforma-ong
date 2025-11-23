@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<title>Ambiente de Testes</title>
+<link href="../css/global.css" rel="stylesheet"/>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9ff;
+}
+.navbar {
+  background-color: #b388eb;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+.navbar button {
+  background-color: white;
+  color: #663399;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.navbar button:hover {
+  background-color: #e4d4f9;
+}
+.card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 20px;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.card h2 {
+  color: #663399;
+}
+button {
+  background-color: #ffe066;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #ffd633;
+}
+input, select, textarea {
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+a {
+  color: #663399;
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+<div class="navbar">
+<div><strong>BETA</strong> - Testes</div>
+<div><a href="menu.html"><button>Ir para o Menu</button></a></div>
+</div>
+<div class="card" style="margin-top: 2rem;">
+<h2>Ambiente de Testes</h2>
+<p>Use os botões abaixo para verificar ou limpar dados simulados:</p>
+<button onclick="mostrarDados()">📊 Mostrar localStorage</button>
+<button onclick="limparTudo()">🗑️ Limpar localStorage</button>
+<pre id="output" style="margin-top: 1rem; background: #f0f0f0; padding: 1rem; overflow-x: auto;"></pre>
+</div>
+<div class="card">
+<h3>Navegação rápida</h3>
+<ul>
+<li><a href="alunos.html">🧑‍🎓 Alunos</a></li>
+<li><a href="chamada.html">📝 Chamada</a></li>
+<li><a href="dashboard.html">📈 Dashboard</a></li>
+<li><a href="doacoes.html">💰 Doações</a></li>
+<li><a href="documentos.html">📄 Documentos</a></li>
+<li><a href="galeria.html">🖼️ Galeria</a></li>
+<li><a href="calendario.html">📅 Calendário</a></li>
+</ul>
+</div>
+<script src="../utils/default.js"></script>
+<script>
+    function mostrarDados() {
+      const output = document.getElementById("output");
+      const chaves = Object.keys(localStorage);
+      const resultado = chaves.reduce((acc, chave) => {
+        try {
+          acc[chave] = JSON.parse(localStorage.getItem(chave));
+        } catch {
+          acc[chave] = localStorage.getItem(chave);
+        }
+        return acc;
+      }, {});
+      output.textContent = JSON.stringify(resultado, null, 2);
+    }
+
+    function limparTudo() {
+      if (confirm("Tem certeza que deseja limpar todos os dados locais?")) {
+        localStorage.clear();
+        alert("localStorage limpo!");
+        document.getElementById("output").textContent = "";
+      }
+    }
+  </script>
+</body>
+</html>

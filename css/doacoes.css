@@ -1,0 +1,79 @@
+/* Estilos específicos para a página de Doações */
+
+:root {
+  --doacoes-purple: #663399;
+  --doacoes-yellow: #FFE066;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.donation-stats .stat-card {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.donation-stats .stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(102, 51, 153, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--doacoes-purple);
+  font-size: 1.2rem;
+}
+
+.donation-stats .stat-value {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.donation-stats .stat-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.donation-filters .form-select,
+.donation-filters .form-control {
+  min-width: 160px;
+}
+
+.donation-table .table {
+  margin-bottom: 0;
+}
+
+.donation-table .table thead th {
+  border-bottom-width: 2px;
+}
+
+.btn-purple {
+  background-color: var(--doacoes-purple);
+  border-color: var(--doacoes-purple);
+  color: #fff;
+}
+
+.btn-purple:hover {
+  background-color: #552b80;
+  border-color: #552b80;
+}
+
+.modal-header.bg-purple {
+  background-color: var(--doacoes-purple) !important;
+}
+
+/* Mensagens toast simples para validações de formulário */
+.doacoes-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1055;
+  min-width: 260px;
+}

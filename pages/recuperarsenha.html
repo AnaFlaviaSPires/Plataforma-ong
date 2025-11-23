@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Recuperar Senha - ONG Novo Amanhã</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="../css/styles.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="login-title">BETA</h1>
+        <h1 class="login-title">Plataforma de Gestão</h1>
+        <p class="login-subtitle">Recuperação de Senha</p>
+        
+        <form id="formRecuperarSenha">
+            <div class="form-group">
+                <label class="form-label" for="email">
+                    <span class="sr-only">E-mail</span>
+                </label>
+                <div class="input-group">
+                    <input type="email" class="form-control" id="email" required 
+                           aria-label="E-mail" data-tooltip="Digite seu e-mail cadastrado"
+                           placeholder="Digite seu e-mail cadastrado">
+                    <i class="fas fa-envelope input-icon"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-entrar">
+                <span>Recuperar Senha</span>
+                <div class="spinner">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                </div>
+            </button>
+
+            <div class="links-container">
+                <a href="../index.html" data-tooltip="Voltar para o login">
+                    <i class="fas fa-arrow-left"></i> Voltar ao login
+                </a>
+            </div>
+
+            <div id="mensagem" class="mensagem" role="alert"></div>
+
+            <div class="copyright">
+                Desenvolvido por quem aprende, para quem transforma.
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('formRecuperarSenha');
+            const mensagemDiv = document.getElementById('mensagem');
+            const API_BASE_URL = 'http://localhost:3003/api';
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const button = this.querySelector('.btn-entrar');
+                const email = this.querySelector('input[type="email"]').value;
+                
+                button.classList.add('loading');
+                mensagemDiv.textContent = '';
+                mensagemDiv.className = 'mensagem';
+
+                try {
+                    const resp = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email })
+                    });
+
+                    const data = await resp.json();
+
+                    if (!resp.ok) {
+                        throw new Error(data.error || 'Erro ao solicitar recuperação de senha');
+                    }
+
+                    mensagemDiv.innerHTML = `
+                        <i class="fas fa-check-circle"></i> Se o e-mail estiver cadastrado, enviaremos instruções para recuperação de senha.<br>
+                        <small>Redirecionando em <span id="countdown">3</span> segundos...</small>
+                    `;
+                    mensagemDiv.className = 'mensagem sucesso';
+
+                    let count = 3;
+                    const countdownElement = document.getElementById('countdown');
+                    const countInterval = setInterval(() => {
+                        count--;
+                        if (count <= 0) {
+                            clearInterval(countInterval);
+                            window.location.href = '../index.html';
+                        } else {
+                            countdownElement.textContent = count;
+                        }
+                    }, 1000);
+
+                } catch (err) {
+                    mensagemDiv.textContent = err.message || 'Erro ao solicitar recuperação de senha.';
+                    mensagemDiv.className = 'mensagem erro';
+                } finally {
+                    button.classList.remove('loading');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

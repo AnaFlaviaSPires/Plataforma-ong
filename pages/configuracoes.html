@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title data-i18n="settings">Configurações - ONG Novo Amanhã</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="../css/config-styles.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <link href="../css/navbar.css" rel="stylesheet"/>
+    <link href="../css/themes.css" rel="stylesheet"/>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Translations -->
+    <script src="../js/translations.js"></script>
+    <!-- Settings Manager -->
+    <script src="../js/settings.js"></script>
+    <!-- Session Timeout -->
+    <script src="../js/session-timeout.js"></script>
+    <script>
+        // Função para encerrar sessão
+        function endSession(sessionId) {
+            // Redireciona para a página de login
+            window.location.href = '../index.html';
+        }
+
+        // Adicionar event listeners aos botões de encerrar sessão
+        document.addEventListener('DOMContentLoaded', () => {
+            const endSessionButtons = document.querySelectorAll('.btn-outline-danger');
+            endSessionButtons.forEach(button => {
+                button.addEventListener('click', () => endSession());
+            });
+        });
+    </script>
+    <style>
+        .settings-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .settings-nav {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .nav-pills .nav-link {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-pills .nav-link i {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        .nav-pills .nav-link:hover {
+            background: rgba(155, 89, 182, 0.05);
+        }
+
+        .nav-pills .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-pills .nav-link.active i {
+            color: white;
+        }
+
+        .settings-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-section {
+            margin-bottom: 2rem;
+        }
+
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .settings-section h3 i {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .session-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .session-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .session-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .shortcut-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .shortcut-item:hover {
+            background: rgba(155, 89, 182, 0.05);
+        }
+
+        .shortcut-keys {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .key {
+            background: #f0f0f0;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-family: monospace;
+            border: 1px solid #ddd;
+        }
+
+        .accessibility-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .font-size-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .font-size-control button {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .font-size-control button:hover {
+            background: rgba(155, 89, 182, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .activity-log {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .log-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .log-login { background: #28a745; }
+        .log-edit { background: #007bff; }
+        .log-security { background: #dc3545; }
+
+        .log-time {
+            font-size: 0.85rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow" style="background-color: var(--primary-color);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="menu.html">
+                <i class="bi bi-arrow-left"></i>
+                <span data-i18n="back_to_menu">Voltar ao Menu</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container mt-5 pt-4">
+        <div class="settings-container">
+            <div class="settings-nav">
+                <ul class="nav nav-pills" id="settingsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#general" type="button">
+                            <i class="bi bi-gear"></i>
+                            Geral
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#security" type="button">
+                            <i class="bi bi-shield-lock"></i>
+                            Segurança
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#accessibility" type="button">
+                            <i class="bi bi-eye"></i>
+                            Acessibilidade
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#shortcuts" type="button">
+                            <i class="bi bi-keyboard"></i>
+                            Atalhos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#activity" type="button">
+                            <i class="bi bi-clock-history"></i>
+                            Atividades
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="settings-content tab-content">
+                <!-- Configurações Gerais -->
+                <div class="tab-pane fade show active" id="general">
+                    <div class="settings-section">
+                        <h3><i class="bi bi-globe"></i> <span data-i18n="system_language">Idioma do Sistema</span></h3>
+                        <select class="form-select" name="language">
+                            <option value="pt-BR" selected>🇧🇷 Português (BR)</option>
+                            <option value="es">🇲🇽 Español</option>
+                            <option value="en">🇺🇸 English</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Segurança -->
+                <div class="tab-pane fade" id="security">
+                    <div class="settings-section">
+                        <h3><i class="bi bi-shield-lock"></i> <span data-i18n="active_sessions">Sessões Ativas</span></h3>
+                        <div class="session-card">
+                            <div class="session-info">
+                                <div class="session-icon">
+                                    <i class="bi bi-laptop"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1"><span data-i18n="windows_chrome">Windows - Chrome</span></h6>
+                                    <small class="text-muted"><span data-i18n="sao_paulo_brazil_now">São Paulo, Brasil • Agora</span></small>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-danger btn-sm" data-i18n="end_session">Encerrar</button>
+                        </div>
+                        <div class="session-card">
+                            <div class="session-info">
+                                <div class="session-icon">
+                                    <i class="bi bi-phone"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1"><span data-i18n="iphone_safari">iPhone - Safari</span></h6>
+                                    <small class="text-muted"><span data-i18n="sao_paulo_brazil_2_hours_ago">São Paulo, Brasil • 2 horas atrás</span></small>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-danger btn-sm" data-i18n="end_session">Encerrar</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="bi bi-shield-check"></i> <span data-i18n="account_security">Segurança da Conta</span></h3>
+                        <div class="mb-4">
+                            <button class="btn btn-primary" data-i18n="change_password">Alterar Senha</button>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="twoFactorAuth"/>
+                                <label class="form-check-label" for="twoFactorAuth">
+                                    <span data-i18n="two_factor_authentication">Autenticação em Duas Etapas (2FA)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acessibilidade -->
+                <div class="tab-pane fade" id="accessibility">
+                    <div class="settings-section">
+                        <h3><i class="bi bi-eye"></i> <span data-i18n="display_settings">Visualização</span></h3>
+                        <div class="accessibility-controls">
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="darkMode"/>
+                                <label class="form-check-label" for="darkMode">
+                                    <span data-i18n="dark_mode">Modo Escuro</span>
+                                </label>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="highContrast"/>
+                                <label class="form-check-label" for="highContrast">
+                                    <span data-i18n="high_contrast">Alto Contraste</span>
+                                </label>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="dyslexicMode"/>
+                                <label class="form-check-label" for="dyslexicMode">
+                                    <span data-i18n="dyslexic_mode">Modo Disléxico</span>
+                                </label>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="screenReader"/>
+                                <label class="form-check-label" for="screenReader">
+                                    <span data-i18n="screen_reader">Leitor de Tela</span>
+                                </label>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="focusMode"/>
+                                <label class="form-check-label" for="focusMode">
+                                    <span data-i18n="focus_mode">Modo Foco</span>
+                                </label>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="reducedMotion"/>
+                                <label class="form-check-label" for="reducedMotion">
+                                    <span data-i18n="reduce_animations">Reduzir Animações</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="bi bi-textarea-t"></i> <span data-i18n="text_and_elements">Texto e Elementos</span></h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label"><span data-i18n="font_size">Tamanho da Fonte</span></label>
+                                <div class="font-size-control">
+                                    <button type="button" id="decreaseFont">A-</button>
+                                    <input type="range" class="form-range" min="80" max="120" value="100" id="fontSizeRange"/>
+                                    <button type="button" id="increaseFont">A+</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><span data-i18n="line_height">Espaçamento entre Linhas</span></label>
+                                <input type="range" class="form-range" min="1" max="2" step="0.1" value="1.5" id="lineHeightRange"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><span data-i18n="cursor_size">Tamanho do Cursor</span></label>
+                                <input type="range" class="form-range" min="1" max="2" step="0.1" value="1" id="cursorSizeRange"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><span data-i18n="clickable_size">Tamanho dos Elementos Clicáveis</span></label>
+                                <input type="range" class="form-range" min="1" max="1.5" step="0.1" value="1" id="clickableSizeRange"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atalhos -->
+                <div class="tab-pane fade" id="shortcuts">
+                    <div class="settings-section">
+                        <h3><i class="bi bi-keyboard"></i> <span data-i18n="keyboard_shortcuts">Atalhos do Teclado</span></h3>
+                        <div class="shortcut-item">
+                            <span data-i18n="open_menu">Abrir Menu</span>
+                            <div class="shortcut-keys">
+                                <span class="key">Alt</span>
+                                <span>+</span>
+                                <span class="key">M</span>
+                            </div>
+                        </div>
+                        <div class="shortcut-item">
+                            <span>Pesquisar</span>
+                            <div class="shortcut-keys">
+                                <span class="key">Ctrl</span>
+                                <span>+</span>
+                                <span class="key">K</span>
+                            </div>
+                        </div>
+                        <div class="shortcut-item">
+                            <span>Salvar</span>
+                            <div class="shortcut-keys">
+                                <span class="key">Ctrl</span>
+                                <span>+</span>
+                                <span class="key">S</span>
+                            </div>
+                        </div>
+                        <div class="shortcut-item">
+                            <span>Ajuda</span>
+                            <div class="shortcut-keys">
+                                <span class="key">F1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log de Atividades -->
+                <div class="tab-pane fade" id="activity">
+                    <div class="settings-section">
+                        <h3><i class="bi bi-clock-history"></i> Histórico de Atividades</h3>
+                        <div class="activity-log">
+                            <div class="log-item">
+                                <div class="log-icon log-login">
+                                    <i class="bi bi-box-arrow-in-right"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div>Login realizado com sucesso</div>
+                                    <div class="log-time">Hoje, 14:30</div>
+                                </div>
+                            </div>
+                            <div class="log-item">
+                                <div class="log-icon log-edit">
+                                    <i class="bi bi-pencil"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div>Perfil atualizado</div>
+                                    <div class="log-time">Hoje, 13:15</div>
+                                </div>
+                            </div>
+                            <div class="log-item">
+                                <div class="log-icon log-security">
+                                    <i class="bi bi-shield"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div>Senha alterada</div>
+                                    <div class="log-time">Ontem, 18:45</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Controles de fonte
+        const fontSizeRange = document.getElementById('fontSizeRange');
+        const decreaseFont = document.getElementById('decreaseFont');
+        const increaseFont = document.getElementById('increaseFont');
+
+        function updateFontSize(value) {
+            document.documentElement.style.fontSize = `${value}%`;
+        }
+
+        fontSizeRange.addEventListener('input', (e) => updateFontSize(e.target.value));
+        decreaseFont.addEventListener('click', () => {
+            fontSizeRange.value = Math.max(80, parseInt(fontSizeRange.value) - 10);
+            updateFontSize(fontSizeRange.value);
+        });
+        increaseFont.addEventListener('click', () => {
+            fontSizeRange.value = Math.min(120, parseInt(fontSizeRange.value) + 10);
+            updateFontSize(fontSizeRange.value);
+        });
+
+        // Espaçamento entre linhas
+        document.getElementById('lineHeightRange').addEventListener('input', (e) => {
+            document.body.style.lineHeight = e.target.value;
+        });
+
+        // Tamanho do cursor
+        document.getElementById('cursorSizeRange').addEventListener('input', (e) => {
+            document.documentElement.style.setProperty('--cursor-size', `${e.target.value}`);
+        });
+
+        // Tamanho dos elementos clicáveis
+        document.getElementById('clickableSizeRange').addEventListener('input', (e) => {
+            document.documentElement.style.setProperty('--clickable-size', `${e.target.value}`);
+        });
+
+        // Modo escuro
+        document.getElementById('darkMode').addEventListener('change', (e) => {
+            document.body.classList.toggle('dark-mode', e.target.checked);
+        });
+
+        // Alto contraste
+        document.getElementById('highContrast').addEventListener('change', (e) => {
+            document.body.classList.toggle('high-contrast', e.target.checked);
+        });
+
+        // Modo disléxico
+        document.getElementById('dyslexicMode').addEventListener('change', (e) => {
+            document.body.classList.toggle('dyslexic-mode', e.target.checked);
+        });
+
+        // Reduzir animações
+        document.getElementById('reducedMotion').addEventListener('change', (e) => {
+            document.body.classList.toggle('reduced-motion', e.target.checked);
+        });
+
+        // Modo foco
+        document.getElementById('focusMode').addEventListener('change', (e) => {
+            document.body.classList.toggle('focus-mode', e.target.checked);
+        });
+    </script>
+</body>
+</html>

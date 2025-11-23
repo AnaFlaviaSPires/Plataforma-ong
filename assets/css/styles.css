@@ -1,0 +1,277 @@
+/* 
+ * Estilos Gerais 
+ */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --text-color: #333;
+    --light-gray: #f5f5f5;
+    --border-color: #ddd;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: #f9f9f9;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* 
+ * Container de Login 
+ */
+.login-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.login-title {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.login-subtitle {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+/* 
+ * Formulário 
+ */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    color: #999;
+}
+
+/* 
+ * Botão de Mostrar/Esconder Senha 
+ */
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.password-toggle:hover {
+    color: var(--primary-color);
+}
+
+/* 
+ * Botão de Entrar 
+ */
+.btn-entrar {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-entrar:hover {
+    background-color: #2980b9;
+}
+
+.btn-entrar:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+/* 
+ * Spinner de Carregamento 
+ */
+.spinner {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.btn-entrar.loading span {
+    visibility: hidden;
+}
+
+.btn-entrar.loading .spinner {
+    display: block;
+}
+
+/* 
+ * Links de Ajuda 
+ */
+.links-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.primeiro-acesso,
+.esqueci-senha {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.primeiro-acesso:hover,
+.esqueci-senha:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* 
+ * Mensagens de Feedback 
+ */
+.mensagem {
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    display: none;
+    font-size: 0.9rem;
+}
+
+.mensagem.erro {
+    background-color: #fde8e8;
+    color: var(--error-color);
+    border: 1px solid #f5c6cb;
+}
+
+.mensagem.sucesso {
+    background-color: #e8f8f0;
+    color: var(--success-color);
+    border: 1px solid #c3e6cb;
+}
+
+/* 
+ * Rodapé 
+ */
+.copyright {
+    margin-top: 2rem;
+    color: #999;
+    font-size: 0.85rem;
+}
+
+/* 
+ * Tooltips 
+ */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 10;
+    margin-bottom: 5px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+}
+
+/* 
+ * Responsividade 
+ */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 1.5rem;
+    }
+    
+    .login-title {
+        font-size: 1.5rem;
+    }
+    
+    .links-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .primeiro-acesso,
+    .esqueci-senha {
+        display: block;
+        text-align: center;
+    }
+}

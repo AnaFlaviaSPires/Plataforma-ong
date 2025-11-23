@@ -1,0 +1,149 @@
+/* Grid de cards */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+    margin-top: 2rem;
+}
+
+/* Card base */
+.menu-card {
+    position: relative;
+    background: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid rgba(155, 89, 182, 0.1);
+    box-shadow: 0 4px 15px rgba(186, 104, 200, 0.15),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.menu-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(186, 104, 200, 0.25),
+                0 4px 6px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+}
+
+.menu-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* Ícone do card */
+.menu-card i {
+    font-size: 2.5rem;
+    margin-bottom: 1.2rem;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 1rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(186, 104, 200, 0.1), rgba(186, 104, 200, 0.05));
+}
+
+.menu-card:hover i {
+    transform: scale(1.1) rotate(-5deg);
+    color: #8e44ad;
+    background: linear-gradient(135deg, rgba(186, 104, 200, 0.2), rgba(186, 104, 200, 0.1));
+    box-shadow: 0 4px 10px rgba(186, 104, 200, 0.2);
+}
+
+/* Título do card */
+.menu-card h4 {
+    color: var(--text-color);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    position: relative;
+    display: inline-block;
+}
+
+.menu-card h4::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 50%;
+    background: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.menu-card:hover h4::after {
+    width: 100%;
+    left: 0;
+}
+
+/* Descrição do card */
+.menu-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 200px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+}
+
+/* Indicador de hover */
+.menu-card::after {
+    content: '';
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 30px;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--primary-color);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.menu-card:hover::after {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+}
+
+/* Responsividade */
+.menu-card:hover p {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .cards-container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .menu-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .menu-card i {
+        font-size: 2rem;
+    }
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Frontend - Alunos</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Teste de Conexão Frontend - API Alunos</h1>
+    <div id="resultado"></div>
+    <button onclick="testarAPI()">Testar API</button>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3003/api';
+        
+        async function testarAPI() {
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = '<p>Testando conexão...</p>';
+            
+            try {
+                console.log('Fazendo requisição para:', `${API_BASE_URL}/alunos`);
+                
+                const response = await fetch(`${API_BASE_URL}/alunos`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                console.log('Status da resposta:', response.status);
+                console.log('Response OK:', response.ok);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Dados recebidos:', data);
+                
+                const alunos = data.alunos || data;
+                console.log('Array de alunos:', alunos);
+                
+                resultado.innerHTML = `
+                    <h3>✅ Sucesso!</h3>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Total de alunos:</strong> ${alunos.length}</p>
+                    <h4>Dados recebidos:</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                resultado.innerHTML = `
+                    <h3>❌ Erro!</h3>
+                    <p><strong>Mensagem:</strong> ${error.message}</p>
+                    <p><strong>Tipo:</strong> ${error.name}</p>
+                    <p>Verifique o console para mais detalhes.</p>
+                `;
+            }
+        }
+        
+        // Testar automaticamente ao carregar
+        window.addEventListener('load', () => {
+            console.log('Página carregada, testando API...');
+            testarAPI();
+        });
+    </script>
+</body>
+</html>

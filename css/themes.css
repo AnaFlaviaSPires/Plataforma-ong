@@ -1,0 +1,302 @@
+/* Temas */
+:root {
+    /* Tema Clássico (Padrão) */
+    --primary-color: #9b59b6;
+    --secondary-color: #8e44ad;
+    --accent-color: #f1c40f;
+    --background-color: #ffffff;
+    --text-color: #2c3e50;
+    --card-bg: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(155, 89, 182, 0.1);
+
+    /* Configurações de Acessibilidade */
+    --font-size: 100%;
+    --line-height: 1.5;
+    --cursor-size: 1;
+    --clickable-size: 1;
+    --animation-speed: 0.2s;
+}
+
+/* Tema Escuro */
+body.dark-mode {
+    --primary-color: #b388ff;
+    --secondary-color: #9575cd;
+    --accent-color: #ffd740;
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --card-bg: #1e1e1e;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --hover-bg: rgba(179, 136, 255, 0.15);
+    --input-bg: #2d2d2d;
+    --input-text: #ffffff;
+    --input-border: rgba(255, 255, 255, 0.2);
+    --btn-primary-bg: #b388ff;
+    --btn-primary-text: #000000;
+    --btn-secondary-bg: #2d2d2d;
+    --btn-secondary-text: #ffffff;
+    --dropdown-bg: #1e1e1e;
+    --dropdown-text: #ffffff;
+    --dropdown-hover: rgba(179, 136, 255, 0.15);
+    --link-color: #b388ff;
+    --link-hover: #9575cd;
+    --success-color: #69f0ae;
+    --warning-color: #ffd740;
+    --error-color: #ff5252;
+}
+
+/* Alto Contraste */
+body.high-contrast {
+    --primary-color: #ffff00;
+    --secondary-color: #ffffff;
+    --accent-color: #ffff00;
+    --background-color: #000000;
+    --text-color: #ffffff;
+    --card-bg: #000000;
+    --border-color: #ffff00;
+    --hover-bg: #333333;
+    --input-bg: #000000;
+    --input-text: #ffffff;
+    --input-border: #ffff00;
+    --btn-primary-bg: #ffff00;
+    --btn-primary-text: #000000;
+    --btn-secondary-bg: #000000;
+    --btn-secondary-text: #ffff00;
+    --dropdown-bg: #000000;
+    --dropdown-text: #ffffff;
+    --dropdown-hover: #333333;
+    --link-color: #ffff00;
+    --link-hover: #ffffff;
+    --success-color: #00ff00;
+    --warning-color: #ffff00;
+    --error-color: #ff0000;
+}
+
+/* Tema Calmo */
+body.theme-calm {
+    --primary-color: #a78bfa;
+    --secondary-color: #8b5cf6;
+    --accent-color: #fbbf24;
+    --background-color: #f8fafc;
+    --text-color: #334155;
+    --card-bg: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.05);
+    --hover-bg: rgba(167, 139, 250, 0.1);
+}
+
+/* Tema Vibrante */
+body.theme-vibrant {
+    --primary-color: #9333ea;
+    --secondary-color: #7c3aed;
+    --accent-color: #fbbf24;
+    --background-color: #ffffff;
+    --text-color: #1e293b;
+    --card-bg: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(147, 51, 234, 0.1);
+}
+
+/* Modo Disléxico */
+body.dyslexic-mode {
+    font-family: "OpenDyslexic", "Comic Sans MS", sans-serif;
+    letter-spacing: 0.05em;
+    word-spacing: 0.1em;
+}
+
+/* Modo Foco */
+body.focus-mode .navbar,
+body.focus-mode .footer,
+body.focus-mode .sidebar {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+body.focus-mode .navbar:hover,
+body.focus-mode .footer:hover,
+body.focus-mode .sidebar:hover {
+    opacity: 1;
+}
+
+/* Reduzir Animações */
+body.reduced-motion * {
+    animation: none !important;
+    transition: none !important;
+}
+
+/* Aplicar configurações de acessibilidade */
+body {
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+}
+
+/* Tamanho do cursor */
+body {
+    cursor: default;
+    cursor: scale(var(--cursor-size));
+}
+
+/* Tamanho dos elementos clicáveis */
+button, 
+.btn,
+.nav-link,
+.dropdown-item,
+input[type="checkbox"],
+input[type="radio"] {
+    transform: scale(var(--clickable-size));
+    transform-origin: left center;
+}
+
+/* Realce de foco personalizado */
+:focus {
+    outline: 3px solid var(--primary-color) !important;
+    outline-offset: 2px !important;
+}
+
+/* Aplicar cores do tema */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Cards e Dropdowns */
+.card,
+.dropdown-menu,
+.modal-content {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Botões */
+.btn-primary {
+    background-color: var(--btn-primary-bg);
+    border-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: var(--btn-primary-text);
+}
+
+.btn-secondary {
+    background-color: var(--btn-secondary-bg);
+    border-color: var(--border-color);
+    color: var(--btn-secondary-text);
+}
+
+.btn-secondary:hover {
+    background-color: var(--hover-bg);
+    border-color: var(--border-color);
+}
+
+/* Inputs */
+input,
+select,
+textarea,
+.form-control {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--input-text) !important;
+}
+
+input::placeholder,
+select::placeholder,
+textarea::placeholder,
+.form-control::placeholder {
+    color: var(--input-text) !important;
+    opacity: 0.7;
+}
+
+/* Links */
+a {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--link-hover);
+}
+
+/* Dropdown */
+.dropdown-menu {
+    background-color: var(--dropdown-bg);
+    border-color: var(--border-color);
+}
+
+.dropdown-item {
+    color: var(--dropdown-text);
+}
+
+.dropdown-item:hover {
+    background-color: var(--dropdown-hover);
+    color: var(--dropdown-text);
+}
+
+/* Status Colors */
+.text-success {
+    color: var(--success-color) !important;
+}
+
+.text-warning {
+    color: var(--warning-color) !important;
+}
+
+.text-danger {
+    color: var(--error-color) !important;
+}
+
+/* Nav Pills */
+.nav-pills .nav-link.active {
+    background-color: var(--primary-color);
+    color: var(--btn-primary-text);
+}
+
+.nav-pills .nav-link {
+    color: var(--text-color);
+}
+
+/* Tables */
+.table {
+    color: var(--text-color);
+}
+
+.table-hover tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Modal */
+.modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--border-color);
+}
+
+/* List Groups */
+.list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Borders */
+.border {
+    border-color: var(--border-color) !important;
+}
+
+/* Text muted */
+.text-muted {
+    color: rgba(var(--text-color), 0.6) !important;
+}
+
+/* Transições suaves */
+body:not(.reduced-motion) * {
+    transition: background-color var(--animation-speed),
+                color var(--animation-speed),
+                border-color var(--animation-speed),
+                transform var(--animation-speed);
+}
