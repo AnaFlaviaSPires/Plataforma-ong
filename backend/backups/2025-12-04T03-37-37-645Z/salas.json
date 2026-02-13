@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1,
+    "nome": "Futebol Sub-15",
+    "professor": "Ana Clara",
+    "professor_id": null,
+    "dia_semana": "Segunda-feira",
+    "horario": "14:00:00",
+    "ativo": 1,
+    "usuario_id": 1,
+    "created_at": "2025-12-04T01:09:10.000Z",
+    "updated_at": "2025-12-04T01:09:10.000Z",
+    "deleted_at": null
+  },
+  {
+    "id": 2,
+    "nome": "Dança Contemporânea",
+    "professor": "Carlos Eduardo",
+    "professor_id": null,
+    "dia_semana": "Terça-feira",
+    "horario": "09:00:00",
+    "ativo": 1,
+    "usuario_id": 1,
+    "created_at": "2025-12-04T01:09:13.000Z",
+    "updated_at": "2025-12-04T01:09:13.000Z",
+    "deleted_at": null
+  },
+  {
+    "id": 3,
+    "nome": "Informática Básica",
+    "professor": "Beatriz Lima",
+    "professor_id": null,
+    "dia_semana": "Quarta-feira",
+    "horario": "10:30:00",
+    "ativo": 1,
+    "usuario_id": 1,
+    "created_at": "2025-12-04T01:09:16.000Z",
+    "updated_at": "2025-12-04T01:09:16.000Z",
+    "deleted_at": null
+  },
+  {
+    "id": 4,
+    "nome": "Música e Violão",
+    "professor": "João Pedro",
+    "professor_id": null,
+    "dia_semana": "Quinta-feira",
+    "horario": "15:00:00",
+    "ativo": 1,
+    "usuario_id": 1,
+    "created_at": "2025-12-04T01:09:20.000Z",
+    "updated_at": "2025-12-04T01:09:20.000Z",
+    "deleted_at": null
+  },
+  {
+    "id": 5,
+    "nome": "Teatro e Expressão",
+    "professor": "Ana Clara",
+    "professor_id": null,
+    "dia_semana": "Sexta-feira",
+    "horario": "16:00:00",
+    "ativo": 1,
+    "usuario_id": 1,
+    "created_at": "2025-12-04T01:09:23.000Z",
+    "updated_at": "2025-12-04T01:09:23.000Z",
+    "deleted_at": null
+  }
+]

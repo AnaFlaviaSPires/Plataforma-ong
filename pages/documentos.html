@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentos - ONG Novo Amanhã</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/themes.css" rel="stylesheet">
+    <link href="../css/variables.css" rel="stylesheet">
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/navbar.css" rel="stylesheet">
+    <link href="../css/cards.css" rel="stylesheet">
+    </head>
+<body>
+    <!-- Navbar será injetada via JS -->
+    <div id="navbar-placeholder"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden" data-i18n="loading">Carregando...</span>
+        </div>
+    </div>
+
+    <div class="container py-5 mt-5">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1" data-i18n="documents_title">Documentos e Arquivos</h2>
+                <p class="text-muted" data-i18n="documents_management">Gerencie os documentos da instituição</p>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoDocumentoModal">
+                <i class="bi bi-plus-lg me-2"></i><span data-i18n="upload_document">Novo Documento</span>
+            </button>
+        </div>
+
+        <!-- Filtros e Busca -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-3">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-search text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0 bg-light" id="searchInput" placeholder="Buscar por título..." data-i18n="search">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select bg-light" id="filterCategoria">
+                            <option value="todas">Todas as Categorias</option>
+                            <option value="atas">Atas e Reuniões</option>
+                            <option value="financeiro">Financeiro</option>
+                            <option value="pedagogico">Pedagógico</option>
+                            <option value="legal">Legal/Jurídico</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Documentos -->
+        <div class="row" id="documentsList">
+            <!-- Cards serão inseridos aqui via JS -->
+        </div>
+    </div>
+
+    <!-- Modal Novo Documento -->
+    <div class="modal fade" id="novoDocumentoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" data-i18n="upload_document">Adicionar Novo Documento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNovoDocumento">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label" data-i18n="document_name">Título do Documento</label>
+                                <input type="text" class="form-control" id="docTitulo" required placeholder="Ex: Ata de Reunião Dezembro">
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Categoria</label>
+                                <select class="form-select" id="docCategoria" required>
+                                    <option value="outros">Outros</option>
+                                    <option value="atas">Atas e Reuniões</option>
+                                    <option value="financeiro">Financeiro</option>
+                                    <option value="pedagogico">Pedagógico</option>
+                                    <option value="legal">Legal/Jurídico</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Data de Referência</label>
+                                <input type="date" class="form-control" id="docData" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label text-primary fw-bold">Link do Arquivo (Google Drive/Dropbox)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-link-45deg"></i></span>
+                                    <input type="url" class="form-control" id="docUrl" required placeholder="https://drive.google.com/file/d/..." 
+                                           title="Cole aqui o link de compartilhamento do arquivo">
+                                </div>
+                                <div class="form-text">Faça o upload no seu Drive e cole o link de compartilhamento aqui.</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Descrição / Observações</label>
+                                <textarea class="form-control" id="docDescricao" rows="3" placeholder="Detalhes adicionais sobre o documento..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                            <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary px-4">Salvar Documento</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/translations.js"></script>
+    <script src="../js/settings.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/documentos.js"></script>
+</body>
+</html>

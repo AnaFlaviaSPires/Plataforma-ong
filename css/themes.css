@@ -1,0 +1,262 @@
+/* Temas - Fonte da Verdade */
+:root {
+  /* Identidade Visual Original (Roxo) - Modo Claro */
+  --bg: #f6f6f6;
+  --text: #1f2328;       /* Cinza quase preto, melhor que preto puro */
+  --surface: #ffffff;
+  --primary: #9b59b6;
+  --accent: #8e44ad;
+  --border: #d0d7de;
+}
+
+:root.dark {
+  /* Modo Escuro Profissional (High Comfort) */
+  
+  /* Fundo: Cinza-azulado profundo (evita o contraste agressivo do preto puro) */
+  --bg: #0d1117;
+  
+  /* Texto: Cinza-gelo suave (reduz fadiga visual) */
+  --text: #c9d1d9;
+  
+  /* Superfície: Ligeiramente mais clara para hierarquia visual */
+  --surface: #161b22;
+  
+  /* Primária: Lilás luminoso e suave (visível sem ofuscar) */
+  --primary: #bc8cff;
+  
+  /* Acento: Roxo médio para estados secundários */
+  --accent: #8957e5;
+  
+  /* Bordas: Sutis para separar elementos sem poluir */
+  --border: #30363d;
+}
+
+/* Aplicação do Modo Escuro via classe no body */
+body.dark-mode {
+  background-color: #0d1117 !important;
+  color: #c9d1d9 !important;
+}
+
+body.dark-mode .card,
+body.dark-mode .modal-content {
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+  color: #c9d1d9 !important;
+}
+
+body.dark-mode .navbar {
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+}
+
+body.dark-mode .btn-primary {
+  background-color: #bc8cff !important;
+  border-color: #bc8cff !important;
+  color: #0d1117 !important;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select,
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #0d1117 !important;
+  color: #c9d1d9 !important;
+  border-color: #30363d !important;
+}
+
+body.dark-mode .table {
+  color: #c9d1d9 !important;
+}
+
+body.dark-mode .table thead {
+  background-color: #161b22 !important;
+}
+
+body.dark-mode .list-group-item {
+  background-color: #161b22 !important;
+  color: #c9d1d9 !important;
+  border-color: #30363d !important;
+}
+
+body.dark-mode .btn-outline-secondary {
+  color: #c9d1d9 !important;
+  border-color: #30363d !important;
+}
+
+body.dark-mode .btn-outline-secondary:hover {
+  background-color: #30363d !important;
+  color: #c9d1d9 !important;
+}
+
+body.dark-mode .badge {
+  background-color: #30363d !important;
+  color: #c9d1d9 !important;
+}
+
+body.dark-mode .text-muted {
+  color: #8b949e !important;
+}
+
+body.dark-mode .border,
+body.dark-mode .border-top,
+body.dark-mode .border-bottom {
+  border-color: #30363d !important;
+}
+
+/* Modo Daltônico - Ajustes de Contraste e Cores Seguras */
+/* Não usar filtros que afetam o layout, apenas cores específicas */
+
+body.colorblind-mode .btn-primary,
+body.colorblind-mode .badge-primary,
+body.colorblind-mode .bg-primary {
+  background-color: #0066cc !important;
+  border-color: #0066cc !important;
+}
+
+body.colorblind-mode .btn-success,
+body.colorblind-mode .badge-success,
+body.colorblind-mode .bg-success {
+  background-color: #007700 !important;
+  border-color: #007700 !important;
+}
+
+body.colorblind-mode .btn-danger,
+body.colorblind-mode .badge-danger,
+body.colorblind-mode .bg-danger {
+  background-color: #d32f2f !important;
+  border-color: #d32f2f !important;
+}
+
+body.colorblind-mode .btn-warning,
+body.colorblind-mode .badge-warning,
+body.colorblind-mode .bg-warning {
+  background-color: #ff9800 !important;
+  border-color: #ff9800 !important;
+  color: #000 !important;
+}
+
+body.colorblind-mode .btn-info,
+body.colorblind-mode .badge-info,
+body.colorblind-mode .bg-info {
+  background-color: #0288d1 !important;
+  border-color: #0288d1 !important;
+}
+
+/* Aumentar contraste de textos no modo daltônico */
+body.colorblind-mode {
+  font-weight: 500;
+}
+
+body.colorblind-mode .text-primary {
+  color: #0066cc !important;
+}
+
+body.colorblind-mode .text-success {
+  color: #007700 !important;
+}
+
+body.colorblind-mode .text-danger {
+  color: #d32f2f !important;
+}
+
+body.colorblind-mode .text-warning {
+  color: #ff9800 !important;
+}
+
+/* Tamanhos de Fonte */
+body.font-small {
+  font-size: 0.875rem;
+}
+
+body.font-small h1 { font-size: 1.75rem; }
+body.font-small h2 { font-size: 1.5rem; }
+body.font-small h3 { font-size: 1.25rem; }
+body.font-small h4 { font-size: 1.1rem; }
+body.font-small h5 { font-size: 1rem; }
+
+body.font-medium {
+  font-size: 1rem;
+}
+
+body.font-large {
+  font-size: 1.125rem;
+}
+
+body.font-large h1 { font-size: 2.5rem; }
+body.font-large h2 { font-size: 2rem; }
+body.font-large h3 { font-size: 1.75rem; }
+body.font-large h4 { font-size: 1.5rem; }
+body.font-large h5 { font-size: 1.25rem; }
+
+/* Alto Contraste */
+body.high-contrast {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+body.high-contrast .card,
+body.high-contrast .modal-content,
+body.high-contrast .settings-content,
+body.high-contrast .settings-nav {
+  background-color: #000 !important;
+  border: 2px solid #fff !important;
+  color: #fff !important;
+}
+
+body.high-contrast .navbar {
+  background-color: #000 !important;
+  border-bottom: 2px solid #fff !important;
+}
+
+body.high-contrast .btn {
+  border-width: 2px !important;
+}
+
+body.high-contrast .btn-primary,
+body.high-contrast .btn-purple {
+  background-color: #0000ff !important;
+  border-color: #fff !important;
+  color: #fff !important;
+}
+
+body.high-contrast .form-control,
+body.high-contrast .form-select {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+body.high-contrast a {
+  color: #ffff00 !important;
+}
+
+body.high-contrast .text-muted {
+  color: #ccc !important;
+}
+
+/* Reduzir Animações */
+body.reduced-motion *,
+body.reduced-motion *::before,
+body.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Modo Disléxico - Fonte mais legível */
+body.dyslexic-mode {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif !important;
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
+  line-height: 1.8;
+}
+
+body.dyslexic-mode p,
+body.dyslexic-mode span,
+body.dyslexic-mode label,
+body.dyslexic-mode td,
+body.dyslexic-mode th {
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
+}

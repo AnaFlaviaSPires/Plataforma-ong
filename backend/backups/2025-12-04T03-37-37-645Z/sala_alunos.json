@@ -1,0 +1,602 @@
+[
+  {
+    "id": 1,
+    "sala_id": 1,
+    "aluno_id": 15,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:10.000Z",
+    "updated_at": "2025-12-04T01:09:10.000Z"
+  },
+  {
+    "id": 2,
+    "sala_id": 1,
+    "aluno_id": 1,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:10.000Z",
+    "updated_at": "2025-12-04T01:09:10.000Z"
+  },
+  {
+    "id": 3,
+    "sala_id": 1,
+    "aluno_id": 30,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:11.000Z",
+    "updated_at": "2025-12-04T01:09:11.000Z"
+  },
+  {
+    "id": 4,
+    "sala_id": 1,
+    "aluno_id": 2,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:11.000Z",
+    "updated_at": "2025-12-04T01:09:11.000Z"
+  },
+  {
+    "id": 5,
+    "sala_id": 1,
+    "aluno_id": 10,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:11.000Z",
+    "updated_at": "2025-12-04T01:09:11.000Z"
+  },
+  {
+    "id": 6,
+    "sala_id": 1,
+    "aluno_id": 3,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:11.000Z",
+    "updated_at": "2025-12-04T01:09:11.000Z"
+  },
+  {
+    "id": 7,
+    "sala_id": 1,
+    "aluno_id": 14,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:11.000Z",
+    "updated_at": "2025-12-04T01:09:11.000Z"
+  },
+  {
+    "id": 8,
+    "sala_id": 1,
+    "aluno_id": 28,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:12.000Z",
+    "updated_at": "2025-12-04T01:09:12.000Z"
+  },
+  {
+    "id": 9,
+    "sala_id": 1,
+    "aluno_id": 7,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:12.000Z",
+    "updated_at": "2025-12-04T01:09:12.000Z"
+  },
+  {
+    "id": 10,
+    "sala_id": 1,
+    "aluno_id": 4,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:12.000Z",
+    "updated_at": "2025-12-04T01:09:12.000Z"
+  },
+  {
+    "id": 11,
+    "sala_id": 1,
+    "aluno_id": 13,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:12.000Z",
+    "updated_at": "2025-12-04T01:09:12.000Z"
+  },
+  {
+    "id": 12,
+    "sala_id": 1,
+    "aluno_id": 19,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:12.000Z",
+    "updated_at": "2025-12-04T01:09:12.000Z"
+  },
+  {
+    "id": 13,
+    "sala_id": 1,
+    "aluno_id": 24,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:13.000Z",
+    "updated_at": "2025-12-04T01:09:13.000Z"
+  },
+  {
+    "id": 14,
+    "sala_id": 1,
+    "aluno_id": 22,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:13.000Z",
+    "updated_at": "2025-12-04T01:09:13.000Z"
+  },
+  {
+    "id": 15,
+    "sala_id": 1,
+    "aluno_id": 27,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:13.000Z",
+    "updated_at": "2025-12-04T01:09:13.000Z"
+  },
+  {
+    "id": 16,
+    "sala_id": 2,
+    "aluno_id": 6,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:13.000Z",
+    "updated_at": "2025-12-04T01:09:13.000Z"
+  },
+  {
+    "id": 17,
+    "sala_id": 2,
+    "aluno_id": 11,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:14.000Z",
+    "updated_at": "2025-12-04T01:09:14.000Z"
+  },
+  {
+    "id": 18,
+    "sala_id": 2,
+    "aluno_id": 17,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:14.000Z",
+    "updated_at": "2025-12-04T01:09:14.000Z"
+  },
+  {
+    "id": 19,
+    "sala_id": 2,
+    "aluno_id": 18,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:14.000Z",
+    "updated_at": "2025-12-04T01:09:14.000Z"
+  },
+  {
+    "id": 20,
+    "sala_id": 2,
+    "aluno_id": 12,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:14.000Z",
+    "updated_at": "2025-12-04T01:09:14.000Z"
+  },
+  {
+    "id": 21,
+    "sala_id": 2,
+    "aluno_id": 25,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:14.000Z",
+    "updated_at": "2025-12-04T01:09:14.000Z"
+  },
+  {
+    "id": 22,
+    "sala_id": 2,
+    "aluno_id": 28,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:15.000Z",
+    "updated_at": "2025-12-04T01:09:15.000Z"
+  },
+  {
+    "id": 23,
+    "sala_id": 2,
+    "aluno_id": 2,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:15.000Z",
+    "updated_at": "2025-12-04T01:09:15.000Z"
+  },
+  {
+    "id": 24,
+    "sala_id": 2,
+    "aluno_id": 20,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:15.000Z",
+    "updated_at": "2025-12-04T01:09:15.000Z"
+  },
+  {
+    "id": 25,
+    "sala_id": 2,
+    "aluno_id": 30,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:15.000Z",
+    "updated_at": "2025-12-04T01:09:15.000Z"
+  },
+  {
+    "id": 26,
+    "sala_id": 2,
+    "aluno_id": 1,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:15.000Z",
+    "updated_at": "2025-12-04T01:09:15.000Z"
+  },
+  {
+    "id": 27,
+    "sala_id": 2,
+    "aluno_id": 24,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:16.000Z",
+    "updated_at": "2025-12-04T01:09:16.000Z"
+  },
+  {
+    "id": 28,
+    "sala_id": 2,
+    "aluno_id": 23,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:16.000Z",
+    "updated_at": "2025-12-04T01:09:16.000Z"
+  },
+  {
+    "id": 29,
+    "sala_id": 2,
+    "aluno_id": 3,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:16.000Z",
+    "updated_at": "2025-12-04T01:09:16.000Z"
+  },
+  {
+    "id": 30,
+    "sala_id": 2,
+    "aluno_id": 13,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:16.000Z",
+    "updated_at": "2025-12-04T01:09:16.000Z"
+  },
+  {
+    "id": 31,
+    "sala_id": 3,
+    "aluno_id": 22,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:17.000Z",
+    "updated_at": "2025-12-04T01:09:17.000Z"
+  },
+  {
+    "id": 32,
+    "sala_id": 3,
+    "aluno_id": 5,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:17.000Z",
+    "updated_at": "2025-12-04T01:09:17.000Z"
+  },
+  {
+    "id": 33,
+    "sala_id": 3,
+    "aluno_id": 10,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:17.000Z",
+    "updated_at": "2025-12-04T01:09:17.000Z"
+  },
+  {
+    "id": 34,
+    "sala_id": 3,
+    "aluno_id": 19,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:17.000Z",
+    "updated_at": "2025-12-04T01:09:17.000Z"
+  },
+  {
+    "id": 35,
+    "sala_id": 3,
+    "aluno_id": 20,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:17.000Z",
+    "updated_at": "2025-12-04T01:09:17.000Z"
+  },
+  {
+    "id": 36,
+    "sala_id": 3,
+    "aluno_id": 18,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:18.000Z",
+    "updated_at": "2025-12-04T01:09:18.000Z"
+  },
+  {
+    "id": 37,
+    "sala_id": 3,
+    "aluno_id": 24,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:18.000Z",
+    "updated_at": "2025-12-04T01:09:18.000Z"
+  },
+  {
+    "id": 38,
+    "sala_id": 3,
+    "aluno_id": 7,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:18.000Z",
+    "updated_at": "2025-12-04T01:09:18.000Z"
+  },
+  {
+    "id": 39,
+    "sala_id": 3,
+    "aluno_id": 13,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:18.000Z",
+    "updated_at": "2025-12-04T01:09:18.000Z"
+  },
+  {
+    "id": 40,
+    "sala_id": 3,
+    "aluno_id": 30,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:18.000Z",
+    "updated_at": "2025-12-04T01:09:18.000Z"
+  },
+  {
+    "id": 41,
+    "sala_id": 3,
+    "aluno_id": 14,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:19.000Z",
+    "updated_at": "2025-12-04T01:09:19.000Z"
+  },
+  {
+    "id": 42,
+    "sala_id": 3,
+    "aluno_id": 2,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:19.000Z",
+    "updated_at": "2025-12-04T01:09:19.000Z"
+  },
+  {
+    "id": 43,
+    "sala_id": 3,
+    "aluno_id": 21,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:19.000Z",
+    "updated_at": "2025-12-04T01:09:19.000Z"
+  },
+  {
+    "id": 44,
+    "sala_id": 3,
+    "aluno_id": 1,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:19.000Z",
+    "updated_at": "2025-12-04T01:09:19.000Z"
+  },
+  {
+    "id": 45,
+    "sala_id": 3,
+    "aluno_id": 29,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:19.000Z",
+    "updated_at": "2025-12-04T01:09:19.000Z"
+  },
+  {
+    "id": 46,
+    "sala_id": 4,
+    "aluno_id": 4,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:20.000Z",
+    "updated_at": "2025-12-04T01:09:20.000Z"
+  },
+  {
+    "id": 47,
+    "sala_id": 4,
+    "aluno_id": 11,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:20.000Z",
+    "updated_at": "2025-12-04T01:09:20.000Z"
+  },
+  {
+    "id": 48,
+    "sala_id": 4,
+    "aluno_id": 15,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:20.000Z",
+    "updated_at": "2025-12-04T01:09:20.000Z"
+  },
+  {
+    "id": 49,
+    "sala_id": 4,
+    "aluno_id": 18,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:20.000Z",
+    "updated_at": "2025-12-04T01:09:20.000Z"
+  },
+  {
+    "id": 50,
+    "sala_id": 4,
+    "aluno_id": 24,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:21.000Z",
+    "updated_at": "2025-12-04T01:09:21.000Z"
+  },
+  {
+    "id": 51,
+    "sala_id": 4,
+    "aluno_id": 13,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:21.000Z",
+    "updated_at": "2025-12-04T01:09:21.000Z"
+  },
+  {
+    "id": 52,
+    "sala_id": 4,
+    "aluno_id": 8,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:21.000Z",
+    "updated_at": "2025-12-04T01:09:21.000Z"
+  },
+  {
+    "id": 53,
+    "sala_id": 4,
+    "aluno_id": 26,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:21.000Z",
+    "updated_at": "2025-12-04T01:09:21.000Z"
+  },
+  {
+    "id": 54,
+    "sala_id": 4,
+    "aluno_id": 3,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:21.000Z",
+    "updated_at": "2025-12-04T01:09:21.000Z"
+  },
+  {
+    "id": 55,
+    "sala_id": 4,
+    "aluno_id": 29,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:22.000Z",
+    "updated_at": "2025-12-04T01:09:22.000Z"
+  },
+  {
+    "id": 56,
+    "sala_id": 4,
+    "aluno_id": 6,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:22.000Z",
+    "updated_at": "2025-12-04T01:09:22.000Z"
+  },
+  {
+    "id": 57,
+    "sala_id": 4,
+    "aluno_id": 17,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:22.000Z",
+    "updated_at": "2025-12-04T01:09:22.000Z"
+  },
+  {
+    "id": 58,
+    "sala_id": 4,
+    "aluno_id": 20,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:22.000Z",
+    "updated_at": "2025-12-04T01:09:22.000Z"
+  },
+  {
+    "id": 59,
+    "sala_id": 4,
+    "aluno_id": 25,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:22.000Z",
+    "updated_at": "2025-12-04T01:09:22.000Z"
+  },
+  {
+    "id": 60,
+    "sala_id": 4,
+    "aluno_id": 21,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:23.000Z",
+    "updated_at": "2025-12-04T01:09:23.000Z"
+  },
+  {
+    "id": 61,
+    "sala_id": 5,
+    "aluno_id": 11,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:23.000Z",
+    "updated_at": "2025-12-04T01:09:23.000Z"
+  },
+  {
+    "id": 62,
+    "sala_id": 5,
+    "aluno_id": 1,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:23.000Z",
+    "updated_at": "2025-12-04T01:09:23.000Z"
+  },
+  {
+    "id": 63,
+    "sala_id": 5,
+    "aluno_id": 22,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:24.000Z",
+    "updated_at": "2025-12-04T01:09:24.000Z"
+  },
+  {
+    "id": 64,
+    "sala_id": 5,
+    "aluno_id": 26,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:24.000Z",
+    "updated_at": "2025-12-04T01:09:24.000Z"
+  },
+  {
+    "id": 65,
+    "sala_id": 5,
+    "aluno_id": 2,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:24.000Z",
+    "updated_at": "2025-12-04T01:09:24.000Z"
+  },
+  {
+    "id": 66,
+    "sala_id": 5,
+    "aluno_id": 19,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:24.000Z",
+    "updated_at": "2025-12-04T01:09:24.000Z"
+  },
+  {
+    "id": 67,
+    "sala_id": 5,
+    "aluno_id": 18,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:24.000Z",
+    "updated_at": "2025-12-04T01:09:24.000Z"
+  },
+  {
+    "id": 68,
+    "sala_id": 5,
+    "aluno_id": 29,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:25.000Z",
+    "updated_at": "2025-12-04T01:09:25.000Z"
+  },
+  {
+    "id": 69,
+    "sala_id": 5,
+    "aluno_id": 16,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:25.000Z",
+    "updated_at": "2025-12-04T01:09:25.000Z"
+  },
+  {
+    "id": 70,
+    "sala_id": 5,
+    "aluno_id": 8,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:25.000Z",
+    "updated_at": "2025-12-04T01:09:25.000Z"
+  },
+  {
+    "id": 71,
+    "sala_id": 5,
+    "aluno_id": 7,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:25.000Z",
+    "updated_at": "2025-12-04T01:09:25.000Z"
+  },
+  {
+    "id": 72,
+    "sala_id": 5,
+    "aluno_id": 10,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:26.000Z",
+    "updated_at": "2025-12-04T01:09:26.000Z"
+  },
+  {
+    "id": 73,
+    "sala_id": 5,
+    "aluno_id": 17,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:26.000Z",
+    "updated_at": "2025-12-04T01:09:26.000Z"
+  },
+  {
+    "id": 74,
+    "sala_id": 5,
+    "aluno_id": 6,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:26.000Z",
+    "updated_at": "2025-12-04T01:09:26.000Z"
+  },
+  {
+    "id": 75,
+    "sala_id": 5,
+    "aluno_id": 3,
+    "ativo": 1,
+    "created_at": "2025-12-04T01:09:26.000Z",
+    "updated_at": "2025-12-04T01:09:26.000Z"
+  }
+]

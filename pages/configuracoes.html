@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title data-i18n="settings">Configurações - ONG Novo Amanhã</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="../css/themes.css" rel="stylesheet"/>
+    <link href="../css/variables.css" rel="stylesheet"/>
+    <link href="../css/config-styles.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <link href="../css/navbar.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/translations.js"></script>
+    <script src="../js/navbar.js"></script>
+    <style>
+        .settings-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .settings-nav {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        .nav-pills .nav-link {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .nav-pills .nav-link i {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        .nav-pills .nav-link:hover {
+            background: rgba(155, 89, 182, 0.05);
+        }
+        .nav-pills .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        .nav-pills .nav-link.active i {
+            color: white;
+        }
+        .settings-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .settings-section {
+            margin-bottom: 2rem;
+        }
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+        .settings-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .session-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .session-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .session-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .btn-purple {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        .btn-purple:hover {
+            background-color: #8e44ad;
+            border-color: #8e44ad;
+            color: white;
+        }
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1060;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container mt-5 pt-4">
+        <div class="settings-container">
+            <h2 class="mb-4"><i class="bi bi-gear me-2"></i> <span data-i18n="settings">Configurações</span></h2>
+            
+            <div class="settings-nav">
+                <ul class="nav nav-pills" id="settingsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#general" type="button">
+                            <i class="bi bi-globe"></i>
+                            <span data-i18n="general">Geral</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#security" type="button">
+                            <i class="bi bi-shield-lock"></i>
+                            <span data-i18n="security">Segurança</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#accessibility" type="button">
+                            <i class="bi bi-eye"></i>
+                            <span data-i18n="accessibility">Acessibilidade</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="settings-content tab-content">
+                <!-- Configurações Gerais -->
+                <div class="tab-pane fade show active" id="general">
+                    <div class="settings-section">
+                        <h3><i class="bi bi-globe"></i> <span data-i18n="system_language">Idioma do Sistema</span></h3>
+                        <p class="text-muted mb-3" data-i18n="choose_language_desc">Escolha o idioma que será usado em todo o sistema.</p>
+                        <select class="form-select" id="languageSelect" style="max-width: 300px;">
+                            <option value="pt-BR">🇧🇷 Português (Brasil)</option>
+                            <option value="en">🇺🇸 English</option>
+                            <option value="es">🇪🇸 Español</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Segurança -->
+                <div class="tab-pane fade" id="security">
+                    <div class="settings-section">
+                        <h3><i class="bi bi-key"></i> <span data-i18n="change_password">Alterar Senha</span></h3>
+                        <p class="text-muted mb-3" data-i18n="change_password_desc">Altere sua senha de acesso ao sistema.</p>
+                        <form id="changePasswordForm">
+                            <div class="row g-3" style="max-width: 500px;">
+                                <div class="col-12">
+                                    <label class="form-label" data-i18n="current_password">Senha Atual</label>
+                                    <input type="password" class="form-control" id="currentPassword" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label" data-i18n="new_password">Nova Senha</label>
+                                    <input type="password" class="form-control" id="newPassword" required minlength="6">
+                                    <small class="text-muted" data-i18n="min_6_chars">Mínimo de 6 caracteres</small>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label" data-i18n="confirm_password">Confirmar Nova Senha</label>
+                                    <input type="password" class="form-control" id="confirmPassword" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-purple">
+                                        <i class="bi bi-check-lg me-1"></i> <span data-i18n="change_password">Alterar Senha</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="settings-section">
+                        <h3><i class="bi bi-laptop"></i> <span data-i18n="active_sessions">Sessões Ativas</span></h3>
+                        <p class="text-muted mb-3" data-i18n="manage_devices_desc">Gerencie os dispositivos conectados à sua conta.</p>
+                        <div id="sessionsContainer">
+                            <div class="session-card">
+                                <div class="session-info">
+                                    <div class="session-icon">
+                                        <i class="bi bi-laptop"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1" data-i18n="this_device">Este dispositivo</h6>
+                                        <small class="text-muted" data-i18n="current_session">Sessão atual</small>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success" data-i18n="active">Ativo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acessibilidade -->
+                <div class="tab-pane fade" id="accessibility">
+                    <div class="settings-section">
+                        <h3><i class="bi bi-eye"></i> <span data-i18n="display_settings">Visualização</span></h3>
+                        <p class="text-muted mb-3" data-i18n="customize_appearance">Personalize a aparência do sistema.</p>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                                    <label class="form-check-label" for="darkModeToggle">
+                                        <i class="bi bi-moon me-2"></i>
+                                        <span data-i18n="dark_mode">Modo Escuro</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="highContrastToggle">
+                                    <label class="form-check-label" for="highContrastToggle">
+                                        <i class="bi bi-circle-half me-2"></i>
+                                        <span data-i18n="high_contrast">Alto Contraste</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="reducedMotionToggle">
+                                    <label class="form-check-label" for="reducedMotionToggle">
+                                        <i class="bi bi-pause-circle me-2"></i>
+                                        <span data-i18n="reduce_animations">Reduzir Animações</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="dyslexicModeToggle">
+                                    <label class="form-check-label" for="dyslexicModeToggle">
+                                        <i class="bi bi-fonts me-2"></i>
+                                        <span data-i18n="dyslexic_mode">Modo Disléxico</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="settings-section">
+                        <h3><i class="bi bi-textarea-t"></i> <span data-i18n="font_size">Tamanho da Fonte</span></h3>
+                        <p class="text-muted mb-3" data-i18n="adjust_font_desc">Ajuste o tamanho do texto em todo o sistema.</p>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary font-size-btn" data-size="small" data-i18n="small">Pequena</button>
+                            <button type="button" class="btn btn-outline-secondary font-size-btn active" data-size="medium" data-i18n="medium">Padrão</button>
+                            <button type="button" class="btn btn-outline-secondary font-size-btn" data-size="large" data-i18n="large">Grande</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3003/api';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
+            setupEventListeners();
+        });
+
+        function loadSettings() {
+            // Carregar idioma
+            const savedLang = localStorage.getItem('language') || 'pt-BR';
+            document.getElementById('languageSelect').value = savedLang;
+
+            // Carregar modo escuro
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            document.getElementById('darkModeToggle').checked = darkMode;
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                document.documentElement.classList.add('dark-mode');
+            }
+
+            // Carregar alto contraste
+            const highContrast = localStorage.getItem('highContrast') === 'true';
+            document.getElementById('highContrastToggle').checked = highContrast;
+            if (highContrast) {
+                document.body.classList.add('high-contrast');
+            }
+
+            // Carregar reduzir animações
+            const reducedMotion = localStorage.getItem('reducedMotion') === 'true';
+            document.getElementById('reducedMotionToggle').checked = reducedMotion;
+            if (reducedMotion) {
+                document.body.classList.add('reduced-motion');
+            }
+
+            // Carregar modo disléxico
+            const dyslexicMode = localStorage.getItem('dyslexicMode') === 'true';
+            document.getElementById('dyslexicModeToggle').checked = dyslexicMode;
+            if (dyslexicMode) {
+                document.body.classList.add('dyslexic-mode');
+            }
+
+            // Carregar tamanho da fonte
+            const fontSize = localStorage.getItem('fontSize') || 'medium';
+            document.querySelectorAll('.font-size-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.size === fontSize);
+            });
+            document.body.classList.add(`font-${fontSize}`);
+
+            // Aplicar traduções
+            applyTranslations(savedLang);
+        }
+
+        function setupEventListeners() {
+            // Idioma
+            document.getElementById('languageSelect').addEventListener('change', (e) => {
+                const lang = e.target.value;
+                localStorage.setItem('language', lang);
+                applyTranslations(lang);
+                showToast('Idioma alterado com sucesso!', 'success');
+            });
+
+            // Modo escuro
+            document.getElementById('darkModeToggle').addEventListener('change', (e) => {
+                const isDark = e.target.checked;
+                localStorage.setItem('darkMode', isDark);
+                document.body.classList.toggle('dark-mode', isDark);
+                document.documentElement.classList.toggle('dark-mode', isDark);
+                showToast(isDark ? 'Modo escuro ativado' : 'Modo escuro desativado', 'success');
+            });
+
+            // Alto contraste
+            document.getElementById('highContrastToggle').addEventListener('change', (e) => {
+                const isHighContrast = e.target.checked;
+                localStorage.setItem('highContrast', isHighContrast);
+                document.body.classList.toggle('high-contrast', isHighContrast);
+                showToast(isHighContrast ? 'Alto contraste ativado' : 'Alto contraste desativado', 'success');
+            });
+
+            // Reduzir animações
+            document.getElementById('reducedMotionToggle').addEventListener('change', (e) => {
+                const isReduced = e.target.checked;
+                localStorage.setItem('reducedMotion', isReduced);
+                document.body.classList.toggle('reduced-motion', isReduced);
+                showToast(isReduced ? 'Animações reduzidas' : 'Animações normais', 'success');
+            });
+
+            // Modo disléxico
+            document.getElementById('dyslexicModeToggle').addEventListener('change', (e) => {
+                const isDyslexic = e.target.checked;
+                localStorage.setItem('dyslexicMode', isDyslexic);
+                document.body.classList.toggle('dyslexic-mode', isDyslexic);
+                showToast(isDyslexic ? 'Modo disléxico ativado' : 'Modo disléxico desativado', 'success');
+            });
+
+            // Tamanho da fonte
+            document.querySelectorAll('.font-size-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const size = btn.dataset.size;
+                    localStorage.setItem('fontSize', size);
+                    
+                    document.querySelectorAll('.font-size-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    document.body.classList.remove('font-small', 'font-medium', 'font-large');
+                    document.body.classList.add(`font-${size}`);
+                    
+                    showToast('Tamanho da fonte alterado', 'success');
+                });
+            });
+
+            // Formulário de troca de senha
+            document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (newPassword !== confirmPassword) {
+                    showToast('As senhas não coincidem', 'danger');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showToast('A nova senha deve ter no mínimo 6 caracteres', 'danger');
+                    return;
+                }
+
+                try {
+                    const token = localStorage.getItem('authToken');
+                    const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            senhaAtual: currentPassword,
+                            novaSenha: newPassword
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        showToast('Senha alterada com sucesso!', 'success');
+                        document.getElementById('changePasswordForm').reset();
+                    } else {
+                        showToast(data.error || 'Erro ao alterar senha', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    showToast('Erro de conexão', 'danger');
+                }
+            });
+        }
+
+        function applyTranslations(lang) {
+            if (typeof translations === 'undefined') return;
+            
+            const langData = translations[lang] || translations['pt-BR'];
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (langData[key]) {
+                    el.textContent = langData[key];
+                }
+            });
+
+            // Atualizar atributo lang do HTML
+            document.documentElement.lang = lang;
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toastId = 'toast-' + Date.now();
+            
+            const toastHtml = `
+                <div id="${toastId}" class="toast align-items-center text-white bg-${type} border-0" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', toastHtml);
+            
+            const toastEl = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            toast.show();
+            
+            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+        }
+    </script>
+</body>
+</html>

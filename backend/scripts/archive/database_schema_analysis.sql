@@ -1,0 +1,46 @@
+-- Análise completa do esquema do banco
+USE plataforma_ong;
+
+-- 1. Estrutura das tabelas principais
+SELECT 
+    TABLE_NAME,
+    COLUMN_NAME,
+    DATA_TYPE,
+    IS_NULLABLE,
+    COLUMN_KEY,
+    COLUMN_DEFAULT,
+    EXTRA
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_SCHEMA = 'plataforma_ong' 
+    AND TABLE_NAME IN ('usuarios', 'alunos', 'salas', 'doacoes', 'professores', 'cursos')
+ORDER BY TABLE_NAME, ORDINAL_POSITION;
+
+-- 2. Chaves estrangeiras
+SELECT 
+    TABLE_NAME,
+    COLUMN_NAME,
+    CONSTRAINT_NAME,
+    REFERENCED_TABLE_NAME,
+    REFERENCED_COLUMN_NAME
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+WHERE TABLE_SCHEMA = 'plataforma_ong' 
+    AND REFERENCED_TABLE_NAME IS NOT NULL
+ORDER BY TABLE_NAME;
+
+-- 3. Índices
+SELECT 
+    TABLE_NAME,
+    INDEX_NAME,
+    COLUMN_NAME,
+    NON_UNIQUE
+FROM INFORMATION_SCHEMA.STATISTICS 
+WHERE TABLE_SCHEMA = 'plataforma_ong'
+ORDER BY TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX;
+
+-- 4. Contagem de registros por tabela
+SELECT 
+    TABLE_NAME,
+    TABLE_ROWS
+FROM INFORMATION_SCHEMA.TABLES 
+WHERE TABLE_SCHEMA = 'plataforma_ong'
+ORDER BY TABLE_NAME;

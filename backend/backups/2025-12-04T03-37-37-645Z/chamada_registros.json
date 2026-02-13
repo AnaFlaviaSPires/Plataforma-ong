@@ -1,0 +1,2702 @@
+[
+  {
+    "id": 1,
+    "chamada_id": 1,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:27.000Z",
+    "updated_at": "2025-12-04T01:09:27.000Z"
+  },
+  {
+    "id": 2,
+    "chamada_id": 1,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:28.000Z",
+    "updated_at": "2025-12-04T01:09:28.000Z"
+  },
+  {
+    "id": 3,
+    "chamada_id": 1,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:28.000Z",
+    "updated_at": "2025-12-04T01:09:28.000Z"
+  },
+  {
+    "id": 4,
+    "chamada_id": 1,
+    "aluno_id": 4,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:28.000Z",
+    "updated_at": "2025-12-04T01:09:28.000Z"
+  },
+  {
+    "id": 5,
+    "chamada_id": 1,
+    "aluno_id": 7,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:28.000Z",
+    "updated_at": "2025-12-04T01:09:28.000Z"
+  },
+  {
+    "id": 6,
+    "chamada_id": 1,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:28.000Z",
+    "updated_at": "2025-12-04T01:09:28.000Z"
+  },
+  {
+    "id": 7,
+    "chamada_id": 1,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:29.000Z",
+    "updated_at": "2025-12-04T01:09:29.000Z"
+  },
+  {
+    "id": 8,
+    "chamada_id": 1,
+    "aluno_id": 14,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:29.000Z",
+    "updated_at": "2025-12-04T01:09:29.000Z"
+  },
+  {
+    "id": 9,
+    "chamada_id": 1,
+    "aluno_id": 15,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:29.000Z",
+    "updated_at": "2025-12-04T01:09:29.000Z"
+  },
+  {
+    "id": 10,
+    "chamada_id": 1,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:29.000Z",
+    "updated_at": "2025-12-04T01:09:29.000Z"
+  },
+  {
+    "id": 11,
+    "chamada_id": 1,
+    "aluno_id": 22,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:29.000Z",
+    "updated_at": "2025-12-04T01:09:29.000Z"
+  },
+  {
+    "id": 12,
+    "chamada_id": 1,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:30.000Z",
+    "updated_at": "2025-12-04T01:09:30.000Z"
+  },
+  {
+    "id": 13,
+    "chamada_id": 1,
+    "aluno_id": 27,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:30.000Z",
+    "updated_at": "2025-12-04T01:09:30.000Z"
+  },
+  {
+    "id": 14,
+    "chamada_id": 1,
+    "aluno_id": 28,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:30.000Z",
+    "updated_at": "2025-12-04T01:09:30.000Z"
+  },
+  {
+    "id": 15,
+    "chamada_id": 1,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:30.000Z",
+    "updated_at": "2025-12-04T01:09:30.000Z"
+  },
+  {
+    "id": 16,
+    "chamada_id": 2,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:31.000Z",
+    "updated_at": "2025-12-04T01:09:31.000Z"
+  },
+  {
+    "id": 17,
+    "chamada_id": 2,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:31.000Z",
+    "updated_at": "2025-12-04T01:09:31.000Z"
+  },
+  {
+    "id": 18,
+    "chamada_id": 2,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:31.000Z",
+    "updated_at": "2025-12-04T01:09:31.000Z"
+  },
+  {
+    "id": 19,
+    "chamada_id": 2,
+    "aluno_id": 4,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:31.000Z",
+    "updated_at": "2025-12-04T01:09:31.000Z"
+  },
+  {
+    "id": 20,
+    "chamada_id": 2,
+    "aluno_id": 7,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:31.000Z",
+    "updated_at": "2025-12-04T01:09:31.000Z"
+  },
+  {
+    "id": 21,
+    "chamada_id": 2,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:32.000Z",
+    "updated_at": "2025-12-04T01:09:32.000Z"
+  },
+  {
+    "id": 22,
+    "chamada_id": 2,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:32.000Z",
+    "updated_at": "2025-12-04T01:09:32.000Z"
+  },
+  {
+    "id": 23,
+    "chamada_id": 2,
+    "aluno_id": 14,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:32.000Z",
+    "updated_at": "2025-12-04T01:09:32.000Z"
+  },
+  {
+    "id": 24,
+    "chamada_id": 2,
+    "aluno_id": 15,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:32.000Z",
+    "updated_at": "2025-12-04T01:09:32.000Z"
+  },
+  {
+    "id": 25,
+    "chamada_id": 2,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:32.000Z",
+    "updated_at": "2025-12-04T01:09:32.000Z"
+  },
+  {
+    "id": 26,
+    "chamada_id": 2,
+    "aluno_id": 22,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:33.000Z",
+    "updated_at": "2025-12-04T01:09:33.000Z"
+  },
+  {
+    "id": 27,
+    "chamada_id": 2,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:33.000Z",
+    "updated_at": "2025-12-04T01:09:33.000Z"
+  },
+  {
+    "id": 28,
+    "chamada_id": 2,
+    "aluno_id": 27,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:33.000Z",
+    "updated_at": "2025-12-04T01:09:33.000Z"
+  },
+  {
+    "id": 29,
+    "chamada_id": 2,
+    "aluno_id": 28,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:33.000Z",
+    "updated_at": "2025-12-04T01:09:33.000Z"
+  },
+  {
+    "id": 30,
+    "chamada_id": 2,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:33.000Z",
+    "updated_at": "2025-12-04T01:09:33.000Z"
+  },
+  {
+    "id": 31,
+    "chamada_id": 3,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:34.000Z",
+    "updated_at": "2025-12-04T01:09:34.000Z"
+  },
+  {
+    "id": 32,
+    "chamada_id": 3,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:34.000Z",
+    "updated_at": "2025-12-04T01:09:34.000Z"
+  },
+  {
+    "id": 33,
+    "chamada_id": 3,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:34.000Z",
+    "updated_at": "2025-12-04T01:09:34.000Z"
+  },
+  {
+    "id": 34,
+    "chamada_id": 3,
+    "aluno_id": 4,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:34.000Z",
+    "updated_at": "2025-12-04T01:09:34.000Z"
+  },
+  {
+    "id": 35,
+    "chamada_id": 3,
+    "aluno_id": 7,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:35.000Z",
+    "updated_at": "2025-12-04T01:09:35.000Z"
+  },
+  {
+    "id": 36,
+    "chamada_id": 3,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:35.000Z",
+    "updated_at": "2025-12-04T01:09:35.000Z"
+  },
+  {
+    "id": 37,
+    "chamada_id": 3,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:35.000Z",
+    "updated_at": "2025-12-04T01:09:35.000Z"
+  },
+  {
+    "id": 38,
+    "chamada_id": 3,
+    "aluno_id": 14,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:35.000Z",
+    "updated_at": "2025-12-04T01:09:35.000Z"
+  },
+  {
+    "id": 39,
+    "chamada_id": 3,
+    "aluno_id": 15,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:35.000Z",
+    "updated_at": "2025-12-04T01:09:35.000Z"
+  },
+  {
+    "id": 40,
+    "chamada_id": 3,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:36.000Z",
+    "updated_at": "2025-12-04T01:09:36.000Z"
+  },
+  {
+    "id": 41,
+    "chamada_id": 3,
+    "aluno_id": 22,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:36.000Z",
+    "updated_at": "2025-12-04T01:09:36.000Z"
+  },
+  {
+    "id": 42,
+    "chamada_id": 3,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:36.000Z",
+    "updated_at": "2025-12-04T01:09:36.000Z"
+  },
+  {
+    "id": 43,
+    "chamada_id": 3,
+    "aluno_id": 27,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:36.000Z",
+    "updated_at": "2025-12-04T01:09:36.000Z"
+  },
+  {
+    "id": 44,
+    "chamada_id": 3,
+    "aluno_id": 28,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:36.000Z",
+    "updated_at": "2025-12-04T01:09:36.000Z"
+  },
+  {
+    "id": 45,
+    "chamada_id": 3,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:37.000Z",
+    "updated_at": "2025-12-04T01:09:37.000Z"
+  },
+  {
+    "id": 46,
+    "chamada_id": 4,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:37.000Z",
+    "updated_at": "2025-12-04T01:09:37.000Z"
+  },
+  {
+    "id": 47,
+    "chamada_id": 4,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:37.000Z",
+    "updated_at": "2025-12-04T01:09:37.000Z"
+  },
+  {
+    "id": 48,
+    "chamada_id": 4,
+    "aluno_id": 3,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:37.000Z",
+    "updated_at": "2025-12-04T01:09:37.000Z"
+  },
+  {
+    "id": 49,
+    "chamada_id": 4,
+    "aluno_id": 4,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:38.000Z",
+    "updated_at": "2025-12-04T01:09:38.000Z"
+  },
+  {
+    "id": 50,
+    "chamada_id": 4,
+    "aluno_id": 7,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:38.000Z",
+    "updated_at": "2025-12-04T01:09:38.000Z"
+  },
+  {
+    "id": 51,
+    "chamada_id": 4,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:38.000Z",
+    "updated_at": "2025-12-04T01:09:38.000Z"
+  },
+  {
+    "id": 52,
+    "chamada_id": 4,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:38.000Z",
+    "updated_at": "2025-12-04T01:09:38.000Z"
+  },
+  {
+    "id": 53,
+    "chamada_id": 4,
+    "aluno_id": 14,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:39.000Z",
+    "updated_at": "2025-12-04T01:09:39.000Z"
+  },
+  {
+    "id": 54,
+    "chamada_id": 4,
+    "aluno_id": 15,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:39.000Z",
+    "updated_at": "2025-12-04T01:09:39.000Z"
+  },
+  {
+    "id": 55,
+    "chamada_id": 4,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:39.000Z",
+    "updated_at": "2025-12-04T01:09:39.000Z"
+  },
+  {
+    "id": 56,
+    "chamada_id": 4,
+    "aluno_id": 22,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:39.000Z",
+    "updated_at": "2025-12-04T01:09:39.000Z"
+  },
+  {
+    "id": 57,
+    "chamada_id": 4,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:39.000Z",
+    "updated_at": "2025-12-04T01:09:39.000Z"
+  },
+  {
+    "id": 58,
+    "chamada_id": 4,
+    "aluno_id": 27,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:40.000Z",
+    "updated_at": "2025-12-04T01:09:40.000Z"
+  },
+  {
+    "id": 59,
+    "chamada_id": 4,
+    "aluno_id": 28,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:40.000Z",
+    "updated_at": "2025-12-04T01:09:40.000Z"
+  },
+  {
+    "id": 60,
+    "chamada_id": 4,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:40.000Z",
+    "updated_at": "2025-12-04T01:09:40.000Z"
+  },
+  {
+    "id": 61,
+    "chamada_id": 5,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:41.000Z",
+    "updated_at": "2025-12-04T01:09:41.000Z"
+  },
+  {
+    "id": 62,
+    "chamada_id": 5,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:41.000Z",
+    "updated_at": "2025-12-04T01:09:41.000Z"
+  },
+  {
+    "id": 63,
+    "chamada_id": 5,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:41.000Z",
+    "updated_at": "2025-12-04T01:09:41.000Z"
+  },
+  {
+    "id": 64,
+    "chamada_id": 5,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:41.000Z",
+    "updated_at": "2025-12-04T01:09:41.000Z"
+  },
+  {
+    "id": 65,
+    "chamada_id": 5,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:41.000Z",
+    "updated_at": "2025-12-04T01:09:41.000Z"
+  },
+  {
+    "id": 66,
+    "chamada_id": 5,
+    "aluno_id": 12,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:42.000Z",
+    "updated_at": "2025-12-04T01:09:42.000Z"
+  },
+  {
+    "id": 67,
+    "chamada_id": 5,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:42.000Z",
+    "updated_at": "2025-12-04T01:09:42.000Z"
+  },
+  {
+    "id": 68,
+    "chamada_id": 5,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:42.000Z",
+    "updated_at": "2025-12-04T01:09:42.000Z"
+  },
+  {
+    "id": 69,
+    "chamada_id": 5,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:42.000Z",
+    "updated_at": "2025-12-04T01:09:42.000Z"
+  },
+  {
+    "id": 70,
+    "chamada_id": 5,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:42.000Z",
+    "updated_at": "2025-12-04T01:09:42.000Z"
+  },
+  {
+    "id": 71,
+    "chamada_id": 5,
+    "aluno_id": 23,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:43.000Z",
+    "updated_at": "2025-12-04T01:09:43.000Z"
+  },
+  {
+    "id": 72,
+    "chamada_id": 5,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:43.000Z",
+    "updated_at": "2025-12-04T01:09:43.000Z"
+  },
+  {
+    "id": 73,
+    "chamada_id": 5,
+    "aluno_id": 25,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:43.000Z",
+    "updated_at": "2025-12-04T01:09:43.000Z"
+  },
+  {
+    "id": 74,
+    "chamada_id": 5,
+    "aluno_id": 28,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:43.000Z",
+    "updated_at": "2025-12-04T01:09:43.000Z"
+  },
+  {
+    "id": 75,
+    "chamada_id": 5,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:43.000Z",
+    "updated_at": "2025-12-04T01:09:43.000Z"
+  },
+  {
+    "id": 76,
+    "chamada_id": 6,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:44.000Z",
+    "updated_at": "2025-12-04T01:09:44.000Z"
+  },
+  {
+    "id": 77,
+    "chamada_id": 6,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:44.000Z",
+    "updated_at": "2025-12-04T01:09:44.000Z"
+  },
+  {
+    "id": 78,
+    "chamada_id": 6,
+    "aluno_id": 3,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:44.000Z",
+    "updated_at": "2025-12-04T01:09:44.000Z"
+  },
+  {
+    "id": 79,
+    "chamada_id": 6,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:44.000Z",
+    "updated_at": "2025-12-04T01:09:44.000Z"
+  },
+  {
+    "id": 80,
+    "chamada_id": 6,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:45.000Z",
+    "updated_at": "2025-12-04T01:09:45.000Z"
+  },
+  {
+    "id": 81,
+    "chamada_id": 6,
+    "aluno_id": 12,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:45.000Z",
+    "updated_at": "2025-12-04T01:09:45.000Z"
+  },
+  {
+    "id": 82,
+    "chamada_id": 6,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:45.000Z",
+    "updated_at": "2025-12-04T01:09:45.000Z"
+  },
+  {
+    "id": 83,
+    "chamada_id": 6,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:45.000Z",
+    "updated_at": "2025-12-04T01:09:45.000Z"
+  },
+  {
+    "id": 84,
+    "chamada_id": 6,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:45.000Z",
+    "updated_at": "2025-12-04T01:09:45.000Z"
+  },
+  {
+    "id": 85,
+    "chamada_id": 6,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:46.000Z",
+    "updated_at": "2025-12-04T01:09:46.000Z"
+  },
+  {
+    "id": 86,
+    "chamada_id": 6,
+    "aluno_id": 23,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:46.000Z",
+    "updated_at": "2025-12-04T01:09:46.000Z"
+  },
+  {
+    "id": 87,
+    "chamada_id": 6,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:46.000Z",
+    "updated_at": "2025-12-04T01:09:46.000Z"
+  },
+  {
+    "id": 88,
+    "chamada_id": 6,
+    "aluno_id": 25,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:46.000Z",
+    "updated_at": "2025-12-04T01:09:46.000Z"
+  },
+  {
+    "id": 89,
+    "chamada_id": 6,
+    "aluno_id": 28,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:46.000Z",
+    "updated_at": "2025-12-04T01:09:46.000Z"
+  },
+  {
+    "id": 90,
+    "chamada_id": 6,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:47.000Z",
+    "updated_at": "2025-12-04T01:09:47.000Z"
+  },
+  {
+    "id": 91,
+    "chamada_id": 7,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:47.000Z",
+    "updated_at": "2025-12-04T01:09:47.000Z"
+  },
+  {
+    "id": 92,
+    "chamada_id": 7,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:47.000Z",
+    "updated_at": "2025-12-04T01:09:47.000Z"
+  },
+  {
+    "id": 93,
+    "chamada_id": 7,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:47.000Z",
+    "updated_at": "2025-12-04T01:09:47.000Z"
+  },
+  {
+    "id": 94,
+    "chamada_id": 7,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:48.000Z",
+    "updated_at": "2025-12-04T01:09:48.000Z"
+  },
+  {
+    "id": 95,
+    "chamada_id": 7,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:48.000Z",
+    "updated_at": "2025-12-04T01:09:48.000Z"
+  },
+  {
+    "id": 96,
+    "chamada_id": 7,
+    "aluno_id": 12,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:48.000Z",
+    "updated_at": "2025-12-04T01:09:48.000Z"
+  },
+  {
+    "id": 97,
+    "chamada_id": 7,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:48.000Z",
+    "updated_at": "2025-12-04T01:09:48.000Z"
+  },
+  {
+    "id": 98,
+    "chamada_id": 7,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:48.000Z",
+    "updated_at": "2025-12-04T01:09:48.000Z"
+  },
+  {
+    "id": 99,
+    "chamada_id": 7,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:49.000Z",
+    "updated_at": "2025-12-04T01:09:49.000Z"
+  },
+  {
+    "id": 100,
+    "chamada_id": 7,
+    "aluno_id": 20,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:49.000Z",
+    "updated_at": "2025-12-04T01:09:49.000Z"
+  },
+  {
+    "id": 101,
+    "chamada_id": 7,
+    "aluno_id": 23,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:49.000Z",
+    "updated_at": "2025-12-04T01:09:49.000Z"
+  },
+  {
+    "id": 102,
+    "chamada_id": 7,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:49.000Z",
+    "updated_at": "2025-12-04T01:09:49.000Z"
+  },
+  {
+    "id": 103,
+    "chamada_id": 7,
+    "aluno_id": 25,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:49.000Z",
+    "updated_at": "2025-12-04T01:09:49.000Z"
+  },
+  {
+    "id": 104,
+    "chamada_id": 7,
+    "aluno_id": 28,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:50.000Z",
+    "updated_at": "2025-12-04T01:09:50.000Z"
+  },
+  {
+    "id": 105,
+    "chamada_id": 7,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:50.000Z",
+    "updated_at": "2025-12-04T01:09:50.000Z"
+  },
+  {
+    "id": 106,
+    "chamada_id": 8,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:50.000Z",
+    "updated_at": "2025-12-04T01:09:50.000Z"
+  },
+  {
+    "id": 107,
+    "chamada_id": 8,
+    "aluno_id": 2,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:50.000Z",
+    "updated_at": "2025-12-04T01:09:50.000Z"
+  },
+  {
+    "id": 108,
+    "chamada_id": 8,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:51.000Z",
+    "updated_at": "2025-12-04T01:09:51.000Z"
+  },
+  {
+    "id": 109,
+    "chamada_id": 8,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:51.000Z",
+    "updated_at": "2025-12-04T01:09:51.000Z"
+  },
+  {
+    "id": 110,
+    "chamada_id": 8,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:51.000Z",
+    "updated_at": "2025-12-04T01:09:51.000Z"
+  },
+  {
+    "id": 111,
+    "chamada_id": 8,
+    "aluno_id": 12,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:51.000Z",
+    "updated_at": "2025-12-04T01:09:51.000Z"
+  },
+  {
+    "id": 112,
+    "chamada_id": 8,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:51.000Z",
+    "updated_at": "2025-12-04T01:09:51.000Z"
+  },
+  {
+    "id": 113,
+    "chamada_id": 8,
+    "aluno_id": 17,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:52.000Z",
+    "updated_at": "2025-12-04T01:09:52.000Z"
+  },
+  {
+    "id": 114,
+    "chamada_id": 8,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:52.000Z",
+    "updated_at": "2025-12-04T01:09:52.000Z"
+  },
+  {
+    "id": 115,
+    "chamada_id": 8,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:52.000Z",
+    "updated_at": "2025-12-04T01:09:52.000Z"
+  },
+  {
+    "id": 116,
+    "chamada_id": 8,
+    "aluno_id": 23,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:52.000Z",
+    "updated_at": "2025-12-04T01:09:52.000Z"
+  },
+  {
+    "id": 117,
+    "chamada_id": 8,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:52.000Z",
+    "updated_at": "2025-12-04T01:09:52.000Z"
+  },
+  {
+    "id": 118,
+    "chamada_id": 8,
+    "aluno_id": 25,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:53.000Z",
+    "updated_at": "2025-12-04T01:09:53.000Z"
+  },
+  {
+    "id": 119,
+    "chamada_id": 8,
+    "aluno_id": 28,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:53.000Z",
+    "updated_at": "2025-12-04T01:09:53.000Z"
+  },
+  {
+    "id": 120,
+    "chamada_id": 8,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:53.000Z",
+    "updated_at": "2025-12-04T01:09:53.000Z"
+  },
+  {
+    "id": 121,
+    "chamada_id": 9,
+    "aluno_id": 1,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:54.000Z",
+    "updated_at": "2025-12-04T01:09:54.000Z"
+  },
+  {
+    "id": 122,
+    "chamada_id": 9,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:54.000Z",
+    "updated_at": "2025-12-04T01:09:54.000Z"
+  },
+  {
+    "id": 123,
+    "chamada_id": 9,
+    "aluno_id": 5,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:54.000Z",
+    "updated_at": "2025-12-04T01:09:54.000Z"
+  },
+  {
+    "id": 124,
+    "chamada_id": 9,
+    "aluno_id": 7,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:54.000Z",
+    "updated_at": "2025-12-04T01:09:54.000Z"
+  },
+  {
+    "id": 125,
+    "chamada_id": 9,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:54.000Z",
+    "updated_at": "2025-12-04T01:09:54.000Z"
+  },
+  {
+    "id": 126,
+    "chamada_id": 9,
+    "aluno_id": 13,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:55.000Z",
+    "updated_at": "2025-12-04T01:09:55.000Z"
+  },
+  {
+    "id": 127,
+    "chamada_id": 9,
+    "aluno_id": 14,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:55.000Z",
+    "updated_at": "2025-12-04T01:09:55.000Z"
+  },
+  {
+    "id": 128,
+    "chamada_id": 9,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:55.000Z",
+    "updated_at": "2025-12-04T01:09:55.000Z"
+  },
+  {
+    "id": 129,
+    "chamada_id": 9,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:55.000Z",
+    "updated_at": "2025-12-04T01:09:55.000Z"
+  },
+  {
+    "id": 130,
+    "chamada_id": 9,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:55.000Z",
+    "updated_at": "2025-12-04T01:09:55.000Z"
+  },
+  {
+    "id": 131,
+    "chamada_id": 9,
+    "aluno_id": 21,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:56.000Z",
+    "updated_at": "2025-12-04T01:09:56.000Z"
+  },
+  {
+    "id": 132,
+    "chamada_id": 9,
+    "aluno_id": 22,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:56.000Z",
+    "updated_at": "2025-12-04T01:09:56.000Z"
+  },
+  {
+    "id": 133,
+    "chamada_id": 9,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:56.000Z",
+    "updated_at": "2025-12-04T01:09:56.000Z"
+  },
+  {
+    "id": 134,
+    "chamada_id": 9,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:56.000Z",
+    "updated_at": "2025-12-04T01:09:56.000Z"
+  },
+  {
+    "id": 135,
+    "chamada_id": 9,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:56.000Z",
+    "updated_at": "2025-12-04T01:09:56.000Z"
+  },
+  {
+    "id": 136,
+    "chamada_id": 10,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:57.000Z",
+    "updated_at": "2025-12-04T01:09:57.000Z"
+  },
+  {
+    "id": 137,
+    "chamada_id": 10,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:57.000Z",
+    "updated_at": "2025-12-04T01:09:57.000Z"
+  },
+  {
+    "id": 138,
+    "chamada_id": 10,
+    "aluno_id": 5,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:57.000Z",
+    "updated_at": "2025-12-04T01:09:57.000Z"
+  },
+  {
+    "id": 139,
+    "chamada_id": 10,
+    "aluno_id": 7,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:58.000Z",
+    "updated_at": "2025-12-04T01:09:58.000Z"
+  },
+  {
+    "id": 140,
+    "chamada_id": 10,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:58.000Z",
+    "updated_at": "2025-12-04T01:09:58.000Z"
+  },
+  {
+    "id": 141,
+    "chamada_id": 10,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:58.000Z",
+    "updated_at": "2025-12-04T01:09:58.000Z"
+  },
+  {
+    "id": 142,
+    "chamada_id": 10,
+    "aluno_id": 14,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:58.000Z",
+    "updated_at": "2025-12-04T01:09:58.000Z"
+  },
+  {
+    "id": 143,
+    "chamada_id": 10,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:58.000Z",
+    "updated_at": "2025-12-04T01:09:58.000Z"
+  },
+  {
+    "id": 144,
+    "chamada_id": 10,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:59.000Z",
+    "updated_at": "2025-12-04T01:09:59.000Z"
+  },
+  {
+    "id": 145,
+    "chamada_id": 10,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:59.000Z",
+    "updated_at": "2025-12-04T01:09:59.000Z"
+  },
+  {
+    "id": 146,
+    "chamada_id": 10,
+    "aluno_id": 21,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:59.000Z",
+    "updated_at": "2025-12-04T01:09:59.000Z"
+  },
+  {
+    "id": 147,
+    "chamada_id": 10,
+    "aluno_id": 22,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:59.000Z",
+    "updated_at": "2025-12-04T01:09:59.000Z"
+  },
+  {
+    "id": 148,
+    "chamada_id": 10,
+    "aluno_id": 24,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:09:59.000Z",
+    "updated_at": "2025-12-04T01:09:59.000Z"
+  },
+  {
+    "id": 149,
+    "chamada_id": 10,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:00.000Z",
+    "updated_at": "2025-12-04T01:10:00.000Z"
+  },
+  {
+    "id": 150,
+    "chamada_id": 10,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:00.000Z",
+    "updated_at": "2025-12-04T01:10:00.000Z"
+  },
+  {
+    "id": 151,
+    "chamada_id": 11,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:00.000Z",
+    "updated_at": "2025-12-04T01:10:00.000Z"
+  },
+  {
+    "id": 152,
+    "chamada_id": 11,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:00.000Z",
+    "updated_at": "2025-12-04T01:10:00.000Z"
+  },
+  {
+    "id": 153,
+    "chamada_id": 11,
+    "aluno_id": 5,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:01.000Z",
+    "updated_at": "2025-12-04T01:10:01.000Z"
+  },
+  {
+    "id": 154,
+    "chamada_id": 11,
+    "aluno_id": 7,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:01.000Z",
+    "updated_at": "2025-12-04T01:10:01.000Z"
+  },
+  {
+    "id": 155,
+    "chamada_id": 11,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:01.000Z",
+    "updated_at": "2025-12-04T01:10:01.000Z"
+  },
+  {
+    "id": 156,
+    "chamada_id": 11,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:01.000Z",
+    "updated_at": "2025-12-04T01:10:01.000Z"
+  },
+  {
+    "id": 157,
+    "chamada_id": 11,
+    "aluno_id": 14,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:01.000Z",
+    "updated_at": "2025-12-04T01:10:01.000Z"
+  },
+  {
+    "id": 158,
+    "chamada_id": 11,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:02.000Z",
+    "updated_at": "2025-12-04T01:10:02.000Z"
+  },
+  {
+    "id": 159,
+    "chamada_id": 11,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:02.000Z",
+    "updated_at": "2025-12-04T01:10:02.000Z"
+  },
+  {
+    "id": 160,
+    "chamada_id": 11,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:02.000Z",
+    "updated_at": "2025-12-04T01:10:02.000Z"
+  },
+  {
+    "id": 161,
+    "chamada_id": 11,
+    "aluno_id": 21,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:02.000Z",
+    "updated_at": "2025-12-04T01:10:02.000Z"
+  },
+  {
+    "id": 162,
+    "chamada_id": 11,
+    "aluno_id": 22,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:02.000Z",
+    "updated_at": "2025-12-04T01:10:02.000Z"
+  },
+  {
+    "id": 163,
+    "chamada_id": 11,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:03.000Z",
+    "updated_at": "2025-12-04T01:10:03.000Z"
+  },
+  {
+    "id": 164,
+    "chamada_id": 11,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:03.000Z",
+    "updated_at": "2025-12-04T01:10:03.000Z"
+  },
+  {
+    "id": 165,
+    "chamada_id": 11,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:03.000Z",
+    "updated_at": "2025-12-04T01:10:03.000Z"
+  },
+  {
+    "id": 166,
+    "chamada_id": 12,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:03.000Z",
+    "updated_at": "2025-12-04T01:10:03.000Z"
+  },
+  {
+    "id": 167,
+    "chamada_id": 12,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:04.000Z",
+    "updated_at": "2025-12-04T01:10:04.000Z"
+  },
+  {
+    "id": 168,
+    "chamada_id": 12,
+    "aluno_id": 5,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:04.000Z",
+    "updated_at": "2025-12-04T01:10:04.000Z"
+  },
+  {
+    "id": 169,
+    "chamada_id": 12,
+    "aluno_id": 7,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:04.000Z",
+    "updated_at": "2025-12-04T01:10:04.000Z"
+  },
+  {
+    "id": 170,
+    "chamada_id": 12,
+    "aluno_id": 10,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:04.000Z",
+    "updated_at": "2025-12-04T01:10:04.000Z"
+  },
+  {
+    "id": 171,
+    "chamada_id": 12,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:04.000Z",
+    "updated_at": "2025-12-04T01:10:04.000Z"
+  },
+  {
+    "id": 172,
+    "chamada_id": 12,
+    "aluno_id": 14,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:05.000Z",
+    "updated_at": "2025-12-04T01:10:05.000Z"
+  },
+  {
+    "id": 173,
+    "chamada_id": 12,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:05.000Z",
+    "updated_at": "2025-12-04T01:10:05.000Z"
+  },
+  {
+    "id": 174,
+    "chamada_id": 12,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:05.000Z",
+    "updated_at": "2025-12-04T01:10:05.000Z"
+  },
+  {
+    "id": 175,
+    "chamada_id": 12,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:05.000Z",
+    "updated_at": "2025-12-04T01:10:05.000Z"
+  },
+  {
+    "id": 176,
+    "chamada_id": 12,
+    "aluno_id": 21,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:05.000Z",
+    "updated_at": "2025-12-04T01:10:05.000Z"
+  },
+  {
+    "id": 177,
+    "chamada_id": 12,
+    "aluno_id": 22,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:06.000Z",
+    "updated_at": "2025-12-04T01:10:06.000Z"
+  },
+  {
+    "id": 178,
+    "chamada_id": 12,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:06.000Z",
+    "updated_at": "2025-12-04T01:10:06.000Z"
+  },
+  {
+    "id": 179,
+    "chamada_id": 12,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:06.000Z",
+    "updated_at": "2025-12-04T01:10:06.000Z"
+  },
+  {
+    "id": 180,
+    "chamada_id": 12,
+    "aluno_id": 30,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:06.000Z",
+    "updated_at": "2025-12-04T01:10:06.000Z"
+  },
+  {
+    "id": 181,
+    "chamada_id": 13,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:07.000Z",
+    "updated_at": "2025-12-04T01:10:07.000Z"
+  },
+  {
+    "id": 182,
+    "chamada_id": 13,
+    "aluno_id": 4,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:07.000Z",
+    "updated_at": "2025-12-04T01:10:07.000Z"
+  },
+  {
+    "id": 183,
+    "chamada_id": 13,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:07.000Z",
+    "updated_at": "2025-12-04T01:10:07.000Z"
+  },
+  {
+    "id": 184,
+    "chamada_id": 13,
+    "aluno_id": 8,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:07.000Z",
+    "updated_at": "2025-12-04T01:10:07.000Z"
+  },
+  {
+    "id": 185,
+    "chamada_id": 13,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:08.000Z",
+    "updated_at": "2025-12-04T01:10:08.000Z"
+  },
+  {
+    "id": 186,
+    "chamada_id": 13,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:08.000Z",
+    "updated_at": "2025-12-04T01:10:08.000Z"
+  },
+  {
+    "id": 187,
+    "chamada_id": 13,
+    "aluno_id": 15,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:08.000Z",
+    "updated_at": "2025-12-04T01:10:08.000Z"
+  },
+  {
+    "id": 188,
+    "chamada_id": 13,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:08.000Z",
+    "updated_at": "2025-12-04T01:10:08.000Z"
+  },
+  {
+    "id": 189,
+    "chamada_id": 13,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:08.000Z",
+    "updated_at": "2025-12-04T01:10:08.000Z"
+  },
+  {
+    "id": 190,
+    "chamada_id": 13,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:09.000Z",
+    "updated_at": "2025-12-04T01:10:09.000Z"
+  },
+  {
+    "id": 191,
+    "chamada_id": 13,
+    "aluno_id": 21,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:09.000Z",
+    "updated_at": "2025-12-04T01:10:09.000Z"
+  },
+  {
+    "id": 192,
+    "chamada_id": 13,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:09.000Z",
+    "updated_at": "2025-12-04T01:10:09.000Z"
+  },
+  {
+    "id": 193,
+    "chamada_id": 13,
+    "aluno_id": 25,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:09.000Z",
+    "updated_at": "2025-12-04T01:10:09.000Z"
+  },
+  {
+    "id": 194,
+    "chamada_id": 13,
+    "aluno_id": 26,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:09.000Z",
+    "updated_at": "2025-12-04T01:10:09.000Z"
+  },
+  {
+    "id": 195,
+    "chamada_id": 13,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:10.000Z",
+    "updated_at": "2025-12-04T01:10:10.000Z"
+  },
+  {
+    "id": 196,
+    "chamada_id": 14,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:10.000Z",
+    "updated_at": "2025-12-04T01:10:10.000Z"
+  },
+  {
+    "id": 197,
+    "chamada_id": 14,
+    "aluno_id": 4,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:10.000Z",
+    "updated_at": "2025-12-04T01:10:10.000Z"
+  },
+  {
+    "id": 198,
+    "chamada_id": 14,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:10.000Z",
+    "updated_at": "2025-12-04T01:10:10.000Z"
+  },
+  {
+    "id": 199,
+    "chamada_id": 14,
+    "aluno_id": 8,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:10.000Z",
+    "updated_at": "2025-12-04T01:10:10.000Z"
+  },
+  {
+    "id": 200,
+    "chamada_id": 14,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:11.000Z",
+    "updated_at": "2025-12-04T01:10:11.000Z"
+  },
+  {
+    "id": 201,
+    "chamada_id": 14,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:11.000Z",
+    "updated_at": "2025-12-04T01:10:11.000Z"
+  },
+  {
+    "id": 202,
+    "chamada_id": 14,
+    "aluno_id": 15,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:11.000Z",
+    "updated_at": "2025-12-04T01:10:11.000Z"
+  },
+  {
+    "id": 203,
+    "chamada_id": 14,
+    "aluno_id": 17,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:11.000Z",
+    "updated_at": "2025-12-04T01:10:11.000Z"
+  },
+  {
+    "id": 204,
+    "chamada_id": 14,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:11.000Z",
+    "updated_at": "2025-12-04T01:10:11.000Z"
+  },
+  {
+    "id": 205,
+    "chamada_id": 14,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:12.000Z",
+    "updated_at": "2025-12-04T01:10:12.000Z"
+  },
+  {
+    "id": 206,
+    "chamada_id": 14,
+    "aluno_id": 21,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:12.000Z",
+    "updated_at": "2025-12-04T01:10:12.000Z"
+  },
+  {
+    "id": 207,
+    "chamada_id": 14,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:12.000Z",
+    "updated_at": "2025-12-04T01:10:12.000Z"
+  },
+  {
+    "id": 208,
+    "chamada_id": 14,
+    "aluno_id": 25,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:12.000Z",
+    "updated_at": "2025-12-04T01:10:12.000Z"
+  },
+  {
+    "id": 209,
+    "chamada_id": 14,
+    "aluno_id": 26,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:12.000Z",
+    "updated_at": "2025-12-04T01:10:12.000Z"
+  },
+  {
+    "id": 210,
+    "chamada_id": 14,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:13.000Z",
+    "updated_at": "2025-12-04T01:10:13.000Z"
+  },
+  {
+    "id": 211,
+    "chamada_id": 15,
+    "aluno_id": 3,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:13.000Z",
+    "updated_at": "2025-12-04T01:10:13.000Z"
+  },
+  {
+    "id": 212,
+    "chamada_id": 15,
+    "aluno_id": 4,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:13.000Z",
+    "updated_at": "2025-12-04T01:10:13.000Z"
+  },
+  {
+    "id": 213,
+    "chamada_id": 15,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:13.000Z",
+    "updated_at": "2025-12-04T01:10:13.000Z"
+  },
+  {
+    "id": 214,
+    "chamada_id": 15,
+    "aluno_id": 8,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:14.000Z",
+    "updated_at": "2025-12-04T01:10:14.000Z"
+  },
+  {
+    "id": 215,
+    "chamada_id": 15,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:14.000Z",
+    "updated_at": "2025-12-04T01:10:14.000Z"
+  },
+  {
+    "id": 216,
+    "chamada_id": 15,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:14.000Z",
+    "updated_at": "2025-12-04T01:10:14.000Z"
+  },
+  {
+    "id": 217,
+    "chamada_id": 15,
+    "aluno_id": 15,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:14.000Z",
+    "updated_at": "2025-12-04T01:10:14.000Z"
+  },
+  {
+    "id": 218,
+    "chamada_id": 15,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:14.000Z",
+    "updated_at": "2025-12-04T01:10:14.000Z"
+  },
+  {
+    "id": 219,
+    "chamada_id": 15,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:15.000Z",
+    "updated_at": "2025-12-04T01:10:15.000Z"
+  },
+  {
+    "id": 220,
+    "chamada_id": 15,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:15.000Z",
+    "updated_at": "2025-12-04T01:10:15.000Z"
+  },
+  {
+    "id": 221,
+    "chamada_id": 15,
+    "aluno_id": 21,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:15.000Z",
+    "updated_at": "2025-12-04T01:10:15.000Z"
+  },
+  {
+    "id": 222,
+    "chamada_id": 15,
+    "aluno_id": 24,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:15.000Z",
+    "updated_at": "2025-12-04T01:10:15.000Z"
+  },
+  {
+    "id": 223,
+    "chamada_id": 15,
+    "aluno_id": 25,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:15.000Z",
+    "updated_at": "2025-12-04T01:10:15.000Z"
+  },
+  {
+    "id": 224,
+    "chamada_id": 15,
+    "aluno_id": 26,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:16.000Z",
+    "updated_at": "2025-12-04T01:10:16.000Z"
+  },
+  {
+    "id": 225,
+    "chamada_id": 15,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:16.000Z",
+    "updated_at": "2025-12-04T01:10:16.000Z"
+  },
+  {
+    "id": 226,
+    "chamada_id": 16,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:16.000Z",
+    "updated_at": "2025-12-04T01:10:16.000Z"
+  },
+  {
+    "id": 227,
+    "chamada_id": 16,
+    "aluno_id": 4,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:16.000Z",
+    "updated_at": "2025-12-04T01:10:16.000Z"
+  },
+  {
+    "id": 228,
+    "chamada_id": 16,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:17.000Z",
+    "updated_at": "2025-12-04T01:10:17.000Z"
+  },
+  {
+    "id": 229,
+    "chamada_id": 16,
+    "aluno_id": 8,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:17.000Z",
+    "updated_at": "2025-12-04T01:10:17.000Z"
+  },
+  {
+    "id": 230,
+    "chamada_id": 16,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:17.000Z",
+    "updated_at": "2025-12-04T01:10:17.000Z"
+  },
+  {
+    "id": 231,
+    "chamada_id": 16,
+    "aluno_id": 13,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:17.000Z",
+    "updated_at": "2025-12-04T01:10:17.000Z"
+  },
+  {
+    "id": 232,
+    "chamada_id": 16,
+    "aluno_id": 15,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:17.000Z",
+    "updated_at": "2025-12-04T01:10:17.000Z"
+  },
+  {
+    "id": 233,
+    "chamada_id": 16,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:18.000Z",
+    "updated_at": "2025-12-04T01:10:18.000Z"
+  },
+  {
+    "id": 234,
+    "chamada_id": 16,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:18.000Z",
+    "updated_at": "2025-12-04T01:10:18.000Z"
+  },
+  {
+    "id": 235,
+    "chamada_id": 16,
+    "aluno_id": 20,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:18.000Z",
+    "updated_at": "2025-12-04T01:10:18.000Z"
+  },
+  {
+    "id": 236,
+    "chamada_id": 16,
+    "aluno_id": 21,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:18.000Z",
+    "updated_at": "2025-12-04T01:10:18.000Z"
+  },
+  {
+    "id": 237,
+    "chamada_id": 16,
+    "aluno_id": 24,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:18.000Z",
+    "updated_at": "2025-12-04T01:10:18.000Z"
+  },
+  {
+    "id": 238,
+    "chamada_id": 16,
+    "aluno_id": 25,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:19.000Z",
+    "updated_at": "2025-12-04T01:10:19.000Z"
+  },
+  {
+    "id": 239,
+    "chamada_id": 16,
+    "aluno_id": 26,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:19.000Z",
+    "updated_at": "2025-12-04T01:10:19.000Z"
+  },
+  {
+    "id": 240,
+    "chamada_id": 16,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:19.000Z",
+    "updated_at": "2025-12-04T01:10:19.000Z"
+  },
+  {
+    "id": 241,
+    "chamada_id": 17,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:20.000Z",
+    "updated_at": "2025-12-04T01:10:20.000Z"
+  },
+  {
+    "id": 242,
+    "chamada_id": 17,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:20.000Z",
+    "updated_at": "2025-12-04T01:10:20.000Z"
+  },
+  {
+    "id": 243,
+    "chamada_id": 17,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:20.000Z",
+    "updated_at": "2025-12-04T01:10:20.000Z"
+  },
+  {
+    "id": 244,
+    "chamada_id": 17,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:20.000Z",
+    "updated_at": "2025-12-04T01:10:20.000Z"
+  },
+  {
+    "id": 245,
+    "chamada_id": 17,
+    "aluno_id": 7,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:20.000Z",
+    "updated_at": "2025-12-04T01:10:20.000Z"
+  },
+  {
+    "id": 246,
+    "chamada_id": 17,
+    "aluno_id": 8,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:21.000Z",
+    "updated_at": "2025-12-04T01:10:21.000Z"
+  },
+  {
+    "id": 247,
+    "chamada_id": 17,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:21.000Z",
+    "updated_at": "2025-12-04T01:10:21.000Z"
+  },
+  {
+    "id": 248,
+    "chamada_id": 17,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:21.000Z",
+    "updated_at": "2025-12-04T01:10:21.000Z"
+  },
+  {
+    "id": 249,
+    "chamada_id": 17,
+    "aluno_id": 16,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:21.000Z",
+    "updated_at": "2025-12-04T01:10:21.000Z"
+  },
+  {
+    "id": 250,
+    "chamada_id": 17,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:21.000Z",
+    "updated_at": "2025-12-04T01:10:21.000Z"
+  },
+  {
+    "id": 251,
+    "chamada_id": 17,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:22.000Z",
+    "updated_at": "2025-12-04T01:10:22.000Z"
+  },
+  {
+    "id": 252,
+    "chamada_id": 17,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:22.000Z",
+    "updated_at": "2025-12-04T01:10:22.000Z"
+  },
+  {
+    "id": 253,
+    "chamada_id": 17,
+    "aluno_id": 22,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:22.000Z",
+    "updated_at": "2025-12-04T01:10:22.000Z"
+  },
+  {
+    "id": 254,
+    "chamada_id": 17,
+    "aluno_id": 26,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:22.000Z",
+    "updated_at": "2025-12-04T01:10:22.000Z"
+  },
+  {
+    "id": 255,
+    "chamada_id": 17,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:22.000Z",
+    "updated_at": "2025-12-04T01:10:22.000Z"
+  },
+  {
+    "id": 256,
+    "chamada_id": 18,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:23.000Z",
+    "updated_at": "2025-12-04T01:10:23.000Z"
+  },
+  {
+    "id": 257,
+    "chamada_id": 18,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:23.000Z",
+    "updated_at": "2025-12-04T01:10:23.000Z"
+  },
+  {
+    "id": 258,
+    "chamada_id": 18,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:23.000Z",
+    "updated_at": "2025-12-04T01:10:23.000Z"
+  },
+  {
+    "id": 259,
+    "chamada_id": 18,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:23.000Z",
+    "updated_at": "2025-12-04T01:10:23.000Z"
+  },
+  {
+    "id": 260,
+    "chamada_id": 18,
+    "aluno_id": 7,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:24.000Z",
+    "updated_at": "2025-12-04T01:10:24.000Z"
+  },
+  {
+    "id": 261,
+    "chamada_id": 18,
+    "aluno_id": 8,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:24.000Z",
+    "updated_at": "2025-12-04T01:10:24.000Z"
+  },
+  {
+    "id": 262,
+    "chamada_id": 18,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:24.000Z",
+    "updated_at": "2025-12-04T01:10:24.000Z"
+  },
+  {
+    "id": 263,
+    "chamada_id": 18,
+    "aluno_id": 11,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:24.000Z",
+    "updated_at": "2025-12-04T01:10:24.000Z"
+  },
+  {
+    "id": 264,
+    "chamada_id": 18,
+    "aluno_id": 16,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:24.000Z",
+    "updated_at": "2025-12-04T01:10:24.000Z"
+  },
+  {
+    "id": 265,
+    "chamada_id": 18,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:25.000Z",
+    "updated_at": "2025-12-04T01:10:25.000Z"
+  },
+  {
+    "id": 266,
+    "chamada_id": 18,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:25.000Z",
+    "updated_at": "2025-12-04T01:10:25.000Z"
+  },
+  {
+    "id": 267,
+    "chamada_id": 18,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:25.000Z",
+    "updated_at": "2025-12-04T01:10:25.000Z"
+  },
+  {
+    "id": 268,
+    "chamada_id": 18,
+    "aluno_id": 22,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:25.000Z",
+    "updated_at": "2025-12-04T01:10:25.000Z"
+  },
+  {
+    "id": 269,
+    "chamada_id": 18,
+    "aluno_id": 26,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:25.000Z",
+    "updated_at": "2025-12-04T01:10:25.000Z"
+  },
+  {
+    "id": 270,
+    "chamada_id": 18,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:26.000Z",
+    "updated_at": "2025-12-04T01:10:26.000Z"
+  },
+  {
+    "id": 271,
+    "chamada_id": 19,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:26.000Z",
+    "updated_at": "2025-12-04T01:10:26.000Z"
+  },
+  {
+    "id": 272,
+    "chamada_id": 19,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:26.000Z",
+    "updated_at": "2025-12-04T01:10:26.000Z"
+  },
+  {
+    "id": 273,
+    "chamada_id": 19,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:26.000Z",
+    "updated_at": "2025-12-04T01:10:26.000Z"
+  },
+  {
+    "id": 274,
+    "chamada_id": 19,
+    "aluno_id": 6,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:27.000Z",
+    "updated_at": "2025-12-04T01:10:27.000Z"
+  },
+  {
+    "id": 275,
+    "chamada_id": 19,
+    "aluno_id": 7,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:27.000Z",
+    "updated_at": "2025-12-04T01:10:27.000Z"
+  },
+  {
+    "id": 276,
+    "chamada_id": 19,
+    "aluno_id": 8,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:27.000Z",
+    "updated_at": "2025-12-04T01:10:27.000Z"
+  },
+  {
+    "id": 277,
+    "chamada_id": 19,
+    "aluno_id": 10,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:27.000Z",
+    "updated_at": "2025-12-04T01:10:27.000Z"
+  },
+  {
+    "id": 278,
+    "chamada_id": 19,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:27.000Z",
+    "updated_at": "2025-12-04T01:10:27.000Z"
+  },
+  {
+    "id": 279,
+    "chamada_id": 19,
+    "aluno_id": 16,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:28.000Z",
+    "updated_at": "2025-12-04T01:10:28.000Z"
+  },
+  {
+    "id": 280,
+    "chamada_id": 19,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:28.000Z",
+    "updated_at": "2025-12-04T01:10:28.000Z"
+  },
+  {
+    "id": 281,
+    "chamada_id": 19,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:28.000Z",
+    "updated_at": "2025-12-04T01:10:28.000Z"
+  },
+  {
+    "id": 282,
+    "chamada_id": 19,
+    "aluno_id": 19,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:28.000Z",
+    "updated_at": "2025-12-04T01:10:28.000Z"
+  },
+  {
+    "id": 283,
+    "chamada_id": 19,
+    "aluno_id": 22,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:28.000Z",
+    "updated_at": "2025-12-04T01:10:28.000Z"
+  },
+  {
+    "id": 284,
+    "chamada_id": 19,
+    "aluno_id": 26,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:29.000Z",
+    "updated_at": "2025-12-04T01:10:29.000Z"
+  },
+  {
+    "id": 285,
+    "chamada_id": 19,
+    "aluno_id": 29,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:29.000Z",
+    "updated_at": "2025-12-04T01:10:29.000Z"
+  },
+  {
+    "id": 286,
+    "chamada_id": 20,
+    "aluno_id": 1,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:29.000Z",
+    "updated_at": "2025-12-04T01:10:29.000Z"
+  },
+  {
+    "id": 287,
+    "chamada_id": 20,
+    "aluno_id": 2,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:29.000Z",
+    "updated_at": "2025-12-04T01:10:29.000Z"
+  },
+  {
+    "id": 288,
+    "chamada_id": 20,
+    "aluno_id": 3,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:30.000Z",
+    "updated_at": "2025-12-04T01:10:30.000Z"
+  },
+  {
+    "id": 289,
+    "chamada_id": 20,
+    "aluno_id": 6,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:30.000Z",
+    "updated_at": "2025-12-04T01:10:30.000Z"
+  },
+  {
+    "id": 290,
+    "chamada_id": 20,
+    "aluno_id": 7,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:30.000Z",
+    "updated_at": "2025-12-04T01:10:30.000Z"
+  },
+  {
+    "id": 291,
+    "chamada_id": 20,
+    "aluno_id": 8,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:30.000Z",
+    "updated_at": "2025-12-04T01:10:30.000Z"
+  },
+  {
+    "id": 292,
+    "chamada_id": 20,
+    "aluno_id": 10,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:30.000Z",
+    "updated_at": "2025-12-04T01:10:30.000Z"
+  },
+  {
+    "id": 293,
+    "chamada_id": 20,
+    "aluno_id": 11,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:31.000Z",
+    "updated_at": "2025-12-04T01:10:31.000Z"
+  },
+  {
+    "id": 294,
+    "chamada_id": 20,
+    "aluno_id": 16,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:31.000Z",
+    "updated_at": "2025-12-04T01:10:31.000Z"
+  },
+  {
+    "id": 295,
+    "chamada_id": 20,
+    "aluno_id": 17,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:31.000Z",
+    "updated_at": "2025-12-04T01:10:31.000Z"
+  },
+  {
+    "id": 296,
+    "chamada_id": 20,
+    "aluno_id": 18,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:31.000Z",
+    "updated_at": "2025-12-04T01:10:31.000Z"
+  },
+  {
+    "id": 297,
+    "chamada_id": 20,
+    "aluno_id": 19,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:31.000Z",
+    "updated_at": "2025-12-04T01:10:31.000Z"
+  },
+  {
+    "id": 298,
+    "chamada_id": 20,
+    "aluno_id": 22,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:32.000Z",
+    "updated_at": "2025-12-04T01:10:32.000Z"
+  },
+  {
+    "id": 299,
+    "chamada_id": 20,
+    "aluno_id": 26,
+    "presente": 0,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:32.000Z",
+    "updated_at": "2025-12-04T01:10:32.000Z"
+  },
+  {
+    "id": 300,
+    "chamada_id": 20,
+    "aluno_id": 29,
+    "presente": 1,
+    "observacao": "",
+    "created_at": "2025-12-04T01:10:32.000Z",
+    "updated_at": "2025-12-04T01:10:32.000Z"
+  }
+]

@@ -1,0 +1,266 @@
+/* =========================================================
+   CHAMADA.CSS — ONG Novo Amanhã
+   Unificado (chamada.css + sala.css)
+   Mantido o design original e corrigidos conflitos
+========================================================= */
+
+/* ======== BASE ======== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.75rem 1rem rgba(0,0,0,0.1);
+}
+
+.shadow-hover {
+  transition: all 0.2s ease-in-out;
+}
+.shadow-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+/* ======== NAVBAR ======== */
+.navbar {
+  font-weight: 500;
+}
+
+/* ======== ANIMAÇÕES E CAMADAS ======== */
+[id^="camada-"] {
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+[id^="camada-"].active {
+  display: block;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ======== LOADING ======== */
+#camada-loading {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(255,255,255,0.95);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease-in-out;
+}
+#camada-loading.d-none {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ======== FORMULÁRIOS ======== */
+.form-control, .form-select {
+  border: 2px solid #e9ecef;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(155, 89, 182, 0.15);
+}
+.form-control::placeholder {
+  color: #adb5bd;
+}
+.form-label {
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+/* ======== BOTÕES ======== */
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff;
+}
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+.btn-outline-primary:hover,
+.btn-check:checked + .btn-outline-primary {
+  color: #fff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+.btn-outline-secondary {
+  border-width: 2px;
+}
+.btn-success {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+/* ======== BADGES ======== */
+.badge {
+  font-weight: 500;
+  font-size: 0.85rem;
+  border-radius: 0.4rem;
+  padding: 0.45rem 0.65rem;
+}
+.bg-primary-subtle { background-color: var(--bs-primary-bg-subtle) !important; }
+.bg-success-subtle { background-color: var(--bs-success-bg-subtle) !important; }
+
+/* ======== TABELAS ======== */
+.table-alunos tbody tr {
+  transition: background-color 0.2s ease-in-out;
+}
+.table-alunos tbody tr:hover {
+  background-color: rgba(0,0,0,0.03);
+}
+.table th {
+  background-color: var(--bs-light);
+  font-weight: 600;
+}
+.table td input[type="text"] {
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 0.4rem;
+  padding: 0.3rem 0.5rem;
+}
+
+/* ======== TIMELINE ======== */
+.timeline {
+  position: relative;
+  padding: 20px 0;
+}
+.timeline-item {
+  position: relative;
+  margin-left: 20px;
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: var(--bs-light);
+  border-left: 3px solid var(--bs-gray-300);
+  border-radius: 0.5rem;
+}
+.timeline-item::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+  left: -7px;
+  top: 20px;
+  background-color: var(--bs-secondary);
+}
+.timeline-item.presente::before { background-color: var(--bs-success); }
+.timeline-item.ausente::before { background-color: var(--bs-danger); }
+.timeline-date {
+  font-size: 0.85rem;
+  color: var(--bs-gray-600);
+  margin-bottom: 5px;
+}
+.timeline-content {
+  margin-left: 10px;
+}
+
+/* ======== SALAS ======== */
+.sala-header {
+  background-color: var(--bs-light);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+}
+.sala-info {
+  color: var(--bs-gray-600);
+}
+.sala-info i {
+  width: 20px;
+  text-align: center;
+}
+
+/* ======== TOASTS ======== */
+.toast {
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+}
+.toast-body {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* ======== MODAIS ======== */
+.modal-content {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+.modal-header {
+  padding: 1.5rem 1.5rem 0;
+}
+.modal-footer {
+  padding: 1.5rem;
+}
+
+/* ======== UTILITÁRIOS ======== */
+.text-primary, .card-subtitle {
+  color: var(--primary-color) !important;
+}
+.text-success {
+  color: var(--bs-success) !important;
+}
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+.border-primary {
+  border-color: var(--primary-color) !important;
+}
+
+/* ======== Checkbox de seleção de alunos ======== */
+.aluno-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #198754;
+}
+.aluno-checkbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+/* Forçar visual do check (compatível com Bootstrap) */
+.form-check-input.aluno-checkbox:checked {
+  background-color: #198754 !important;
+  border-color: #198754 !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
+  background-size: 100% 100%;
+}
+
+/* ======== RESPONSIVIDADE ======== */
+@media (max-width: 767.98px) {
+  .btn-action {
+    width: 32px;
+    height: 32px;
+  }
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+  .card-body {
+    padding: 1rem !important;
+  }
+}

@@ -1,0 +1,47 @@
+[build]
+  # Diretório de publicação (onde estão os arquivos HTML, CSS, JS)
+  publish = "."
+  
+  # Comando de build (não necessário para site estático)
+  command = ""
+
+[build.environment]
+  # Versão do Node.js
+  NODE_VERSION = "18"
+
+# Configurações de redirecionamento
+[[redirects]]
+  # Redirecionar todas as rotas para index.html (SPA)
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers de segurança
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Configurações específicas para arquivos estáticos
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Guia do Usuário - ONG Novo Amanhã</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="../css/themes.css" rel="stylesheet"/>
+    <link href="../css/variables.css" rel="stylesheet"/>
+    <link href="../css/config-styles.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <link href="../css/navbar.css" rel="stylesheet"/>
+    <!-- Navbar Centralizada -->
+    <script src="../js/navbar.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            min-height: calc(100vh - 56px);
+            margin-top: 85px;
+            border: none;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar removida (injetada via navbar.js) -->
+    
+    <!-- Conteúdo Principal -->
+    <embed src="../assets/ong-guia.pdf#toolbar=1&navpanes=1&scrollbar=1&view=FitH&bgcolor=FFFFFF&zoom=75" type="application/pdf" class="pdf-viewer">
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Translations -->
+    <script src="../js/translations.js"></script>
+    <!-- Settings Manager -->
+    <script src="../js/settings.js"></script>
+    <!-- Session Timeout -->
+    <script src="../js/session-timeout.js"></script>
+</body>
+</html>

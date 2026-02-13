@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Nova Senha - ONG Novo Amanhã</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="../css/styles.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="login-title">BETA</h1>
+        <h1 class="login-title">Plataforma de Gestão</h1>
+        <p class="login-subtitle">Definir nova senha</p>
+        
+        <form id="formNovaSenha">
+            <div class="form-group">
+                <label class="form-label" for="senha">
+                    <span class="sr-only">Nova senha</span>
+                </label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="senha" required 
+                           minlength="6" aria-label="Nova senha" data-tooltip="Mínimo de 6 caracteres"
+                           placeholder="Digite a nova senha">
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="confirmarSenha">
+                    <span class="sr-only">Confirmar nova senha</span>
+                </label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="confirmarSenha" required 
+                           minlength="6" aria-label="Confirmar nova senha" data-tooltip="Repita a nova senha"
+                           placeholder="Confirme a nova senha">
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+                <small id="senhaErro" class="text-danger" style="display:none;">As senhas não coincidem.</small>
+            </div>
+
+            <button type="submit" class="btn-entrar">
+                <span>Redefinir senha</span>
+                <div class="spinner">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                </div>
+            </button>
+
+            <div class="links-container">
+                <a href="../index.html" data-tooltip="Voltar para o login">
+                    <i class="fas fa-arrow-left"></i> Voltar ao login
+                </a>
+            </div>
+
+            <div id="mensagem" class="mensagem" role="alert"></div>
+
+            <div class="copyright">
+                Desenvolvido por quem aprende, para quem transforma.
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('formNovaSenha');
+            const senhaInput = document.getElementById('senha');
+            const confirmarSenhaInput = document.getElementById('confirmarSenha');
+            const senhaErro = document.getElementById('senhaErro');
+            const mensagemDiv = document.getElementById('mensagem');
+            const API_BASE_URL = 'http://localhost:3003/api';
+
+            // Obter token da URL
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+
+            if (!token) {
+                mensagemDiv.textContent = 'Link inválido ou incompleto.';
+                mensagemDiv.className = 'mensagem erro';
+                form.querySelector('button[type="submit"]').disabled = true;
+                return;
+            }
+
+            function validarSenhasIguais() {
+                if (senhaInput.value && confirmarSenhaInput.value && senhaInput.value !== confirmarSenhaInput.value) {
+                    senhaErro.style.display = 'block';
+                    confirmarSenhaInput.setCustomValidity('As senhas não coincidem');
+                } else {
+                    senhaErro.style.display = 'none';
+                    confirmarSenhaInput.setCustomValidity('');
+                }
+            }
+
+            senhaInput.addEventListener('input', validarSenhasIguais);
+            confirmarSenhaInput.addEventListener('input', validarSenhasIguais);
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const button = this.querySelector('.btn-entrar');
+                button.classList.add('loading');
+                mensagemDiv.textContent = '';
+                mensagemDiv.className = 'mensagem';
+
+                if (senhaInput.value !== confirmarSenhaInput.value) {
+                    senhaErro.style.display = 'block';
+                    button.classList.remove('loading');
+                    return;
+                }
+
+                try {
+                    const resp = await fetch(`${API_BASE_URL}/auth/reset-password/${token}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ senha: senhaInput.value })
+                    });
+
+                    const data = await resp.json();
+
+                    if (!resp.ok) {
+                        throw new Error(data.error || 'Erro ao redefinir senha');
+                    }
+
+                    mensagemDiv.textContent = data.message || 'Senha redefinida com sucesso!';
+                    mensagemDiv.className = 'mensagem sucesso';
+
+                    setTimeout(() => {
+                        window.location.href = '../index.html';
+                    }, 2000);
+                } catch (err) {
+                    mensagemDiv.textContent = err.message || 'Erro ao redefinir senha.';
+                    mensagemDiv.className = 'mensagem erro';
+                } finally {
+                    button.classList.remove('loading');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
