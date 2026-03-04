@@ -2,8 +2,10 @@
 // Este arquivo substitui a conexão com MySQL por dados mockados para o deploy
 // EM AMBIENTE LOCAL, USE O BANCO MYSQL REAL
 
-// Define a URL da API globalmente
-window.API_BASE_URL = 'http://localhost:3003/api';
+// Mantém a URL da API já definida por config.js (não sobrescreve em produção)
+if (!window.API_BASE_URL) {
+  window.API_BASE_URL = 'http://localhost:3003/api';
+}
 
 window.DEMO_CONFIG = {
   // MODO DEMO DESABILITADO - usar banco real

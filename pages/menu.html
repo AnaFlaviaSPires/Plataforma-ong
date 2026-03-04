@@ -350,6 +350,7 @@
       </div>
     </div>
 <!-- Scripts -->
+<script src="../js/config.js"></script>
 <script type="module">
 
     // Elementos do perfil do usuário
@@ -387,7 +388,7 @@
             const token = localStorage.getItem('authToken');
             if (token) {
                 try {
-                    const resp = await fetch('http://localhost:3003/api/auth/verify', {
+                    const resp = await fetch((window.API_BASE_URL || 'http://localhost:3003/api') + '/auth/verify', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (resp.ok) {

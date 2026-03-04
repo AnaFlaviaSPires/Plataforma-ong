@@ -369,9 +369,10 @@
 <script src="../js/translations.js"></script>
 <script src="../js/settings.js"></script>
 <script src="../js/navbar.js"></script>
+<script src="../js/config.js"></script>
 
 <script>
-    const API_BASE_URL = 'http://localhost:3003/api';
+    const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3003/api';
 
     function getEventColors(category) {
       const colors = {

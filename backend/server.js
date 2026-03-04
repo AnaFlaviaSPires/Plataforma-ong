@@ -37,10 +37,10 @@ if (process.env.NODE_ENV === 'production') {
   app.use('/api/', limiter);
 }
 
-// CORS - Permitir todas as origens em desenvolvimento
+// CORS - Permitir origens configuradas via FRONTEND_URL em produção
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://seudominio.com'] 
+    ? (process.env.FRONTEND_URL || '').split(',').map(url => url.trim())
     : true, // Permitir todas as origens em desenvolvimento
   credentials: true
 }));
@@ -107,8 +107,18 @@ async function startServer() {
     await sequelize.authenticate();
     console.log('✅ Conexão com MySQL estabelecida com sucesso!');
     
-    // Pular sincronização automática - usar apenas o script SQL
-    console.log('⚠️  Sincronização automática desabilitada - use o script setup.sql');
+    // Sincronizar models com o banco (criar/atualizar tabelas)
+    // Requer ALLOW_DB_SYNC=true nas variáveis de ambiente para alter:true
+    // Sem ALLOW_DB_SYNC, faz sync básico (só cria tabelas que não existem)
+    if (process.env.ALLOW_DB_SYNC === 'true') {
+      console.log('🔄 Sincronizando banco de dados (alter: true)...');
+      await sequelize.sync({ alter: true });
+      console.log('✅ Banco de dados sincronizado com sucesso!');
+    } else {
+      console.log('🔄 Verificando tabelas no banco de dados...');
+      await sequelize.sync();
+      console.log('✅ Tabelas verificadas/criadas com sucesso!');
+    }
     
     // Iniciar servidor
     app.listen(PORT, () => {

@@ -106,6 +106,7 @@
         </form>
     </div>
 
+    <script src="../js/config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('formPrimeiroAcesso');
@@ -195,7 +196,7 @@
                 const button = this.querySelector('.btn-entrar');
                 button.classList.add('loading');
 
-                const API_BASE_URL = 'http://localhost:3003/api';
+                const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3003/api';
 
                 const payload = {
                     nome: document.getElementById('nome').value.trim(),

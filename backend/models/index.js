@@ -220,10 +220,20 @@ Documento.belongsTo(User, {
 // 🛑 TRAVA DE SEGURANÇA DE DADOS 🛑
 // Sobrescreve o método sync para impedir force:true ou alter:true
 // Isso evita que o banco seja apagado acidentalmente.
+// Para permitir sincronização (ex: criar tabelas no TiDB Cloud),
+// defina a variável de ambiente: ALLOW_DB_SYNC=true
 // ============================================================
 const originalSync = sequelize.sync.bind(sequelize);
 sequelize.sync = async function(options) {
   if (options && (options.force || options.alter)) {
+    if (process.env.ALLOW_DB_SYNC === 'true') {
+      console.log('⚠️  ALLOW_DB_SYNC=true — Sincronização com alter/force permitida.');
+      if (options.force) {
+        console.error('🛑 BLOQUEIO: force:true continua proibido mesmo com ALLOW_DB_SYNC. Use alter:true.');
+        throw new Error('SEGURANÇA: sync({ force: true }) é sempre proibido.');
+      }
+      return originalSync(options);
+    }
     const msg = `
     🛑 BLOQUEIO DE SEGURANÇA CRÍTICO ATIVADO 🛑
     -------------------------------------------------------------
@@ -231,6 +241,9 @@ sequelize.sync = async function(options) {
     Comandos sync({ force: true }) ou sync({ alter: true }) são PROIBIDOS.
     
     Seus dados estão salvos. A operação foi cancelada.
+    
+    💡 Para criar tabelas pela primeira vez (ex: TiDB Cloud),
+       defina ALLOW_DB_SYNC=true nas variáveis de ambiente.
     -------------------------------------------------------------
     `;
     console.error(msg);

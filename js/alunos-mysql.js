@@ -257,7 +257,7 @@ async function loadAlunos() {
     
     // Tentar mostrar mensagem mais específica
     if (error.message.includes('Failed to fetch')) {
-      showAlert('Erro de conexão com o servidor. Verifique se o backend está rodando em http://localhost:3003', 'danger');
+      showAlert('Erro de conexão com o servidor. Verifique se o backend está rodando.', 'danger');
     } else if (error.message.includes('401')) {
       showAlert('Erro de autenticação. Faça login novamente.', 'danger');
     } else if (error.message.includes('403')) {

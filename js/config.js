@@ -2,32 +2,42 @@
 // Este arquivo deve ser carregado ANTES de todos os outros scripts
 
 (function() {
-  // Detecta automaticamente o IP do servidor baseado na URL atual
-  // Isso permite que o frontend funcione em rede local sem configuração manual
+  // ============================================================
+  // URL do backend em produção (Render)
+  // Após o deploy do backend no Render, substitua pela URL real.
+  // Exemplo: 'https://plataforma-ong-backend.onrender.com/api'
+  // ============================================================
+  var PRODUCTION_API_URL = 'https://SEU-BACKEND.onrender.com/api';
+
+  // Detecta se estamos em ambiente de produção (Vercel/domínio externo)
+  var hostname = window.location.hostname || 'localhost';
+  var isLocal = (hostname === 'localhost' || hostname === '127.0.0.1' || window.location.protocol === 'file:');
   
-  var serverHost = window.location.hostname || 'localhost';
-  var serverPort = '3003'; // Porta padrão do backend
-  var protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
-  
-  // Se estiver acessando via arquivo local (file://), usa localhost
-  if (window.location.protocol === 'file:') {
-    serverHost = 'localhost';
-    protocol = 'http:';
-  }
-  
-  // Permite sobrescrever via localStorage (para configuração manual)
-  var customServerIP = localStorage.getItem('serverIP');
-  if (customServerIP) {
-    serverHost = customServerIP;
-  }
-  
-  var customServerPort = localStorage.getItem('serverPort');
-  if (customServerPort) {
-    serverPort = customServerPort;
-  }
-  
-  // Define a URL base da API
-  if (typeof API_BASE_URL === 'undefined') {
+  if (!isLocal && PRODUCTION_API_URL.indexOf('SEU-BACKEND') === -1) {
+    // Produção: usa a URL do backend no Render
+    window.API_BASE_URL = PRODUCTION_API_URL;
+  } else {
+    // Desenvolvimento local: detecta automaticamente
+    var serverHost = hostname;
+    var serverPort = '3003';
+    var protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+    
+    if (window.location.protocol === 'file:') {
+      serverHost = 'localhost';
+      protocol = 'http:';
+    }
+    
+    // Permite sobrescrever via localStorage (para configuração manual)
+    var customServerIP = localStorage.getItem('serverIP');
+    if (customServerIP) {
+      serverHost = customServerIP;
+    }
+    
+    var customServerPort = localStorage.getItem('serverPort');
+    if (customServerPort) {
+      serverPort = customServerPort;
+    }
+    
     window.API_BASE_URL = protocol + '//' + serverHost + ':' + serverPort + '/api';
   }
   
@@ -35,7 +45,7 @@
   window.setServerConfig = function(ip, port) {
     localStorage.setItem('serverIP', ip);
     if (port) localStorage.setItem('serverPort', port);
-    console.log('Servidor configurado para: ' + ip + ':' + (port || serverPort));
+    console.log('Servidor configurado para: ' + ip + ':' + (port || '3003'));
     console.log('Recarregue a página para aplicar.');
   };
   

@@ -48,11 +48,12 @@
         </form>
     </div>
 
+    <script src="../js/config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('formRecuperarSenha');
             const mensagemDiv = document.getElementById('mensagem');
-            const API_BASE_URL = 'http://localhost:3003/api';
+            const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3003/api';
 
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();

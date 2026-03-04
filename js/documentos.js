@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3003/api';
+var API_URL = window.API_BASE_URL || 'http://localhost:3003/api';
 
 // Estado da aplicação
 let currentUser = null;

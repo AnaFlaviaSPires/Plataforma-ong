@@ -1,6 +1,6 @@
 class DoacoesManager {
     constructor() {
-        this.API_BASE_URL = 'http://localhost:3003/api';
+        this.API_BASE_URL = window.API_BASE_URL || 'http://localhost:3003/api';
         this.doacoes = [];
         this.ultimoId = 1;
         this.filtroTimeout = null;
