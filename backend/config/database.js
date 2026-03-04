@@ -8,6 +8,7 @@ const commonOptions = {
   dialectModule: require('mysql2'),
   dialectOptions: {
     ssl: {
+      require: true,
       rejectUnauthorized: false,
     },
   },
