@@ -121,18 +121,12 @@ async function startServer() {
     await sequelize.authenticate();
     console.log('✅ Conexão com MySQL estabelecida com sucesso!');
     
-    // Sincronizar models com o banco (criar/atualizar tabelas)
-    // Requer ALLOW_DB_SYNC=true nas variáveis de ambiente para alter:true
-    // Sem ALLOW_DB_SYNC, faz sync básico (só cria tabelas que não existem)
-    if (process.env.ALLOW_DB_SYNC === 'true') {
-      console.log('🔄 Sincronizando banco de dados (alter: true)...');
-      await sequelize.sync({ alter: true });
-      console.log('✅ Banco de dados sincronizado com sucesso!');
-    } else {
-      console.log('🔄 Verificando tabelas no banco de dados...');
-      await sequelize.sync();
-      console.log('✅ Tabelas verificadas/criadas com sucesso!');
-    }
+    // Sincronizar models com o banco (só cria tabelas que não existem)
+    // TiDB Cloud não suporta ALTER TABLE em constraints UNIQUE/INDEX
+    // Para alterações de schema, usar migrations ou SQL manual
+    console.log('🔄 Verificando tabelas no banco de dados...');
+    await sequelize.sync();
+    console.log('✅ Tabelas verificadas/criadas com sucesso!');
     
     // Iniciar servidor
     app.listen(PORT, () => {
