@@ -123,10 +123,13 @@ async function startServer() {
     
     // Sincronizar models com o banco (só cria tabelas que não existem)
     // TiDB Cloud não suporta ALTER TABLE em constraints UNIQUE/INDEX
-    // Para alterações de schema, usar migrations ou SQL manual
-    console.log('🔄 Verificando tabelas no banco de dados...');
-    await sequelize.sync();
-    console.log('✅ Tabelas verificadas/criadas com sucesso!');
+    try {
+      console.log('🔄 Verificando tabelas no banco de dados...');
+      await sequelize.sync();
+      console.log('✅ Tabelas verificadas/criadas com sucesso!');
+    } catch (syncError) {
+      console.error('⚠️ Erro ao sincronizar tabelas (servidor vai iniciar mesmo assim):', syncError.message);
+    }
     
     // Iniciar servidor
     app.listen(PORT, () => {
