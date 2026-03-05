@@ -24,12 +24,25 @@ const mysql2Wrapped = new Proxy(mysql2, {
   }
 });
 
-// Parâmetros de conexão (variáveis individuais)
-const dbHost = process.env.DB_HOST;
-const dbPort = process.env.DB_PORT || 3306;
-const dbName = process.env.DB_NAME;
-const dbUser = process.env.DB_USER;
-const dbPass = process.env.DB_PASSWORD;
+// Parâmetros de conexão
+let dbHost, dbPort, dbName, dbUser, dbPass;
+
+if (process.env.DATABASE_URL) {
+  const dbUrl = new URL(process.env.DATABASE_URL);
+  dbName = dbUrl.pathname.replace('/', '');
+  dbUser = decodeURIComponent(dbUrl.username);
+  dbPass = decodeURIComponent(dbUrl.password);
+  dbHost = dbUrl.hostname;
+  dbPort = dbUrl.port || 4000;
+  console.log('=== USANDO DATABASE_URL ===');
+} else {
+  dbHost = process.env.DB_HOST;
+  dbPort = process.env.DB_PORT || 3306;
+  dbName = process.env.DB_NAME;
+  dbUser = process.env.DB_USER;
+  dbPass = process.env.DB_PASSWORD;
+  console.log('=== USANDO VARIAVEIS INDIVIDUAIS ===');
+}
 
 console.log('=== DB CONFIG ===', { host: dbHost, port: dbPort, database: dbName });
 
