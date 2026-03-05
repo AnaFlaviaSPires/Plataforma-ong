@@ -1,9 +1,25 @@
+// ============================================================
+// database.js v5 - TiDB Cloud SSL Fix
+// ============================================================
+console.log('>>> database.js v5 carregado');
+
 const { Sequelize } = require('sequelize');
+const mysql2 = require('mysql2');
 require('dotenv').config();
 
-// Configuração da conexão com MySQL
-// Compatível com TiDB Cloud (SSL obrigatório)
-let sequelize;
+// CAMADA 3: Monkey-patch mysql2 para SEMPRE usar SSL
+// Isso garante SSL independente de como o Sequelize passa as opções
+const originalCreateConnection = mysql2.createConnection;
+mysql2.createConnection = function(config) {
+  if (!config.ssl) {
+    config.ssl = {
+      minVersion: 'TLSv1.2',
+      rejectUnauthorized: false
+    };
+    console.log('>>> mysql2 patch: SSL injetado na conexão');
+  }
+  return originalCreateConnection.call(mysql2, config);
+};
 
 // Determinar parâmetros de conexão
 let dbName, dbUser, dbPass, dbHost, dbPort;
@@ -23,12 +39,14 @@ if (process.env.DATABASE_URL) {
   dbPort = process.env.DB_PORT || 3306;
 }
 
-console.log('🔧 DB Config:', { host: dbHost, port: dbPort, database: dbName, user: dbUser ? '***' : 'undefined' });
+console.log('>>> DB:', { host: dbHost, port: dbPort, database: dbName });
 
-sequelize = new Sequelize(dbName, dbUser, dbPass, {
+// CAMADA 1: SSL via dialectOptions (método padrão do Sequelize)
+const sequelize = new Sequelize(dbName, dbUser, dbPass, {
   host: dbHost,
   port: dbPort,
   dialect: 'mysql',
+  dialectModule: mysql2,
   logging: false,
   dialectOptions: {
     ssl: {
@@ -50,11 +68,11 @@ sequelize = new Sequelize(dbName, dbUser, dbPass, {
   timezone: '-03:00'
 });
 
-// Hook para GARANTIR que SSL é injetado em cada conexão mysql2
-// Isso contorna qualquer problema de merge de opções do Sequelize
+// CAMADA 2: Hook beforeConnect para injetar SSL no dialectOptions
 sequelize.addHook('beforeConnect', (config) => {
-  console.log('🔒 beforeConnect: injetando SSL na conexão mysql2');
-  config.ssl = {
+  console.log('>>> beforeConnect hook executado');
+  config.dialectOptions = config.dialectOptions || {};
+  config.dialectOptions.ssl = {
     minVersion: 'TLSv1.2',
     rejectUnauthorized: false
   };
