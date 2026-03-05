@@ -1,58 +1,46 @@
 // ============================================================
-// database.js v5 - TiDB Cloud SSL Fix
+// database.js v6 - TiDB Cloud SSL Fix
 // ============================================================
-console.log('>>> database.js v5 carregado');
+console.log('=== DATABASE.JS V6 CARREGADO ===');
 
 const { Sequelize } = require('sequelize');
 const mysql2 = require('mysql2');
 require('dotenv').config();
 
-// CAMADA 3: Monkey-patch mysql2 para SEMPRE usar SSL
-// Isso garante SSL independente de como o Sequelize passa as opções
-const originalCreateConnection = mysql2.createConnection;
-mysql2.createConnection = function(config) {
-  if (!config.ssl) {
-    config.ssl = {
-      minVersion: 'TLSv1.2',
-      rejectUnauthorized: false
-    };
-    console.log('>>> mysql2 patch: SSL injetado na conexão');
+// SSL obrigatório para TiDB Cloud
+const SSL_CONFIG = { minVersion: 'TLSv1.2', rejectUnauthorized: false };
+
+// Proxy que intercepta mysql2.createConnection e FORÇA SSL
+const mysql2Wrapped = new Proxy(mysql2, {
+  get(target, prop) {
+    if (prop === 'createConnection') {
+      return function(config) {
+        config.ssl = SSL_CONFIG;
+        console.log('=== MYSQL2 PROXY: SSL FORCADO ===');
+        return target.createConnection(config);
+      };
+    }
+    return target[prop];
   }
-  return originalCreateConnection.call(mysql2, config);
-};
+});
 
-// Determinar parâmetros de conexão
-let dbName, dbUser, dbPass, dbHost, dbPort;
+// Parâmetros de conexão (variáveis individuais)
+const dbHost = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT || 3306;
+const dbName = process.env.DB_NAME;
+const dbUser = process.env.DB_USER;
+const dbPass = process.env.DB_PASSWORD;
 
-if (process.env.DATABASE_URL) {
-  const dbUrl = new URL(process.env.DATABASE_URL);
-  dbName = dbUrl.pathname.replace('/', '');
-  dbUser = decodeURIComponent(dbUrl.username);
-  dbPass = decodeURIComponent(dbUrl.password);
-  dbHost = dbUrl.hostname;
-  dbPort = dbUrl.port || 4000;
-} else {
-  dbName = process.env.DB_NAME;
-  dbUser = process.env.DB_USER;
-  dbPass = process.env.DB_PASSWORD;
-  dbHost = process.env.DB_HOST;
-  dbPort = process.env.DB_PORT || 3306;
-}
+console.log('=== DB CONFIG ===', { host: dbHost, port: dbPort, database: dbName });
 
-console.log('>>> DB:', { host: dbHost, port: dbPort, database: dbName });
-
-// CAMADA 1: SSL via dialectOptions (método padrão do Sequelize)
 const sequelize = new Sequelize(dbName, dbUser, dbPass, {
   host: dbHost,
-  port: dbPort,
+  port: parseInt(dbPort),
   dialect: 'mysql',
-  dialectModule: mysql2,
+  dialectModule: mysql2Wrapped,
   logging: false,
   dialectOptions: {
-    ssl: {
-      minVersion: 'TLSv1.2',
-      rejectUnauthorized: false
-    }
+    ssl: SSL_CONFIG
   },
   pool: {
     max: 10,
@@ -68,14 +56,10 @@ const sequelize = new Sequelize(dbName, dbUser, dbPass, {
   timezone: '-03:00'
 });
 
-// CAMADA 2: Hook beforeConnect para injetar SSL no dialectOptions
+// Hook extra: injetar SSL antes de cada conexão
 sequelize.addHook('beforeConnect', (config) => {
-  console.log('>>> beforeConnect hook executado');
-  config.dialectOptions = config.dialectOptions || {};
-  config.dialectOptions.ssl = {
-    minVersion: 'TLSv1.2',
-    rejectUnauthorized: false
-  };
+  config.ssl = SSL_CONFIG;
+  console.log('=== BEFORE CONNECT: SSL INJETADO ===');
 });
 
 module.exports = sequelize;
