@@ -1,3 +1,17 @@
+// ============================================================
+// PATCH SSL - Deve ser o PRIMEIRO código executado
+// Força SSL em TODA conexão MySQL do Sequelize
+// ============================================================
+console.log('*** SERVER.JS V7 INICIANDO ***');
+const mysql2SSL = require('mysql2');
+const origCreateConn = mysql2SSL.createConnection;
+mysql2SSL.createConnection = function(opts) {
+  opts.ssl = { minVersion: 'TLSv1.2', rejectUnauthorized: false };
+  console.log('*** SSL FORCADO NA CONEXAO ***');
+  return origCreateConn.call(this, opts);
+};
+// ============================================================
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');

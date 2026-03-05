@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: plataforma-ong-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_HOST
+        fromGroup: tidb
+      - key: DB_PORT
+        fromGroup: tidb
+      - key: DB_USER
+        fromGroup: tidb
+      - key: DB_PASSWORD
+        fromGroup: tidb
+      - key: DB_NAME
+        fromGroup: tidb
