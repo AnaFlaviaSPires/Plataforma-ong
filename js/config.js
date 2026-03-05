@@ -7,7 +7,7 @@
   // Após o deploy do backend no Render, substitua pela URL real.
   // Exemplo: 'https://plataforma-ong-backend.onrender.com/api'
   // ============================================================
-  var PRODUCTION_API_URL = 'https://SEU-BACKEND.onrender.com/api';
+  var PRODUCTION_API_URL = 'https://plataforma-ong-backend.onrender.com/api';
 
   // Detecta se estamos em ambiente de produção (Vercel/domínio externo)
   var hostname = window.location.hostname || 'localhost';
