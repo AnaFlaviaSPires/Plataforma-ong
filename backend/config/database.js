@@ -1,78 +1,30 @@
-// ============================================================
-// database.js v6 - TiDB Cloud SSL Fix
-// ============================================================
-console.log('=== DATABASE.JS V6 CARREGADO ===');
-
+// Configuração baseada no exemplo oficial TiDB Cloud + Sequelize:
+// https://github.com/tidb-samples/tidb-nodejs-sequelize-quickstart
 const { Sequelize } = require('sequelize');
-const mysql2 = require('mysql2');
 require('dotenv').config();
 
-// SSL obrigatório para TiDB Cloud
-const SSL_CONFIG = { minVersion: 'TLSv1.2', rejectUnauthorized: false };
+console.log('*** database.js v8 ***');
 
-// Proxy que intercepta mysql2.createConnection e FORÇA SSL
-const mysql2Wrapped = new Proxy(mysql2, {
-  get(target, prop) {
-    if (prop === 'createConnection') {
-      return function(config) {
-        config.ssl = SSL_CONFIG;
-        console.log('=== MYSQL2 PROXY: SSL FORCADO ===');
-        return target.createConnection(config);
-      };
-    }
-    return target[prop];
-  }
-});
-
-// Parâmetros de conexão
-let dbHost, dbPort, dbName, dbUser, dbPass;
-
-if (process.env.DATABASE_URL) {
-  const dbUrl = new URL(process.env.DATABASE_URL);
-  dbName = dbUrl.pathname.replace('/', '');
-  dbUser = decodeURIComponent(dbUrl.username);
-  dbPass = decodeURIComponent(dbUrl.password);
-  dbHost = dbUrl.hostname;
-  dbPort = dbUrl.port || 4000;
-  console.log('=== USANDO DATABASE_URL ===');
-} else {
-  dbHost = process.env.DB_HOST;
-  dbPort = process.env.DB_PORT || 3306;
-  dbName = process.env.DB_NAME;
-  dbUser = process.env.DB_USER;
-  dbPass = process.env.DB_PASSWORD;
-  console.log('=== USANDO VARIAVEIS INDIVIDUAIS ===');
-}
-
-console.log('=== DB CONFIG ===', { host: dbHost, port: dbPort, database: dbName });
-
-const sequelize = new Sequelize(dbName, dbUser, dbPass, {
-  host: dbHost,
-  port: parseInt(dbPort),
+const sequelize = new Sequelize({
   dialect: 'mysql',
-  dialectModule: mysql2Wrapped,
+  host: process.env.DB_HOST || 'localhost',
+  port: Number(process.env.DB_PORT) || 4000,
+  username: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'test',
   logging: false,
   dialectOptions: {
-    ssl: SSL_CONFIG
-  },
-  pool: {
-    max: 10,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
+    ssl: {
+      minVersion: 'TLSv1.2',
+      rejectUnauthorized: true,
+    },
   },
   define: {
     timestamps: true,
     underscored: true,
-    freezeTableName: true
+    freezeTableName: true,
   },
-  timezone: '-03:00'
-});
-
-// Hook extra: injetar SSL antes de cada conexão
-sequelize.addHook('beforeConnect', (config) => {
-  config.ssl = SSL_CONFIG;
-  console.log('=== BEFORE CONNECT: SSL INJETADO ===');
+  timezone: '-03:00',
 });
 
 module.exports = sequelize;
