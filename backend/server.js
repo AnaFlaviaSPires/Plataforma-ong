@@ -31,7 +31,7 @@ const eventosRoutes = require('./routes/eventos');
 const documentosRoutes = require('./routes/documentos');
 
 // Importar configuração do banco
-const { sequelize } = require('./models');
+const { sequelize, User } = require('./models');
 
 const app = express();
 const PORT = process.env.PORT || 3003;
@@ -140,7 +140,24 @@ async function startServer() {
     } catch (syncError) {
       console.error('⚠️ Erro ao sincronizar tabelas (servidor vai iniciar mesmo assim):', syncError.message);
     }
-    
+
+    // Criar admin padrão se não existir nenhum usuário
+    try {
+      const userCount = await User.count();
+      if (userCount === 0) {
+        await User.create({
+          nome: 'Administrador',
+          email: 'ongnovoamanha@hotmail.com',
+          senha: 'admin123',
+          cargo: 'admin',
+          ativo: true
+        });
+        console.log('👤 Usuário admin padrão criado: ongnovoamanha@hotmail.com / admin123');
+      }
+    } catch (seedError) {
+      console.error('⚠️ Erro ao criar admin padrão:', seedError.message);
+    }
+
     // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`🚀 Servidor rodando na porta ${PORT}`);
