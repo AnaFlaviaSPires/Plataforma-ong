@@ -51,11 +51,21 @@ if (process.env.NODE_ENV === 'production') {
   app.use('/api/', limiter);
 }
 
-// CORS - Permitir origens configuradas via FRONTEND_URL em produção
+// CORS - Permitir origens do frontend
+const allowedOrigins = [
+  'http://localhost:3003',
+  'http://localhost:3000',
+  'https://plataforma-ong.vercel.app'
+];
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? (process.env.FRONTEND_URL || '').split(',').map(url => url.trim())
-    : true, // Permitir todas as origens em desenvolvimento
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS not allowed'), false);
+  },
   credentials: true
 }));
 
