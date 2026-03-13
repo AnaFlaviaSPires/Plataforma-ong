@@ -152,7 +152,7 @@ async function startServer() {
           cargo: 'admin',
           ativo: true
         });
-        console.log('👤 Usuário admin padrão criado: ongnovoamanha@hotmail.com / admin123');
+        console.log('👤 Usuário admin padrão criado: admin@ongnovoamanha.org / admin123');
       }
     } catch (seedError) {
       console.error('⚠️ Erro ao criar admin padrão:', seedError.message);
