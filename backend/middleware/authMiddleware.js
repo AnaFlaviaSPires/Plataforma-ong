@@ -2,6 +2,10 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { logAction } = require('./auditMiddleware');
 
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  console.error('🛑 SEGURANÇA: JWT_SECRET não definido em produção! Defina a variável de ambiente.');
+  process.exit(1);
+}
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-ong-novo-amanha';
 
 const authMiddleware = async (req, res, next) => {

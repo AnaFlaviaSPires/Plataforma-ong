@@ -7,6 +7,10 @@ const { Op } = require('sequelize');
 const { logAction } = require('../middleware/auditMiddleware');
 const { sendEmail, templates } = require('../services/emailService');
 
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  console.error('🛑 SEGURANÇA: JWT_SECRET não definido em produção! Defina a variável de ambiente.');
+  process.exit(1);
+}
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-ong-novo-amanha';
 
 // Gerar token JWT

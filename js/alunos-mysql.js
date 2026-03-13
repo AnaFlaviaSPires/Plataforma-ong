@@ -10,16 +10,10 @@ async function initializeApp() {
   // Configurar event listeners primeiro
   setupEventListeners();
 
-  // Se não há token, criar usuário mock para desenvolvimento
+  // Se não há token, redirecionar para login
   if (!authToken) {
-    console.warn('Sem token de autenticação - usando modo desenvolvimento');
-    currentUser = {
-      id: 1,
-      nome: 'Usuário Desenvolvimento',
-      email: 'dev@ongnovoamanha.org'
-    };
-    initializeUI(currentUser);
-    await loadAlunos();
+    console.warn('Sem token de autenticação - redirecionando para login');
+    window.location.href = '../index.html';
     return;
   }
 
@@ -38,24 +32,16 @@ async function initializeApp() {
     const userData = await response.json();
     currentUser = userData.user;
     
-    // Debug para diagnóstico
-    console.log('Usuário logado:', currentUser);
-    
     initializeUI(userData.user);
     applyPermissions(userData.user); // Aplicar permissões imediatamente
     await loadAlunos();
   } catch (error) {
     console.error('Erro de autenticação:', error);
-    // Em caso de erro, usar modo desenvolvimento
-    currentUser = {
-      id: 1,
-      nome: 'Usuário Desenvolvimento',
-      email: 'dev@ongnovoamanha.org',
-      cargo: 'admin' // Dev é admin
-    };
-    initializeUI(currentUser);
-    applyPermissions(currentUser);
-    await loadAlunos();
+    // Token inválido ou expirado - redirecionar para login
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('user');
+    window.location.href = '../index.html';
   }
 }
 

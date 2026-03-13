@@ -62,8 +62,7 @@ const getProfessores = async (req, res) => {
   } catch (error) {
     console.error('Erro ao buscar professores:', error);
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
@@ -92,8 +91,7 @@ const getProfessor = async (req, res) => {
   } catch (error) {
     console.error('Erro ao buscar professor:', error);
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
@@ -141,8 +139,7 @@ const createProfessor = async (req, res) => {
     }
 
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
@@ -196,8 +193,7 @@ const updateProfessor = async (req, res) => {
     }
 
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
@@ -236,8 +232,7 @@ const deleteProfessor = async (req, res) => {
   } catch (error) {
     console.error('Erro ao excluir professor:', error);
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
@@ -275,8 +270,7 @@ const reactivateProfessor = async (req, res) => {
   } catch (error) {
     console.error('Erro ao reativar professor:', error);
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
@@ -304,8 +298,7 @@ const getProfessoresPorStatus = async (req, res) => {
   } catch (error) {
     console.error('Erro ao buscar professores por status:', error);
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
@@ -380,8 +373,7 @@ const getEstatisticas = async (req, res) => {
   } catch (error) {
     console.error('Erro ao buscar estatísticas:', error);
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
@@ -430,8 +422,7 @@ const getLixeira = async (req, res) => {
   } catch (error) {
     console.error('Erro ao buscar lixeira de professores:', error);
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
@@ -470,8 +461,7 @@ const restoreProfessor = async (req, res) => {
   } catch (error) {
     console.error('Erro ao restaurar professor:', error);
     res.status(500).json({
-      error: 'Erro interno do servidor',
-      message: error.message
+      error: 'Erro interno do servidor'
     });
   }
 };
