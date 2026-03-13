@@ -61,23 +61,21 @@ async function createChamada(req, res, next) {
     if (registrosData.length) {
       await ChamadaRegistro.bulkCreate(registrosData);
       
-      // Atualizar estatísticas de frequência silenciosamente (para Power BI)
-      for (const registro of registrosData) {
-        if (registro.presente) {
-          await Aluno.increment('total_presencas', {
-            by: 1,
-            where: { id: registro.aluno_id }
-          });
-        } else {
-          await Aluno.increment('total_faltas', {
-            by: 1,
-            where: { id: registro.aluno_id }
-          });
-        }
-        // Atualizar timestamp
+      // Atualizar estatísticas de frequência em bulk (para Power BI)
+      const presenteIds = registrosData.filter(r => r.presente).map(r => r.aluno_id);
+      const faltaIds = registrosData.filter(r => !r.presente).map(r => r.aluno_id);
+      const todosIds = registrosData.map(r => r.aluno_id);
+
+      if (presenteIds.length) {
+        await Aluno.increment('total_presencas', { by: 1, where: { id: presenteIds } });
+      }
+      if (faltaIds.length) {
+        await Aluno.increment('total_faltas', { by: 1, where: { id: faltaIds } });
+      }
+      if (todosIds.length) {
         await Aluno.update(
           { ultima_atualizacao_frequencia: new Date() },
-          { where: { id: registro.aluno_id } }
+          { where: { id: todosIds } }
         );
       }
       

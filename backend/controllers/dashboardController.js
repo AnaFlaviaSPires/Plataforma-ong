@@ -89,25 +89,36 @@ const getDashboardStats = async (req, res) => {
       attributes: ['id', 'nome', 'turma', 'data_matricula', 'created_at']
     });
 
-    // Crescimento mensal (últimos 6 meses)
+    // Crescimento mensal (últimos 6 meses) - query única com GROUP BY
+    const seisAtras = new Date();
+    seisAtras.setMonth(seisAtras.getMonth() - 5);
+    const inicioSeisMeses = new Date(seisAtras.getFullYear(), seisAtras.getMonth(), 1);
+
+    const crescimentoRaw = await Aluno.findAll({
+      attributes: [
+        [Aluno.sequelize.fn('YEAR', Aluno.sequelize.col('created_at')), 'ano'],
+        [Aluno.sequelize.fn('MONTH', Aluno.sequelize.col('created_at')), 'mes_num'],
+        [Aluno.sequelize.fn('COUNT', Aluno.sequelize.col('id')), 'total']
+      ],
+      where: { created_at: { [Op.gte]: inicioSeisMeses } },
+      group: [
+        Aluno.sequelize.fn('YEAR', Aluno.sequelize.col('created_at')),
+        Aluno.sequelize.fn('MONTH', Aluno.sequelize.col('created_at'))
+      ],
+      raw: true
+    });
+
+    const crescimentoMap = {};
+    crescimentoRaw.forEach(r => { crescimentoMap[`${r.ano}-${r.mes_num}`] = parseInt(r.total); });
+
     const crescimentoMensal = [];
     for (let i = 5; i >= 0; i--) {
       const data = new Date();
       data.setMonth(data.getMonth() - i);
-      const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
-      const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
-
-      const count = await Aluno.count({
-        where: {
-          created_at: {
-            [Op.between]: [inicioMes, fimMes]
-          }
-        }
-      });
-
+      const key = `${data.getFullYear()}-${data.getMonth() + 1}`;
       crescimentoMensal.push({
         mes: data.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
-        total: count
+        total: crescimentoMap[key] || 0
       });
     }
 
@@ -131,32 +142,53 @@ const getDashboardStats = async (req, res) => {
       raw: true
     });
 
-    // Doações dos últimos 6 meses
+    // Doações dos últimos 6 meses - queries únicas com GROUP BY
+    const doacoesCountRaw = await Doacao.findAll({
+      attributes: [
+        [Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')), 'ano'],
+        [Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at')), 'mes_num'],
+        [Doacao.sequelize.fn('COUNT', Doacao.sequelize.col('id')), 'total']
+      ],
+      where: { created_at: { [Op.gte]: inicioSeisMeses } },
+      group: [
+        Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')),
+        Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at'))
+      ],
+      raw: true
+    });
+
+    const doacoesValorRaw = await Doacao.findAll({
+      attributes: [
+        [Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')), 'ano'],
+        [Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at')), 'mes_num'],
+        [Doacao.sequelize.fn('SUM', Doacao.sequelize.col('valor')), 'valor']
+      ],
+      where: {
+        tipo: 'dinheiro',
+        status: 'confirmada',
+        created_at: { [Op.gte]: inicioSeisMeses }
+      },
+      group: [
+        Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')),
+        Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at'))
+      ],
+      raw: true
+    });
+
+    const doacoesCountMap = {};
+    doacoesCountRaw.forEach(r => { doacoesCountMap[`${r.ano}-${r.mes_num}`] = parseInt(r.total); });
+    const doacoesValorMap = {};
+    doacoesValorRaw.forEach(r => { doacoesValorMap[`${r.ano}-${r.mes_num}`] = parseFloat(r.valor) || 0; });
+
     const doacoesMensal = [];
     for (let i = 5; i >= 0; i--) {
       const data = new Date();
       data.setMonth(data.getMonth() - i);
-      const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
-      const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
-
-      const count = await Doacao.count({
-        where: {
-          created_at: { [Op.between]: [inicioMes, fimMes] }
-        }
-      });
-
-      const valor = await Doacao.sum('valor', {
-        where: {
-          tipo: 'dinheiro',
-          status: 'confirmada',
-          created_at: { [Op.between]: [inicioMes, fimMes] }
-        }
-      }) || 0;
-
+      const key = `${data.getFullYear()}-${data.getMonth() + 1}`;
       doacoesMensal.push({
         mes: data.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
-        total: count,
-        valor: valor
+        total: doacoesCountMap[key] || 0,
+        valor: doacoesValorMap[key] || 0
       });
     }
 
@@ -244,36 +276,43 @@ const getDashboardStats = async (req, res) => {
         : 0
     }));
 
-    // === FREQUÊNCIA POR PERÍODO (últimos 6 meses) ===
+    // === FREQUÊNCIA POR PERÍODO (últimos 6 meses) - query única ===
+    const frequenciaRaw = await ChamadaRegistro.findAll({
+      attributes: [
+        'presente',
+        [ChamadaRegistro.sequelize.fn('YEAR', ChamadaRegistro.sequelize.col('chamada.data')), 'ano'],
+        [ChamadaRegistro.sequelize.fn('MONTH', ChamadaRegistro.sequelize.col('chamada.data')), 'mes_num'],
+        [ChamadaRegistro.sequelize.fn('COUNT', ChamadaRegistro.sequelize.col('ChamadaRegistro.id')), 'total']
+      ],
+      include: [{
+        model: Chamada,
+        as: 'chamada',
+        attributes: [],
+        where: { data: { [Op.gte]: inicioSeisMeses } }
+      }],
+      group: [
+        ChamadaRegistro.sequelize.fn('YEAR', ChamadaRegistro.sequelize.col('chamada.data')),
+        ChamadaRegistro.sequelize.fn('MONTH', ChamadaRegistro.sequelize.col('chamada.data')),
+        'presente'
+      ],
+      raw: true
+    });
+
+    const freqPresMap = {};
+    const freqFaltMap = {};
+    frequenciaRaw.forEach(r => {
+      const key = `${r.ano}-${r.mes_num}`;
+      if (r.presente) freqPresMap[key] = parseInt(r.total);
+      else freqFaltMap[key] = parseInt(r.total);
+    });
+
     const frequenciaMensal = [];
     for (let i = 5; i >= 0; i--) {
       const data = new Date();
       data.setMonth(data.getMonth() - i);
-      const inicioMes = new Date(data.getFullYear(), data.getMonth(), 1);
-      const fimMes = new Date(data.getFullYear(), data.getMonth() + 1, 0);
-
-      const chamadasMes = await Chamada.findAll({
-        where: {
-          data: { [Op.between]: [inicioMes, fimMes] }
-        },
-        include: [{
-          model: ChamadaRegistro,
-          as: 'registros',
-          attributes: ['presente']
-        }]
-      });
-
-      let presencasMes = 0;
-      let faltasMes = 0;
-      chamadasMes.forEach(chamada => {
-        if (chamada.registros) {
-          chamada.registros.forEach(reg => {
-            if (reg.presente) presencasMes++;
-            else faltasMes++;
-          });
-        }
-      });
-
+      const key = `${data.getFullYear()}-${data.getMonth() + 1}`;
+      const presencasMes = freqPresMap[key] || 0;
+      const faltasMes = freqFaltMap[key] || 0;
       frequenciaMensal.push({
         mes: data.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
         presencas: presencasMes,
