@@ -5,7 +5,7 @@ const { Op } = require('sequelize');
 const getDashboardStats = async (req, res) => {
   try {
     // Estatísticas básicas
-    const totalAlunos = await Aluno.count({ where: { ativo: true } });
+    const totalAlunos = await Aluno.count(); // Total geral (todos os status)
     const totalUsuarios = await User.count({ where: { ativo: true } });
     const alunosInativos = await Aluno.count({ where: { ativo: false } });
     

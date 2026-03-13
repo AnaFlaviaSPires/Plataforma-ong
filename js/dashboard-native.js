@@ -124,23 +124,44 @@ function updateCharts(data) {
         'aguardando_vaga': '#f39c12'
     };
     
-    if (statusData.length > 0) {
-        createOrUpdateChart('chartAlunosStatus', {
-            type: 'doughnut',
-            data: {
-                labels: statusData.map(s => statusLabels[s.status] || s.status || 'Desconhecido'),
-                datasets: [{
-                    data: statusData.map(s => parseInt(s.total) || 0),
-                    backgroundColor: statusData.map(s => statusColors[s.status] || '#6c757d')
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom' } }
+    // Garantir que todas as 5 categorias apareçam (mesmo com 0)
+    const allStatuses = ['matriculado', 'inativo', 'cancelado', 'formado', 'aguardando_vaga'];
+    const statusMap = {};
+    statusData.forEach(s => { statusMap[s.status] = parseInt(s.total) || 0; });
+    const fullStatusData = allStatuses.map(s => statusMap[s] || 0);
+    const fullStatusLabelsArr = allStatuses.map(s => statusLabels[s]);
+    const fullStatusColorsArr = allStatuses.map(s => statusColors[s]);
+
+    createOrUpdateChart('chartAlunosStatus', {
+        type: 'doughnut',
+        data: {
+            labels: fullStatusLabelsArr,
+            datasets: [{
+                data: fullStatusData,
+                backgroundColor: fullStatusColorsArr
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            return data.labels.map((label, i) => ({
+                                text: label + ' (' + data.datasets[0].data[i] + ')',
+                                fillStyle: data.datasets[0].backgroundColor[i],
+                                hidden: false,
+                                index: i
+                            }));
+                        }
+                    }
+                }
             }
-        });
-    }
+        }
+    });
 
     // 2. Alunos por Sala
     let alunosSala = data.alunos?.por_sala || [];
@@ -160,7 +181,7 @@ function updateCharts(data) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: { legend: { display: true, position: 'top' } },
             scales: { y: { beginAtZero: true } }
         }
     });
@@ -169,19 +190,21 @@ function updateCharts(data) {
     let freqSala = data.frequencia?.por_sala || [];
     if (!Array.isArray(freqSala)) freqSala = [freqSala];
     
+    const totalPresFreq = freqSala.reduce((acc, s) => acc + (parseInt(s.presencas) || 0), 0);
+    const totalFaltFreq = freqSala.reduce((acc, s) => acc + (parseInt(s.faltas) || 0), 0);
     createOrUpdateChart('chartFrequenciaSala', {
         type: 'bar',
         data: {
             labels: freqSala.length > 0 ? freqSala.map(s => s.sala_nome || 'Sem nome') : ['Nenhuma sala'],
             datasets: [
                 {
-                    label: 'Presencas',
+                    label: 'Presencas (' + totalPresFreq + ')',
                     data: freqSala.length > 0 ? freqSala.map(s => parseInt(s.presencas) || 0) : [0],
                     backgroundColor: '#9b59b6',
                     borderRadius: 5
                 },
                 {
-                    label: 'Faltas',
+                    label: 'Faltas (' + totalFaltFreq + ')',
                     data: freqSala.length > 0 ? freqSala.map(s => parseInt(s.faltas) || 0) : [0],
                     backgroundColor: '#8e44ad',
                     borderRadius: 5
@@ -191,7 +214,7 @@ function updateCharts(data) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'top' } },
+            plugins: { legend: { display: true, position: 'top' } },
             scales: { y: { beginAtZero: true } }
         }
     });
@@ -200,20 +223,22 @@ function updateCharts(data) {
     let doacoesMensal = data.doacoes?.mensal || [];
     if (!Array.isArray(doacoesMensal)) doacoesMensal = [doacoesMensal];
     
+    const totalQtdDoacao = doacoesMensal.reduce((acc, m) => acc + (parseInt(m.total) || 0), 0);
+    const totalValDoacao = doacoesMensal.reduce((acc, m) => acc + (parseFloat(m.valor) || 0), 0);
     createOrUpdateChart('chartDoacoesMensal', {
         type: 'bar',
         data: {
             labels: doacoesMensal.map(m => m.mes || ''),
             datasets: [
                 {
-                    label: 'Quantidade',
+                    label: 'Quantidade (' + totalQtdDoacao + ')',
                     data: doacoesMensal.map(m => parseInt(m.total) || 0),
                     backgroundColor: '#9b59b6',
                     borderRadius: 5,
                     yAxisID: 'y'
                 },
                 {
-                    label: 'Valor (R$)',
+                    label: 'Valor (R$ ' + totalValDoacao.toLocaleString('pt-BR', {minimumFractionDigits:2}) + ')',
                     data: doacoesMensal.map(m => parseFloat(m.valor) || 0),
                     type: 'line',
                     borderColor: '#8e44ad',
@@ -227,7 +252,7 @@ function updateCharts(data) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'top' } },
+            plugins: { legend: { display: true, position: 'top' } },
             scales: {
                 y: { type: 'linear', position: 'left', beginAtZero: true, title: { display: true, text: 'Qtd' } },
                 y1: { type: 'linear', position: 'right', beginAtZero: true, title: { display: true, text: 'R$' }, grid: { drawOnChartArea: false } }
@@ -324,7 +349,7 @@ function showFrequenciaAluno(data) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'top' } },
+            plugins: { legend: { display: true, position: 'top' } },
             scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }
         }
     });
