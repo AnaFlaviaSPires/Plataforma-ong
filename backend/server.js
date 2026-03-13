@@ -2,7 +2,6 @@
 // PATCH SSL - Deve ser o PRIMEIRO código executado
 // Força SSL em TODA conexão MySQL do Sequelize
 // ============================================================
-console.log('*** SERVER.JS V7 INICIANDO ***');
 const mysql2SSL = require('mysql2');
 const origCreateConn = mysql2SSL.createConnection;
 mysql2SSL.createConnection = function(opts) {
@@ -55,13 +54,24 @@ if (process.env.NODE_ENV === 'production') {
 const allowedOrigins = [
   'http://localhost:3003',
   'http://localhost:3000',
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
   'https://plataforma-ong.vercel.app'
 ];
+
+// Adicionar FRONTEND_URL do env se definida
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
 
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    // Aceitar preview deploys do Vercel (subdomínios *.vercel.app)
+    if (origin.endsWith('.vercel.app')) {
       return callback(null, true);
     }
     return callback(new Error('CORS not allowed'), false);

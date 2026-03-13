@@ -73,7 +73,9 @@ class SessionTimeout {
         // Mostrar modal de aviso
         this.modal.show();
         
-        // Remover usuário do localStorage (simula logout)
+        // Remover dados de sessão do localStorage
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
         localStorage.removeItem('user');
         
         // Redirecionar para a página de login após 5 segundos se o usuário não interagir

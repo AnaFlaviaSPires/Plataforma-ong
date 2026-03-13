@@ -1,4 +1,4 @@
-var API_URL = window.API_BASE_URL || 'http://localhost:3003/api';
+var API_BASE_URL = window.API_BASE_URL || 'http://localhost:3003/api';
 
 // Estado da aplicação
 let currentUser = null;
@@ -48,6 +48,7 @@ function setupEventListeners() {
     document.getElementById('logoutBtn')?.addEventListener('click', () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userData');
+        localStorage.removeItem('user');
         window.location.href = 'index.html';
     });
 }
@@ -57,7 +58,7 @@ async function carregarDocumentos() {
         toggleLoading(true);
         const token = localStorage.getItem('authToken');
         
-        const response = await fetch(`${API_URL}/documentos`, {
+        const response = await fetch(`${API_BASE_URL}/documentos`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -175,7 +176,7 @@ async function handleNovoDocumento(e) {
         toggleLoading(true);
         const token = localStorage.getItem('authToken');
 
-        const response = await fetch(`${API_URL}/documentos`, {
+        const response = await fetch(`${API_BASE_URL}/documentos`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -210,7 +211,7 @@ window.deletarDocumento = async (id) => {
         toggleLoading(true);
         const token = localStorage.getItem('authToken');
 
-        const response = await fetch(`${API_URL}/documentos/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/documentos/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`

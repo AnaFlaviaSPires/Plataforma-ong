@@ -64,14 +64,12 @@ function applyPermissions(user) {
   const isAdmin = userRole === 'admin';
   const canEdit = isAdmin || userRole === 'secretaria';
   
-  console.log('Aplicando permissões:', { userRole, canEdit, isAdmin });
 
   // Botão Novo Aluno
   const btnNovo = document.querySelector('button[data-bs-target="#modalAluno"]');
   if (btnNovo) {
     if (!canEdit) {
         btnNovo.remove(); // Remover do DOM para garantir
-        console.log('Botão Novo Aluno removido (Permissão insuficiente)');
     } else {
         btnNovo.style.display = 'inline-block';
     }
@@ -103,9 +101,6 @@ function initializeUI(user) {
 
 // Carregar alunos da API
 async function loadAlunos() {
-  console.log('🔄 Carregando alunos...');
-  console.log('🔑 Token:', authToken ? 'Presente' : 'Ausente');
-  console.log('🌐 API URL:', API_BASE_URL);
   
   try {
     const headers = {
@@ -123,14 +118,10 @@ async function loadAlunos() {
     });
 
     const url = `${API_BASE_URL}/alunos?${queryParams.toString()}`;
-    console.log('📡 Fazendo requisição para:', url);
 
     const response = await fetch(url, {
       headers: headers
     });
-
-    console.log('📊 Status response:', response.status);
-    console.log('📊 Headers response:', response.headers);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -139,7 +130,6 @@ async function loadAlunos() {
     }
 
     const data = await response.json();
-    console.log('✅ Dados recebidos:', data);
     const alunos = data.alunos || data; // Suportar tanto formato {alunos: []} quanto array direto
     
     if (dataTable) {
@@ -365,23 +355,14 @@ async function saveAluno(event) {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
 
-    // Debug: mostrar dados sendo enviados
-    console.log('Dados sendo enviados:', JSON.stringify(alunoData, null, 2));
-    console.log('URL:', url);
-    console.log('Method:', method);
-    console.log('Headers:', headers);
-
     const response = await fetch(url, {
       method: method,
       headers: headers,
       body: JSON.stringify(alunoData)
     });
 
-    console.log('Status da resposta:', response.status);
-
     if (!response.ok) {
       const errorData = await response.json();
-      console.log('Erro detalhado:', errorData);
       
       // Mostrar detalhes do erro se disponível
       if (errorData.details && Array.isArray(errorData.details)) {
@@ -575,6 +556,8 @@ function setupEventListeners() {
   if (btnLogout) {
     btnLogout.addEventListener('click', () => {
       localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      localStorage.removeItem('user');
       window.location.href = '../index.html';
     });
   }

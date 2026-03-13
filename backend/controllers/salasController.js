@@ -81,12 +81,6 @@ async function getSala(req, res, next) {
 // Criar nova sala
 async function createSala(req, res, next) {
   try {
-    // Verificação de Permissão: Apenas Admin e Secretaria
-    const allowedRoles = ['admin', 'secretaria'];
-    if (!allowedRoles.includes(req.user.cargo)) {
-        return res.status(403).json({ error: 'Acesso negado. Apenas Admin e Secretaria podem criar salas.' });
-    }
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -158,12 +152,6 @@ async function createSala(req, res, next) {
 // Atualizar sala
 async function updateSala(req, res, next) {
   try {
-    // Verificação de Permissão: Apenas Admin e Secretaria
-    const allowedRoles = ['admin', 'secretaria'];
-    if (!allowedRoles.includes(req.user.cargo)) {
-        return res.status(403).json({ error: 'Acesso negado. Apenas Admin e Secretaria podem editar salas.' });
-    }
-
     const { id } = req.params;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -250,11 +238,6 @@ async function updateSala(req, res, next) {
 // Excluir sala (hard delete por enquanto)
 async function deleteSala(req, res, next) {
   try {
-    // Verificação de Permissão: Apenas Admin
-    if (req.user.cargo !== 'admin') {
-        return res.status(403).json({ error: 'Acesso negado. Apenas Administradores podem excluir salas.' });
-    }
-
     const { id } = req.params;
     const sala = await Sala.findByPk(id);
     if (!sala) {

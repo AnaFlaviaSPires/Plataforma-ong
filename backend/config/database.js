@@ -3,8 +3,6 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-console.log('*** database.js v8 ***');
-
 const sequelize = new Sequelize({
   dialect: 'mysql',
   host: process.env.DB_HOST || 'localhost',

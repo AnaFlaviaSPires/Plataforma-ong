@@ -99,6 +99,63 @@ async function createEvento(req, res, next) {
   }
 }
 
+// Atualizar Evento
+async function updateEvento(req, res, next) {
+  try {
+    const { id } = req.params;
+    const evento = await Evento.findByPk(id);
+
+    if (!evento) return res.status(404).json({ error: 'Evento não encontrado' });
+
+    // Permissão: Criador ou Admin
+    if (evento.criado_por !== req.user.id && req.user.cargo !== 'admin') {
+        return res.status(403).json({ error: 'Sem permissão para editar este evento' });
+    }
+
+    const dadosAntigos = evento.toJSON();
+
+    const { titulo, descricao, inicio, fim, dia_inteiro, categoria, visibilidade, participantes } = req.body;
+
+    await evento.update({
+      titulo: titulo || evento.titulo,
+      descricao: descricao !== undefined ? descricao : evento.descricao,
+      inicio: inicio || evento.inicio,
+      fim: fim || evento.fim,
+      dia_inteiro: dia_inteiro !== undefined ? !!dia_inteiro : evento.dia_inteiro,
+      categoria: categoria || evento.categoria,
+      visibilidade: visibilidade || evento.visibilidade
+    });
+
+    // Atualizar participantes se fornecidos
+    if (Array.isArray(participantes)) {
+        await EventoParticipante.destroy({ where: { evento_id: id } });
+        if (participantes.length > 0) {
+            const inserts = participantes.map(uid => ({
+                evento_id: evento.id,
+                usuario_id: uid
+            }));
+            await EventoParticipante.bulkCreate(inserts, { ignoreDuplicates: true });
+        }
+    }
+
+    const eventoCompleto = await Evento.findByPk(evento.id, {
+        include: [{ model: User, as: 'participantes', attributes: ['id', 'nome'] }]
+    });
+
+    await logAction(req, {
+      acao: 'UPDATE',
+      tabela: 'eventos',
+      registroId: evento.id,
+      antigos: dadosAntigos,
+      novos: eventoCompleto
+    });
+
+    res.json(eventoCompleto);
+  } catch (err) {
+    next(err);
+  }
+}
+
 // Excluir Evento
 async function deleteEvento(req, res, next) {
   try {
@@ -127,4 +184,4 @@ async function deleteEvento(req, res, next) {
   }
 }
 
-module.exports = { getEventos, createEvento, deleteEvento };
+module.exports = { getEventos, createEvento, updateEvento, deleteEvento };

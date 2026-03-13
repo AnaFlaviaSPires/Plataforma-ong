@@ -31,11 +31,11 @@ function initializePage() {
     // Carregar dados do usuário para permissões
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     currentUserRole = (userData.cargo || 'guest').toLowerCase();
-    const isAdmin = currentUserRole === 'admin';
+    const canCreate = currentUserRole === 'admin' || currentUserRole === 'secretaria';
     
-    // Esconder botão novo se não for admin
+    // Esconder botão novo se não for admin ou secretaria
     const btnNovo = document.querySelector('button[data-bs-target="#modalCurso"]');
-    if (btnNovo && !isAdmin) {
+    if (btnNovo && !canCreate) {
         btnNovo.style.display = 'none';
     }
 
