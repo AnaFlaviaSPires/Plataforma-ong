@@ -444,8 +444,8 @@ const getUsers = async (req, res) => {
 
     const users = await User.findAll({
       where,
-      attributes: ['id', 'nome', 'email', 'cargo', 'ativo', 'created_at'], // Exclui senha
-      order: [['created_at', 'DESC']]
+      attributes: { exclude: ['senha'] },
+      order: [['createdAt', 'DESC']]
     });
 
     res.json(users);

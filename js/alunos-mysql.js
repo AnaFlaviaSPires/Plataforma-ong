@@ -327,7 +327,7 @@ async function saveAluno(event) {
   if (nomeResponsavel) alunoData.nome_responsavel = nomeResponsavel;
 
   const parentescoResponsavel = getValueOrNull('parentescoResponsavel');
-  if (parentescoResponsavel) alunoData.parentesco_responsavel = parentescoResponsavel;
+  if (parentescoResponsavel) alunoData.parentesco = parentescoResponsavel;
 
   const telefoneResponsavel = getValueOrNull('telefoneResponsavel1');
   if (telefoneResponsavel) alunoData.telefone_responsavel = telefoneResponsavel;
@@ -349,21 +349,10 @@ async function saveAluno(event) {
   const observacoesMedicas = getValueOrNull('observacoes');
   if (observacoesMedicas) alunoData.observacoes_medicas = observacoesMedicas;
 
-  // Status
+  // Status - enviar diretamente para o backend
   const statusElement = document.getElementById('status');
-  if (statusElement) {
-    const statusVal = (statusElement.value || '').toString().trim().toLowerCase();
-    if (statusVal === 'matriculado') {
-      alunoData.ativo = true;
-    } else if (statusVal === 'inativo') {
-      alunoData.ativo = false;
-    } else {
-      // Status não definido claramente: não enviar o campo para preservar valor atual
-      delete alunoData.ativo;
-    }
-  } else {
-    // Sem campo de status no formulário: não enviar para que o backend preserve o valor
-    delete alunoData.ativo;
+  if (statusElement && statusElement.value) {
+    alunoData.status = statusElement.value.trim().toLowerCase();
   }
 
   try {
@@ -454,7 +443,7 @@ async function viewAluno(id) {
         <div class="col-md-6">
           <h6>Responsável</h6>
           <p><strong>Nome:</strong> ${aluno.nome_responsavel || 'Não informado'}</p>
-          <p><strong>Parentesco:</strong> ${aluno.parentesco_responsavel || 'Não informado'}</p>
+          <p><strong>Parentesco:</strong> ${aluno.parentesco || 'Não informado'}</p>
           <p><strong>Telefone:</strong> ${aluno.telefone_responsavel || 'Não informado'}</p>
         </div>
       </div>
@@ -516,7 +505,7 @@ async function editAluno(id) {
     document.getElementById('cep').value = aluno.cep || '';
     document.getElementById('nomeResponsavel').value = aluno.nome_responsavel || '';
     if (document.getElementById('parentescoResponsavel')) {
-      document.getElementById('parentescoResponsavel').value = aluno.parentesco_responsavel || '';
+      document.getElementById('parentescoResponsavel').value = aluno.parentesco || '';
     }
     document.getElementById('telefoneResponsavel1').value = aluno.telefone_responsavel || '';
     document.getElementById('escola').value = aluno.escola || '';
@@ -524,7 +513,7 @@ async function editAluno(id) {
     document.getElementById('restricaoAlimentar').value = aluno.restricao_alimentar || '';
     document.getElementById('medicacao').value = aluno.medicamentos || '';
     document.getElementById('observacoes').value = aluno.observacoes_medicas || '';
-    document.getElementById('status').value = aluno.ativo ? 'matriculado' : 'inativo';
+    document.getElementById('status').value = aluno.status || (aluno.ativo ? 'matriculado' : 'inativo');
     
     // Alterar título do modal
     document.getElementById('modalTitle').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Aluno';
