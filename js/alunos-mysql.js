@@ -59,6 +59,19 @@ async function initializeApp() {
   }
 }
 
+// Retorna badge colorida para cada status do aluno
+function getStatusBadge(status) {
+  const map = {
+    'matriculado':     { label: 'Matriculado',      bg: 'bg-success' },
+    'inativo':         { label: 'Inativo',           bg: 'bg-secondary' },
+    'cancelado':       { label: 'Cancelado',         bg: 'bg-danger' },
+    'formado':         { label: 'Formado',           bg: 'bg-primary' },
+    'aguardando_vaga': { label: 'Aguardando vaga',   bg: 'bg-warning text-dark' }
+  };
+  const s = map[status] || { label: status || 'Desconhecido', bg: 'bg-secondary' };
+  return `<span class="badge ${s.bg}">${s.label}</span>`;
+}
+
 // Aplicar permissões de interface
 function applyPermissions(user) {
   const userRole = (user.cargo || 'guest').toLowerCase();
@@ -190,9 +203,7 @@ async function loadAlunos() {
         <td>${aluno.nome_responsavel || 'Não informado'}</td>
         <td>${aluno.telefone || aluno.telefone_responsavel || 'Não informado'}</td>
         <td>
-          <span class="badge bg-success">
-            ${aluno.ativo ? 'Ativo' : 'Inativo'}
-          </span>
+          ${getStatusBadge(aluno.status)}
         </td>
         <td class="text-end">
           <div class="btn-group">
