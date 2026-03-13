@@ -244,10 +244,9 @@ async function loadAlunos() {
       order: [[0, 'asc']],
       // Oculta o seletor de quantidade ("Show entries")
       lengthChange: false,
-      // Remove o componente 'f' (search box) do layout
+      // Remove o componente 'f' (search box nativa) do layout, usaremos a barra personalizada
       dom: 'rtip',
-      // Desativa a busca nativa, usaremos a barra personalizada
-      searching: false
+      searching: true
     });
 
     // Conectar a barra de busca personalizada à tabela

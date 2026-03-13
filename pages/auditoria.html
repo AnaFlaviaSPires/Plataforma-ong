@@ -266,10 +266,10 @@
 </div>
 </div>
 <!-- Scripts -->
-
+<script src="../js/config.js"></script>
 
 <script>
-    const API_BASE_URL = 'http://localhost:3003/api';
+    const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3003/api';
     let allLogs = []; // Armazena logs para exportação
 
     // Função para verificar autenticação
@@ -333,11 +333,11 @@
             
             // Construir Query String
             const params = new URLSearchParams();
-            if (filtros.usuario) params.append('usuarioId', filtros.usuario);
+            if (filtros.usuario) params.append('usuario', filtros.usuario);
             if (filtros.acao) params.append('acao', filtros.acao);
-            if (filtros.dataInicial) params.append('startDate', filtros.dataInicial);
-            if (filtros.dataFinal) params.append('endDate', filtros.dataFinal);
-            if (filtros.secao) params.append('tabela', filtros.secao); // Backend usa 'tabela' ou similar, vamos ajustar se precisar
+            if (filtros.dataInicial) params.append('dataInicio', filtros.dataInicial);
+            if (filtros.dataFinal) params.append('dataFim', filtros.dataFinal);
+            if (filtros.secao) params.append('tabela', filtros.secao);
             
             const response = await fetch(`${API_BASE_URL}/logs?${params.toString()}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -346,20 +346,21 @@
             if (!response.ok) throw new Error('Falha ao buscar logs');
 
             const data = await response.json();
-            allLogs = data; // Salva para exportação
+            const logs = data.logs || [];
+            allLogs = logs; // Salva para exportação
 
             const logsTable = document.getElementById('logsList');
             logsTable.innerHTML = '';
             
-            if (data.length === 0) {
+            if (logs.length === 0) {
                 document.getElementById('semResultados').classList.remove('d-none');
                 document.getElementById('totalRegistros').textContent = '0';
                 return;
             }
 
-            document.getElementById('totalRegistros').textContent = data.length;
+            document.getElementById('totalRegistros').textContent = data.pagination ? data.pagination.total : logs.length;
             
-            data.forEach(log => {
+            logs.forEach(log => {
                 const row = logsTable.insertRow();
                 
                 const cellData = row.insertCell(0);
@@ -368,14 +369,16 @@
                 const cellAcao = row.insertCell(3);
                 const cellEntidade = row.insertCell(4); // Entidade Afetada (ID)
                 const cellDetalhes = row.insertCell(5); // Usando coluna "Antes" para Detalhes
+                row.insertCell(6); // Coluna "Depois" (vazia)
+                row.insertCell(7); // Coluna "Motivo" (vazia)
                 
-                // Ajuste de colunas visual
-                row.cells[6].style.display = 'none'; // Esconder colunas extras se não usar
+                // Esconder colunas extras não utilizadas
+                row.cells[6].style.display = 'none';
                 row.cells[7].style.display = 'none';
 
                 cellData.textContent = new Date(log.created_at).toLocaleString();
-                cellUsuario.textContent = log.usuario ? (log.usuario.nome || log.usuario.email) : 'Sistema/Removido';
-                cellSecao.textContent = log.tabela || 'N/A';
+                cellUsuario.textContent = log.usuario ? (log.usuario.nome || log.usuario.email) : (log.usuario_nome || 'Sistema/Removido');
+                cellSecao.textContent = log.tabela_afetada || 'N/A';
                 cellAcao.innerHTML = `<span class="badge bg-${getAcaoColor(log.acao)}">${log.acao}</span>`;
                 cellEntidade.textContent = log.registro_id || '-';
                 
@@ -431,13 +434,13 @@
       const modal = new bootstrap.Modal(document.getElementById('modalDados'));
       
       let conteudo = '';
-      if (log.novos_dados) {
-          conteudo += `<h6>Dados Novos/Atuais:</h6><pre class="bg-light p-2">${JSON.stringify(log.novos_dados, null, 2)}</pre>`;
+      if (log.dados_novos) {
+          conteudo += `<h6>Dados Novos/Atuais:</h6><pre class="bg-light p-2">${JSON.stringify(log.dados_novos, null, 2)}</pre>`;
       }
       if (log.dados_antigos) {
           conteudo += `<h6>Dados Anteriores:</h6><pre class="bg-light p-2">${JSON.stringify(log.dados_antigos, null, 2)}</pre>`;
       }
-      if (!log.novos_dados && !log.dados_antigos) {
+      if (!log.dados_novos && !log.dados_antigos) {
           conteudo = '<p class="text-muted">Nenhum detalhe adicional registrado.</p>';
       }
 
@@ -452,8 +455,8 @@
         let csv = 'Data,Usuario,Acao,Tabela,ID,Detalhes\n';
         allLogs.forEach(log => {
             const usuario = log.usuario ? (log.usuario.nome || log.usuario.email) : 'N/A';
-            const detalhes = JSON.stringify(log.novos_dados || log.dados_antigos || {}).replace(/"/g, '""');
-            csv += `"${new Date(log.created_at).toLocaleString()}","${usuario}","${log.acao}","${log.tabela}","${log.registro_id}","${detalhes}"\n`;
+            const detalhes = JSON.stringify(log.dados_novos || log.dados_antigos || {}).replace(/"/g, '""');
+            csv += `"${new Date(log.created_at).toLocaleString()}","${usuario}","${log.acao}","${log.tabela_afetada}","${log.registro_id}","${detalhes}"\n`;
         });
 
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
