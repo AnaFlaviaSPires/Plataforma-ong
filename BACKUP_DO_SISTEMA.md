@@ -4,7 +4,7 @@
 
 Backup automático do banco de dados MySQL (TiDB Cloud) da Plataforma ONG.
 
-O sistema exporta todos os dados do banco via `mysqldump` (somente leitura), comprime o arquivo e envia para armazenamento externo na Amazon S3.
+O sistema exporta todos os dados do banco via `mysqldump` (somente leitura), comprime o arquivo e envia para armazenamento externo no Google Drive.
 
 **O sistema NÃO altera, modifica ou apaga dados do banco em nenhuma hipótese.** Apenas leitura via `mysqldump` é permitida.
 
@@ -22,30 +22,30 @@ O sistema exporta todos os dados do banco via `mysqldump` (somente leitura), com
 
 ## 3. Retenção
 
-- Backups são mantidos por **7 dias** no S3.
-- Após 7 dias, os arquivos são **automaticamente deletados** pela regra de lifecycle do bucket.
+- Backups são mantidos por **7 dias** no Google Drive.
+- Após 7 dias, os arquivos são **automaticamente deletados** pelo próprio script de backup.
 
 ---
 
 ## 4. Local dos Backups
 
-- **Serviço:** Amazon S3
-- **Bucket:** *(definido na variável de ambiente `S3_BUCKET_NAME`)*
-- **Caminho:** `/backups/`
+- **Serviço:** Google Drive
+- **Pasta:** Definida pela variável de ambiente `GOOGLE_FOLDER_ID`
 - **Formato:** `backup-YYYY-MM-DD_HH-mm.sql.gz`
 
 Exemplo de arquivo:
 ```
-s3://nome-do-bucket/backups/backup-2026-03-19_12-00.sql.gz
+backup-2026-03-19_12-00.sql.gz
 ```
 
 ---
 
 ## 5. Acesso aos Backups
 
-- Via painel AWS S3: https://s3.console.aws.amazon.com/
+- Via Google Drive: https://drive.google.com/
+- Acessar a pasta compartilhada de backups
 - Credenciais de acesso fornecidas ao cliente/equipe responsável
-- Usuário IAM dedicado com permissões mínimas (apenas `s3:PutObject` e `s3:ListBucket`)
+- A pasta deve estar compartilhada com o email da Service Account
 
 ---
 
@@ -53,7 +53,7 @@ s3://nome-do-bucket/backups/backup-2026-03-19_12-00.sql.gz
 
 ### Passo 1 — Baixar o arquivo
 
-Acesse o bucket S3 pelo painel AWS e baixe o arquivo `.sql.gz` desejado.
+Acesse a pasta de backups no Google Drive e baixe o arquivo `.sql.gz` desejado.
 
 ### Passo 2 — Descompactar
 
@@ -89,7 +89,7 @@ Será solicitada a senha do banco.
 │                  │
 │  Comprime .gz    │
 │                  │     upload          ┌──────────────┐
-│                  │ ──────────────────▶│  Amazon S3    │
+│                  │ ──────────────────▶│ Google Drive  │
 └─────────────────┘                     │  /backups/    │
                                         └──────────────┘
 ```
@@ -105,10 +105,9 @@ Será solicitada a senha do banco.
 | `DB_PASS` | Senha do banco |
 | `DB_NAME` | Nome do banco de dados |
 | `DB_PORT` | Porta (padrão: 4000) |
-| `AWS_ACCESS_KEY_ID` | Chave de acesso AWS |
-| `AWS_SECRET_ACCESS_KEY` | Chave secreta AWS |
-| `AWS_REGION` | Região AWS (ex: us-east-1) |
-| `S3_BUCKET_NAME` | Nome do bucket S3 |
+| `GOOGLE_CLIENT_EMAIL` | Email da Service Account do Google |
+| `GOOGLE_PRIVATE_KEY` | Chave privada da Service Account |
+| `GOOGLE_FOLDER_ID` | ID da pasta no Google Drive |
 
 ---
 
@@ -126,45 +125,31 @@ Será solicitada a senha do banco.
 
 ---
 
-## 10. Configuração no S3
+## 10. Configuração do Google Drive
 
-1. **Criar bucket** no console AWS S3
-2. **Criar pasta** `backups/` dentro do bucket
-3. **Ativar regra de lifecycle:**
-   - Nome: `auto-delete-7-days`
-   - Prefixo: `backups/`
-   - Ação: Expirar objetos após **7 dias**
+1. Acesse o [Google Cloud Console](https://console.cloud.google.com/)
+2. Crie um projeto (ou use um existente)
+3. Ative a **Google Drive API** no projeto
+4. Crie uma **Service Account**:
+   - Vá em "IAM & Admin" > "Service Accounts"
+   - Clique em "Create Service Account"
+   - Dê um nome (ex: `backup-ong`)
+   - Crie uma chave JSON ("Keys" > "Add Key" > "Create new key" > JSON)
+5. Da chave JSON baixada, extraia:
+   - `client_email` → variável `GOOGLE_CLIENT_EMAIL`
+   - `private_key` → variável `GOOGLE_PRIVATE_KEY`
+6. No Google Drive:
+   - Crie uma pasta para os backups (ex: "Backups ONG")
+   - Copie o ID da pasta (parte final da URL: `drive.google.com/drive/folders/ID_AQUI`)
+   - **Compartilhe a pasta** com o email da Service Account (`client_email`) com permissão de **Editor**
+7. Use o ID da pasta como `GOOGLE_FOLDER_ID`
 
----
-
-## 11. Permissões AWS (IAM)
-
-Criar usuário IAM dedicado com política mínima:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:ListBucket"
-      ],
-      "Resource": [
-        "arn:aws:s3:::NOME_DO_BUCKET",
-        "arn:aws:s3:::NOME_DO_BUCKET/*"
-      ]
-    }
-  ]
-}
-```
-
-**NÃO dar permissões de delete ou admin.**
+> **Importante:** A retenção de 7 dias é gerenciada automaticamente pelo próprio script.
+> Backups com mais de 7 dias são deletados a cada execução.
 
 ---
 
-## 12. Observações
+## 11. Observações
 
 - O sistema é **totalmente automático** após configuração
 - **NÃO altera dados** do banco (somente leitura via `mysqldump`)

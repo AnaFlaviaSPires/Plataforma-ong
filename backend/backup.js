@@ -2,7 +2,7 @@
  * Sistema de Backup Automático - Banco MySQL (TiDB Cloud)
  * 
  * Execução: Render Scheduled Job (cron: 0 12,18 * * *)
- * Armazenamento: Amazon S3
+ * Armazenamento: Google Drive (via Service Account)
  * 
  * SOMENTE LEITURA - Não executa nenhum comando de escrita no banco.
  * Usa apenas mysqldump para exportação segura.
@@ -12,7 +12,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { google } = require('googleapis');
 
 // ============================================================
 // Variáveis de ambiente (obrigatórias)
@@ -23,10 +23,9 @@ const DB_PASS = process.env.DB_PASS;
 const DB_NAME = process.env.DB_NAME;
 const DB_PORT = process.env.DB_PORT || '4000';
 
-const AWS_REGION = process.env.AWS_REGION;
-const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
-const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
-const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL;
+const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : '';
+const GOOGLE_FOLDER_ID = process.env.GOOGLE_FOLDER_ID;
 
 // ============================================================
 // Validação de variáveis
@@ -34,7 +33,7 @@ const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 function validarVariaveis() {
   const required = {
     DB_HOST, DB_USER, DB_PASS, DB_NAME,
-    AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, S3_BUCKET_NAME
+    GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY, GOOGLE_FOLDER_ID
   };
 
   const missing = Object.entries(required)
@@ -129,31 +128,74 @@ function executarDump(outputPath) {
 }
 
 // ============================================================
-// Upload para Amazon S3
+// Autenticação Google Drive (Service Account)
 // ============================================================
-async function uploadParaS3(filePath, fileName) {
-  console.log(`[BACKUP] Enviando para S3: s3://${S3_BUCKET_NAME}/backups/${fileName}`);
+function criarClienteDrive() {
+  const auth = new google.auth.JWT(
+    GOOGLE_CLIENT_EMAIL,
+    null,
+    GOOGLE_PRIVATE_KEY,
+    ['https://www.googleapis.com/auth/drive.file']
+  );
 
-  const s3Client = new S3Client({
-    region: AWS_REGION,
-    credentials: {
-      accessKeyId: AWS_ACCESS_KEY_ID,
-      secretAccessKey: AWS_SECRET_ACCESS_KEY
+  return google.drive({ version: 'v3', auth });
+}
+
+// ============================================================
+// Upload para Google Drive
+// ============================================================
+async function uploadParaDrive(filePath, fileName) {
+  console.log(`[BACKUP] Enviando para Google Drive: ${fileName}`);
+
+  const drive = criarClienteDrive();
+
+  const response = await drive.files.create({
+    requestBody: {
+      name: fileName,
+      parents: [GOOGLE_FOLDER_ID],
+      mimeType: 'application/gzip'
+    },
+    media: {
+      mimeType: 'application/gzip',
+      body: fs.createReadStream(filePath)
+    },
+    fields: 'id, name'
+  });
+
+  console.log(`[BACKUP] Upload para Google Drive concluído. ID: ${response.data.id}`);
+  return response.data.id;
+}
+
+// ============================================================
+// Retenção: remover backups com mais de 7 dias
+// ============================================================
+async function limparBackupsAntigos() {
+  console.log('[BACKUP] Verificando backups antigos (retenção: 7 dias)...');
+
+  const drive = criarClienteDrive();
+  const seteDiasAtras = new Date();
+  seteDiasAtras.setDate(seteDiasAtras.getDate() - 7);
+
+  // Listar arquivos na pasta de backup com nome "backup-"
+  const res = await drive.files.list({
+    q: `'${GOOGLE_FOLDER_ID}' in parents and name contains 'backup-' and trashed = false`,
+    fields: 'files(id, name, createdTime)',
+    orderBy: 'createdTime asc'
+  });
+
+  const arquivos = res.data.files || [];
+  let removidos = 0;
+
+  for (const arquivo of arquivos) {
+    const criadoEm = new Date(arquivo.createdTime);
+    if (criadoEm < seteDiasAtras) {
+      await drive.files.delete({ fileId: arquivo.id });
+      console.log(`[BACKUP] Removido backup antigo: ${arquivo.name} (${arquivo.createdTime})`);
+      removidos++;
     }
-  });
+  }
 
-  const fileContent = fs.readFileSync(filePath);
-
-  const command = new PutObjectCommand({
-    Bucket: S3_BUCKET_NAME,
-    Key: `backups/${fileName}`,
-    Body: fileContent,
-    ContentType: 'application/gzip',
-    ContentEncoding: 'gzip'
-  });
-
-  await s3Client.send(command);
-  console.log('[BACKUP] Upload para S3 concluído com sucesso.');
+  console.log(`[BACKUP] Limpeza concluída: ${removidos} arquivo(s) removido(s).`);
 }
 
 // ============================================================
@@ -182,10 +224,13 @@ async function executarBackup() {
     // 3. Executar mysqldump (SOMENTE LEITURA)
     executarDump(filePath);
 
-    // 4. Upload para S3
-    await uploadParaS3(filePath, fileName);
+    // 4. Upload para Google Drive
+    await uploadParaDrive(filePath, fileName);
 
-    // 5. Remover arquivo local
+    // 5. Limpar backups antigos (retenção 7 dias)
+    await limparBackupsAntigos();
+
+    // 6. Remover arquivo local
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
       console.log('[BACKUP] Arquivo local removido.');
