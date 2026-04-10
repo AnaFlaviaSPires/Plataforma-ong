@@ -257,32 +257,23 @@
     tbody.innerHTML = html;
   }
 
-  function updateButtons(proximaAcao) {
-    const btnEntrada = document.getElementById('btnEntrada');
-    const btnInicioIntervalo = document.getElementById('btnInicioIntervalo');
-    const btnFimIntervalo = document.getElementById('btnFimIntervalo');
-    const btnSaida = document.getElementById('btnSaida');
+  function updateButtons(acoesDisponiveis) {
+    const map = {
+      'entrada': document.getElementById('btnEntrada'),
+      'inicio_intervalo': document.getElementById('btnInicioIntervalo'),
+      'fim_intervalo': document.getElementById('btnFimIntervalo'),
+      'saida': document.getElementById('btnSaida')
+    };
 
     // Desabilitar todos
-    [btnEntrada, btnInicioIntervalo, btnFimIntervalo, btnSaida].forEach(b => { if (b) b.disabled = true; });
+    Object.values(map).forEach(b => { if (b) b.disabled = true; });
 
-    if (!proximaAcao) return; // expediente encerrado
+    if (!acoesDisponiveis || !acoesDisponiveis.length) return;
 
-    switch (proximaAcao) {
-      case 'entrada':
-        if (btnEntrada) btnEntrada.disabled = false;
-        break;
-      case 'inicio_intervalo':
-        if (btnInicioIntervalo) btnInicioIntervalo.disabled = false;
-        if (btnSaida) btnSaida.disabled = false;
-        break;
-      case 'fim_intervalo':
-        if (btnFimIntervalo) btnFimIntervalo.disabled = false;
-        break;
-      case 'saida':
-        if (btnSaida) btnSaida.disabled = false;
-        break;
-    }
+    // Habilitar apenas as ações disponíveis
+    acoesDisponiveis.forEach(acao => {
+      if (map[acao]) map[acao].disabled = false;
+    });
   }
 
   function renderListaFuncionarios(lista) {
@@ -377,7 +368,7 @@
     try {
       const status = await apiGetStatus();
       document.getElementById('statusTexto').textContent = status.status || 'Sem registro';
-      updateButtons(status.proximaAcao);
+      updateButtons(status.acoesDisponiveis || (status.proximaAcao ? [status.proximaAcao] : []));
       renderTimeline(status.registrosDoDia);
     } catch (e) {
       console.error('Erro ao carregar status:', e);

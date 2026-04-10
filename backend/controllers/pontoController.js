@@ -294,32 +294,33 @@ async function getStatusAtual(req, res, next) {
     const ultimoRegistro = registrosDoDia.length > 0 ? registrosDoDia[registrosDoDia.length - 1] : null;
 
     let status = 'Sem registro hoje';
-    let proximaAcao = 'entrada';
+    let acoesDisponiveis = ['entrada'];
 
     if (ultimoRegistro) {
       switch (ultimoRegistro.tipo) {
         case 'entrada':
           status = 'Em expediente';
-          proximaAcao = 'inicio_intervalo';
+          acoesDisponiveis = ['inicio_intervalo', 'saida'];
           break;
         case 'inicio_intervalo':
           status = 'Em intervalo';
-          proximaAcao = 'fim_intervalo';
+          acoesDisponiveis = ['fim_intervalo'];
           break;
         case 'fim_intervalo':
           status = 'Em expediente';
-          proximaAcao = 'saida';
+          acoesDisponiveis = ['inicio_intervalo', 'saida'];
           break;
         case 'saida':
           status = 'Expediente encerrado';
-          proximaAcao = null;
+          acoesDisponiveis = [];
           break;
       }
     }
 
     res.json({
       status,
-      proximaAcao,
+      acoesDisponiveis,
+      proximaAcao: acoesDisponiveis[0] || null,
       registrosDoDia,
       ultimoRegistro
     });
