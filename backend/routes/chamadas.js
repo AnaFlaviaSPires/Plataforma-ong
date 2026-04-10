@@ -1,6 +1,6 @@
 const express = require('express');
 const { authMiddleware, requireRole } = require('../middleware/authMiddleware');
-const { createChamada, getChamadas, deleteChamada } = require('../controllers/chamadasController');
+const { createChamada, getChamadas, deleteChamada, getDeletedChamadas, restoreChamada } = require('../controllers/chamadasController');
 
 const router = express.Router();
 
@@ -17,6 +17,18 @@ router.post('/',
 router.get('/', 
   requireRole(['admin', 'professor', 'secretaria', 'assistente_social']), 
   getChamadas
+);
+
+// Listar chamadas excluídas (dos logs de auditoria)
+router.get('/deleted', 
+  requireRole(['admin', 'secretaria']), 
+  getDeletedChamadas
+);
+
+// Restaurar chamada excluída a partir do log
+router.post('/restore/:logId', 
+  requireRole(['admin', 'secretaria']), 
+  restoreChamada
 );
 
 // Excluir chamada (apenas admin e secretaria)

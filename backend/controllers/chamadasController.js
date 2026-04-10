@@ -1,4 +1,4 @@
-const { Chamada, ChamadaRegistro, Sala, Aluno } = require('../models');
+const { Chamada, ChamadaRegistro, Sala, Aluno, ActionLog } = require('../models');
 const { logAction } = require('../middleware/auditMiddleware');
 
 // Criar nova chamada com registros de presença
@@ -196,8 +196,118 @@ async function deleteChamada(req, res, next) {
   }
 }
 
+// Listar chamadas excluídas (dos logs de auditoria)
+async function getDeletedChamadas(req, res, next) {
+  try {
+    const logs = await ActionLog.findAll({
+      where: {
+        acao: 'DELETE',
+        tabela_afetada: 'chamadas'
+      },
+      order: [['created_at', 'DESC']]
+    });
+
+    const deletadas = logs.map(log => {
+      const dados = log.dados_antigos || {};
+      return {
+        logId: log.id,
+        chamadaId: log.registro_id,
+        salaId: dados.sala_id,
+        data: dados.data,
+        hora: dados.hora,
+        totalRegistros: Array.isArray(dados.registros) ? dados.registros.length : 0,
+        excluidaEm: log.created_at,
+        excluidaPor: log.usuario_nome
+      };
+    });
+
+    res.json({ deletadas });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// Restaurar uma chamada excluída a partir do log de auditoria
+async function restoreChamada(req, res, next) {
+  try {
+    const allowedRoles = ['admin', 'secretaria'];
+    if (!allowedRoles.includes(req.user.cargo)) {
+      return res.status(403).json({ error: 'Acesso negado.' });
+    }
+
+    const { logId } = req.params;
+
+    const log = await ActionLog.findByPk(logId);
+    if (!log || log.acao !== 'DELETE' || log.tabela_afetada !== 'chamadas') {
+      return res.status(404).json({ error: 'Log de exclusão não encontrado' });
+    }
+
+    const dados = log.dados_antigos;
+    if (!dados || !dados.sala_id || !dados.data) {
+      return res.status(400).json({ error: 'Dados insuficientes no log para restauração' });
+    }
+
+    // Verificar se a chamada já não foi restaurada (evitar duplicata)
+    const jaExiste = await Chamada.findOne({
+      where: { sala_id: dados.sala_id, data: dados.data, hora: dados.hora || null }
+    });
+    if (jaExiste) {
+      return res.status(409).json({ error: 'Uma chamada com mesma sala, data e hora já existe. Pode já ter sido restaurada.' });
+    }
+
+    // Recriar a chamada
+    const novaChamada = await Chamada.create({
+      sala_id: dados.sala_id,
+      data: dados.data,
+      hora: dados.hora || null,
+      observacoes: dados.observacoes || null,
+      criado_por: dados.criado_por || null,
+      atualizado_por: req.user.id
+    });
+
+    // Recriar registros de presença
+    if (Array.isArray(dados.registros) && dados.registros.length > 0) {
+      const registrosData = dados.registros.map(r => ({
+        chamada_id: novaChamada.id,
+        aluno_id: r.aluno_id,
+        presente: r.presente,
+        observacao: r.observacao || null
+      }));
+
+      await ChamadaRegistro.bulkCreate(registrosData);
+
+      // Re-incrementar estatísticas de frequência
+      const presenteIds = registrosData.filter(r => r.presente).map(r => r.aluno_id);
+      const faltaIds = registrosData.filter(r => !r.presente).map(r => r.aluno_id);
+
+      if (presenteIds.length) {
+        await Aluno.increment('total_presencas', { by: 1, where: { id: presenteIds } });
+      }
+      if (faltaIds.length) {
+        await Aluno.increment('total_faltas', { by: 1, where: { id: faltaIds } });
+      }
+    }
+
+    await logAction(req, {
+      acao: 'RESTORE',
+      tabela: 'chamadas',
+      registroId: novaChamada.id,
+      antigos: { logId: log.id, chamadaOriginalId: log.registro_id },
+      novos: novaChamada.toJSON()
+    });
+
+    console.log(`[CHAMADA] Restaurada (novo ID ${novaChamada.id}) a partir do log ${logId} por ${req.user.nome}`);
+
+    res.json({ message: 'Chamada restaurada com sucesso', chamadaId: novaChamada.id });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   createChamada,
   getChamadas,
-  deleteChamada
+  deleteChamada,
+  getDeletedChamadas,
+  restoreChamada
 };
