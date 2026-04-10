@@ -28,6 +28,7 @@ const doacoesRoutes = require('./routes/doacoes');
 const logsRoutes = require('./routes/logs');
 const eventosRoutes = require('./routes/eventos');
 const documentosRoutes = require('./routes/documentos');
+const pontoRoutes = require('./routes/ponto');
 
 // Importar configuração do banco
 const { sequelize, User } = require('./models');
@@ -94,6 +95,7 @@ app.use('/api/doacoes', doacoesRoutes);
 app.use('/api/logs', logsRoutes);
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/documentos', documentosRoutes);
+app.use('/api/ponto', pontoRoutes);
 
 // Rota de health check
 app.get('/api/health', (req, res) => {

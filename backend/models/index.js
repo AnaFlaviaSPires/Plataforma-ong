@@ -13,6 +13,7 @@ const PasswordResetModel = require('./PasswordReset');
 const EventoModel = require('./Evento');
 const EventoParticipanteModel = require('./EventoParticipante');
 const DocumentoModel = require('./Documento');
+const PontoModel = require('./Ponto');
 
 // Inicializar modelos
 const User = UserModel(sequelize);
@@ -29,6 +30,7 @@ const PasswordReset = PasswordResetModel(sequelize);
 const Evento = EventoModel(sequelize);
 const EventoParticipante = EventoParticipanteModel(sequelize);
 const Documento = DocumentoModel(sequelize);
+const Ponto = PontoModel(sequelize);
 
 // Definir associações
 
@@ -216,6 +218,17 @@ Documento.belongsTo(User, {
   as: 'criador'
 });
 
+// User -> Pontos
+User.hasMany(Ponto, {
+  foreignKey: 'funcionario_id',
+  as: 'pontos'
+});
+
+Ponto.belongsTo(User, {
+  foreignKey: 'funcionario_id',
+  as: 'funcionario'
+});
+
 // ============================================================
 // 🛑 TRAVA DE SEGURANÇA DE DADOS 🛑
 // Sobrescreve o método sync para impedir force:true ou alter:true
@@ -268,5 +281,6 @@ module.exports = {
   PasswordReset,
   Evento,
   EventoParticipante,
-  Documento
+  Documento,
+  Ponto
 };
