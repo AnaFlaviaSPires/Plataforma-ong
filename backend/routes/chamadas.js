@@ -1,6 +1,6 @@
 const express = require('express');
 const { authMiddleware, requireRole } = require('../middleware/authMiddleware');
-const { createChamada, getChamadas } = require('../controllers/chamadasController');
+const { createChamada, getChamadas, deleteChamada } = require('../controllers/chamadasController');
 
 const router = express.Router();
 
@@ -17,6 +17,12 @@ router.post('/',
 router.get('/', 
   requireRole(['admin', 'professor', 'secretaria', 'assistente_social']), 
   getChamadas
+);
+
+// Excluir chamada (apenas admin e secretaria)
+router.delete('/:id', 
+  requireRole(['admin', 'secretaria']), 
+  deleteChamada
 );
 
 module.exports = router;

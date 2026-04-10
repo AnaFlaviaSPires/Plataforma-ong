@@ -196,6 +196,25 @@ const ChamadaAPI = {
     return await resp.json();
   },
 
+  async excluir(id) {
+    const token = localStorage.getItem('authToken');
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const resp = await fetch(`${API_BASE_URL}/chamadas/${id}`, {
+      method: 'DELETE',
+      headers
+    });
+
+    if (!resp.ok) {
+      const errorData = await resp.json().catch(() => ({}));
+      const msg = errorData.error || 'Erro ao excluir chamada';
+      throw new Error(msg);
+    }
+
+    return true;
+  },
+
   async listarPorSala(salaId, dataISO) {
     const token = localStorage.getItem('authToken');
     const headers = { 'Content-Type': 'application/json' };
@@ -671,6 +690,11 @@ const UI = {
       grouped[d].push(c);
     });
 
+    // Verificar se o usuário pode excluir chamadas (apenas secretaria e admin)
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const userRole = userData.cargo || '';
+    const canDeleteChamada = userRole === 'admin' || userRole === 'secretaria';
+
     let html = '';
     for (const [data, listaChamadas] of Object.entries(grouped)) {
       html += `<div class="card mb-3"><div class="card-header bg-light"><h6 class="mb-0">${data}</h6></div><div class="card-body p-0"><div class="list-group list-group-flush">`;
@@ -688,6 +712,11 @@ const UI = {
         const total = registros.length;
         const presentes = registros.filter(r => r.presente).length;
         const perc = total ? Math.round((presentes/total)*100) : 0;
+
+        const btnExcluir = canDeleteChamada
+          ? `<button class="btn btn-sm btn-outline-danger btn-excluir-chamada ms-2" data-id="${ch.id}" title="Excluir chamada"><i class="bi bi-trash"></i></button>`
+          : '';
+
         return `
           <div class="list-group-item">
             <div class="d-flex justify-content-between align-items-center">
@@ -695,7 +724,10 @@ const UI = {
                 <h6 class="mb-1">Chamada - ${ch.hora || ch.dataHora || ''}</h6>
                 <small class="text-muted">${presentes} de ${total} presentes (${perc}%)</small>
               </div>
-              <button class="btn btn-sm btn-outline-primary btn-det-chamada" data-id="${ch.id}"><i class="bi bi-chevron-right"></i></button>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-outline-primary btn-det-chamada" data-id="${ch.id}"><i class="bi bi-chevron-right"></i></button>
+                ${btnExcluir}
+              </div>
             </div>
           </div>`;
       }).join('');
@@ -709,6 +741,14 @@ const UI = {
       b.addEventListener('click', () => {
         const id = b.getAttribute('data-id');
         App.actions.showChamadaDetails(idSala, id);
+      });
+    });
+
+    // attach delete handlers
+    container.querySelectorAll('.btn-excluir-chamada').forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.getAttribute('data-id');
+        App.actions.deleteChamada(id, idSala);
       });
     });
   },
@@ -1060,6 +1100,19 @@ const App = {
       Utils.showToast('Oficina excluída', 'success');
       const salas = await Storage.getSalas();
       UI.renderSalasList(salas);
+    },
+
+    async deleteChamada(idChamada, idSala) {
+      if (!confirm('Tem certeza que deseja excluir esta chamada? As presenças e faltas registradas serão revertidas.')) return;
+      try {
+        await ChamadaAPI.excluir(idChamada);
+        Utils.showToast('Chamada excluída com sucesso!', 'success');
+        // Re-renderizar o histórico da mesma sala
+        await UI.renderHistoricoList(idSala);
+      } catch (e) {
+        console.error('Erro ao excluir chamada', e);
+        Utils.showToast(e.message || 'Erro ao excluir chamada', 'danger');
+      }
     },
 
     async openChamada(idSala) {

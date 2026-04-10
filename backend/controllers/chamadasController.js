@@ -138,7 +138,66 @@ async function getChamadas(req, res, next) {
   }
 }
 
+// Excluir uma chamada (apenas admin e secretaria)
+async function deleteChamada(req, res, next) {
+  try {
+    const allowedRoles = ['admin', 'secretaria'];
+    if (!allowedRoles.includes(req.user.cargo)) {
+      return res.status(403).json({ error: 'Acesso negado. Apenas Secretaria e Admin podem excluir chamadas.' });
+    }
+
+    const { id } = req.params;
+
+    const chamada = await Chamada.findByPk(id, {
+      include: [
+        {
+          model: ChamadaRegistro,
+          as: 'registros',
+          include: [{ model: Aluno, as: 'aluno' }]
+        }
+      ]
+    });
+
+    if (!chamada) {
+      return res.status(404).json({ error: 'Chamada não encontrada' });
+    }
+
+    const dadosAntigos = chamada.toJSON();
+
+    // Reverter estatísticas de frequência dos alunos
+    if (Array.isArray(chamada.registros) && chamada.registros.length > 0) {
+      const presenteIds = chamada.registros.filter(r => r.presente).map(r => r.aluno_id);
+      const faltaIds = chamada.registros.filter(r => !r.presente).map(r => r.aluno_id);
+
+      if (presenteIds.length) {
+        await Aluno.decrement('total_presencas', { by: 1, where: { id: presenteIds } });
+      }
+      if (faltaIds.length) {
+        await Aluno.decrement('total_faltas', { by: 1, where: { id: faltaIds } });
+      }
+    }
+
+    // Excluir registros de presença e depois a chamada
+    await ChamadaRegistro.destroy({ where: { chamada_id: id } });
+    await chamada.destroy();
+
+    await logAction(req, {
+      acao: 'DELETE',
+      tabela: 'chamadas',
+      registroId: parseInt(id),
+      antigos: dadosAntigos
+    });
+
+    console.log(`[CHAMADA] ID ${id} excluída por ${req.user.nome} (${req.user.cargo})`);
+
+    res.json({ message: 'Chamada excluída com sucesso' });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   createChamada,
-  getChamadas
+  getChamadas,
+  deleteChamada
 };
