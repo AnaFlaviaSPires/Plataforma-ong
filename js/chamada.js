@@ -1173,13 +1173,15 @@ const App = {
       const profEl = document.getElementById('professorOficinaChamada');
       const diaEl = document.getElementById('diaOficinaChamada');
       const horEl = document.getElementById('horarioOficinaChamada');
-      const dataAtual = document.getElementById('dataAtual');
+      const dataChamadaInput = document.getElementById('dataChamada');
 
       if (titulo) titulo.textContent = sala.nome;
       if (profEl) profEl.textContent = sala.professor || '-';
       if (diaEl) diaEl.textContent = sala.diaSemana || '-';
       if (horEl) horEl.textContent = sala.horario || '-';
-      if (dataAtual) dataAtual.textContent = Utils.formatDateDisplay(chamada.dataISO || chamada.data);
+      if (dataChamadaInput) {
+        dataChamadaInput.value = chamada.dataISO || chamada.data || todayIso;
+      }
 
       UI.renderChamadaView();
       UI.showLayer('camada-chamada');
@@ -1243,9 +1245,13 @@ const App = {
     // refresh registros already updated on UI events
     chamada.dataAtualizacao = new Date().toISOString();
 
+    // Ler a data escolhida pelo professor no input
+    const dataChamadaInput = document.getElementById('dataChamada');
+    const dataEscolhida = dataChamadaInput ? dataChamadaInput.value : chamada.dataISO;
+
     const payload = {
       salaId: chamada.idSala,
-      dataISO: chamada.dataISO,
+      dataISO: dataEscolhida || chamada.dataISO,
       hora: chamada.hora,
       registros: chamada.registros.map(r => ({
         idAluno: r.idAluno,
