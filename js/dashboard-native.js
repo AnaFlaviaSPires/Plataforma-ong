@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Dashboard carregando...');
     loadDashboardData();
     loadAlunosLista();
+    loadDoacoesStats('mes');
     
     setInterval(loadDashboardData, 60000);
     
@@ -18,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         btnRefresh.addEventListener('click', () => {
             btnRefresh.disabled = true;
             btnRefresh.innerHTML = '<i class="bi bi-arrow-clockwise spin me-1"></i>...';
-            loadDashboardData().finally(() => {
+            const periodo = document.getElementById('selectPeriodoDoacoes')?.value || 'mes';
+            Promise.all([loadDashboardData(), loadDoacoesStats(periodo)]).finally(() => {
                 btnRefresh.disabled = false;
                 btnRefresh.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i>Atualizar';
             });
@@ -43,6 +45,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (selectAluno.value) {
                 loadFrequenciaAluno(selectAluno.value, selectPeriodo.value);
             }
+        });
+    }
+
+    const selectPeriodoDoacoes = document.getElementById('selectPeriodoDoacoes');
+    if (selectPeriodoDoacoes) {
+        selectPeriodoDoacoes.addEventListener('change', () => {
+            loadDoacoesStats(selectPeriodoDoacoes.value);
         });
     }
 });
@@ -219,46 +228,108 @@ function updateCharts(data) {
         }
     });
 
-    // 4. Doacoes por Mes
-    let doacoesMensal = data.doacoes?.mensal || [];
-    if (!Array.isArray(doacoesMensal)) doacoesMensal = [doacoesMensal];
-    
-    const totalQtdDoacao = doacoesMensal.reduce((acc, m) => acc + (parseInt(m.total) || 0), 0);
-    const totalValDoacao = doacoesMensal.reduce((acc, m) => acc + (parseFloat(m.valor) || 0), 0);
-    createOrUpdateChart('chartDoacoesMensal', {
-        type: 'bar',
-        data: {
-            labels: doacoesMensal.map(m => m.mes || ''),
-            datasets: [
-                {
-                    label: 'Quantidade (' + totalQtdDoacao + ')',
-                    data: doacoesMensal.map(m => parseInt(m.total) || 0),
-                    backgroundColor: '#9b59b6',
-                    borderRadius: 5,
-                    yAxisID: 'y'
-                },
-                {
-                    label: 'Valor (R$ ' + totalValDoacao.toLocaleString('pt-BR', {minimumFractionDigits:2}) + ')',
-                    data: doacoesMensal.map(m => parseFloat(m.valor) || 0),
-                    type: 'line',
-                    borderColor: '#8e44ad',
-                    backgroundColor: 'rgba(142, 68, 173, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    yAxisID: 'y1'
+    // Doacoes carregadas separadamente via loadDoacoesStats
+}
+
+const TIPO_LABELS_DASH = {
+    'dinheiro': 'Dinheiro', 'pix': 'Pix', 'alimentos': 'Alimentos',
+    'vestuario': 'Vestuario', 'material_higiene': 'Higiene',
+    'material_escolar': 'Escolar', 'brindes': 'Brindes', 'outros': 'Outros'
+};
+const TIPO_COLORS_DASH = ['#9b59b6','#3498db','#f39c12','#2ecc71','#e74c3c','#1abc9c','#e67e22','#95a5a6'];
+
+async function loadDoacoesStats(periodo) {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/doacoes/estatisticas?periodo=${periodo}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Erro');
+        const d = await response.json();
+
+        // Cards
+        const el = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+        el('doacaoTotalPeriodo', d.total_periodo || 0);
+        el('doacaoValorPeriodo', formatCurrency(d.valor_periodo || 0));
+        el('doacaoTotalGeral', d.total_geral || 0);
+        el('doacaoValorGeral', formatCurrency(d.valor_geral || 0));
+
+        // Chart serie temporal
+        const serie = d.serie || [];
+        const totalQtd = serie.reduce((a, s) => a + (s.total || 0), 0);
+        const totalVal = serie.reduce((a, s) => a + (s.valor || 0), 0);
+        createOrUpdateChart('chartDoacoesSerie', {
+            type: 'bar',
+            data: {
+                labels: serie.map(s => s.label),
+                datasets: [
+                    {
+                        label: 'Quantidade (' + totalQtd + ')',
+                        data: serie.map(s => s.total || 0),
+                        backgroundColor: '#9b59b6',
+                        borderRadius: 5,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Valor (' + formatCurrency(totalVal) + ')',
+                        data: serie.map(s => s.valor || 0),
+                        type: 'line',
+                        borderColor: '#8e44ad',
+                        backgroundColor: 'rgba(142, 68, 173, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true, position: 'top' } },
+                scales: {
+                    y: { type: 'linear', position: 'left', beginAtZero: true, title: { display: true, text: 'Qtd' } },
+                    y1: { type: 'linear', position: 'right', beginAtZero: true, title: { display: true, text: 'R$' }, grid: { drawOnChartArea: false } }
                 }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: true, position: 'top' } },
-            scales: {
-                y: { type: 'linear', position: 'left', beginAtZero: true, title: { display: true, text: 'Qtd' } },
-                y1: { type: 'linear', position: 'right', beginAtZero: true, title: { display: true, text: 'R$' }, grid: { drawOnChartArea: false } }
             }
-        }
-    });
+        });
+
+        // Chart por tipo (doughnut)
+        const porTipo = d.por_tipo || [];
+        createOrUpdateChart('chartDoacoesTipo', {
+            type: 'doughnut',
+            data: {
+                labels: porTipo.map(t => TIPO_LABELS_DASH[t.tipo] || t.tipo),
+                datasets: [{
+                    data: porTipo.map(t => parseInt(t.total) || 0),
+                    backgroundColor: TIPO_COLORS_DASH.slice(0, porTipo.length)
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            generateLabels: function(chart) {
+                                const data = chart.data;
+                                return data.labels.map((label, i) => ({
+                                    text: label + ' (' + data.datasets[0].data[i] + ')',
+                                    fillStyle: data.datasets[0].backgroundColor[i],
+                                    hidden: false,
+                                    index: i
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Erro ao carregar estatisticas de doacoes:', error);
+    }
 }
 
 async function loadAlunosLista() {

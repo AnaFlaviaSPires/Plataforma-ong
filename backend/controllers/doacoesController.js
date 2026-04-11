@@ -203,16 +203,43 @@ const deleteDoacao = async (req, res) => {
 };
 
 // Estatísticas agregadas (todos os usuários — SEM dados sensíveis)
+// Suporta ?periodo=semana|mes|semestre|ano
 const getEstatisticas = async (req, res) => {
   try {
-    const totalDoacoes = await Doacao.count();
+    const { periodo = 'mes' } = req.query;
+    const agora = new Date();
+    let dataInicio, agrupamento;
 
-    // Valor total arrecadado (dinheiro + pix)
-    const valorDinheiro = await Doacao.sum('valor', { where: { tipo: 'dinheiro' } }) || 0;
-    const valorPix = await Doacao.sum('valor', { where: { tipo: 'pix' } }) || 0;
-    const valorTotal = parseFloat(valorDinheiro) + parseFloat(valorPix);
+    switch (periodo) {
+      case 'semana':
+        dataInicio = new Date(agora); dataInicio.setDate(dataInicio.getDate() - 7);
+        agrupamento = 'dia'; break;
+      case 'semestre':
+        dataInicio = new Date(agora); dataInicio.setMonth(dataInicio.getMonth() - 6);
+        agrupamento = 'mes'; break;
+      case 'ano':
+        dataInicio = new Date(agora); dataInicio.setFullYear(dataInicio.getFullYear() - 1);
+        agrupamento = 'mes'; break;
+      default: // mes
+        dataInicio = new Date(agora); dataInicio.setDate(dataInicio.getDate() - 30);
+        agrupamento = 'dia'; break;
+    }
 
-    // Quantidade por tipo
+    const wherePeriodo = { data_doacao: { [Op.gte]: dataInicio } };
+
+    // Totais gerais (all-time)
+    const totalGeral = await Doacao.count();
+    const valorGeralDin = await Doacao.sum('valor', { where: { tipo: 'dinheiro' } }) || 0;
+    const valorGeralPix = await Doacao.sum('valor', { where: { tipo: 'pix' } }) || 0;
+    const valorGeral = parseFloat(valorGeralDin) + parseFloat(valorGeralPix);
+
+    // Totais do período
+    const totalPeriodo = await Doacao.count({ where: wherePeriodo });
+    const valorPeriodoDin = await Doacao.sum('valor', { where: { ...wherePeriodo, tipo: 'dinheiro' } }) || 0;
+    const valorPeriodoPix = await Doacao.sum('valor', { where: { ...wherePeriodo, tipo: 'pix' } }) || 0;
+    const valorPeriodo = parseFloat(valorPeriodoDin) + parseFloat(valorPeriodoPix);
+
+    // Distribuição por tipo no período
     const porTipo = await Doacao.findAll({
       attributes: [
         'tipo',
@@ -220,52 +247,80 @@ const getEstatisticas = async (req, res) => {
         [Doacao.sequelize.fn('SUM', Doacao.sequelize.col('valor')), 'soma_valor'],
         [Doacao.sequelize.fn('SUM', Doacao.sequelize.col('quantidade')), 'soma_quantidade']
       ],
+      where: wherePeriodo,
       group: ['tipo'],
       raw: true
     });
 
-    // Doações dos últimos 6 meses
-    const seisAtras = new Date();
-    seisAtras.setMonth(seisAtras.getMonth() - 5);
-    const inicioSeisMeses = new Date(seisAtras.getFullYear(), seisAtras.getMonth(), 1);
-
-    const mensalRaw = await Doacao.findAll({
-      attributes: [
-        [Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('data_doacao')), 'ano'],
-        [Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('data_doacao')), 'mes_num'],
-        [Doacao.sequelize.fn('COUNT', Doacao.sequelize.col('id')), 'total'],
-        [Doacao.sequelize.fn('SUM', Doacao.sequelize.col('valor')), 'valor']
-      ],
-      where: { data_doacao: { [Op.gte]: inicioSeisMeses } },
-      group: [
-        Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('data_doacao')),
-        Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('data_doacao'))
-      ],
-      raw: true
-    });
-
-    const mensalMap = {};
-    mensalRaw.forEach(r => {
-      mensalMap[`${r.ano}-${r.mes_num}`] = { total: parseInt(r.total), valor: parseFloat(r.valor) || 0 };
-    });
-
-    const mensal = [];
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date();
-      d.setMonth(d.getMonth() - i);
-      const key = `${d.getFullYear()}-${d.getMonth() + 1}`;
-      mensal.push({
-        mes: d.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
-        total: mensalMap[key]?.total || 0,
-        valor: mensalMap[key]?.valor || 0
+    // Série temporal
+    let serieRaw;
+    if (agrupamento === 'dia') {
+      serieRaw = await Doacao.findAll({
+        attributes: [
+          [Doacao.sequelize.fn('DATE', Doacao.sequelize.col('data_doacao')), 'data'],
+          [Doacao.sequelize.fn('COUNT', Doacao.sequelize.col('id')), 'total'],
+          [Doacao.sequelize.fn('SUM', Doacao.sequelize.col('valor')), 'valor']
+        ],
+        where: wherePeriodo,
+        group: [Doacao.sequelize.fn('DATE', Doacao.sequelize.col('data_doacao'))],
+        order: [[Doacao.sequelize.fn('DATE', Doacao.sequelize.col('data_doacao')), 'ASC']],
+        raw: true
+      });
+    } else {
+      serieRaw = await Doacao.findAll({
+        attributes: [
+          [Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('data_doacao')), 'ano'],
+          [Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('data_doacao')), 'mes_num'],
+          [Doacao.sequelize.fn('COUNT', Doacao.sequelize.col('id')), 'total'],
+          [Doacao.sequelize.fn('SUM', Doacao.sequelize.col('valor')), 'valor']
+        ],
+        where: wherePeriodo,
+        group: [
+          Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('data_doacao')),
+          Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('data_doacao'))
+        ],
+        raw: true
       });
     }
 
+    // Preencher série com zeros para períodos sem dados
+    const serie = [];
+    if (agrupamento === 'dia') {
+      const rawMap = {};
+      serieRaw.forEach(r => { rawMap[r.data] = { total: parseInt(r.total), valor: parseFloat(r.valor) || 0 }; });
+      const numDias = periodo === 'semana' ? 7 : 30;
+      for (let i = numDias - 1; i >= 0; i--) {
+        const d = new Date(agora); d.setDate(d.getDate() - i);
+        const key = d.toISOString().split('T')[0];
+        serie.push({
+          label: d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+          total: rawMap[key]?.total || 0,
+          valor: rawMap[key]?.valor || 0
+        });
+      }
+    } else {
+      const rawMap = {};
+      serieRaw.forEach(r => { rawMap[`${r.ano}-${r.mes_num}`] = { total: parseInt(r.total), valor: parseFloat(r.valor) || 0 }; });
+      const numMeses = periodo === 'semestre' ? 6 : 12;
+      for (let i = numMeses - 1; i >= 0; i--) {
+        const d = new Date(agora); d.setMonth(d.getMonth() - i);
+        const key = `${d.getFullYear()}-${d.getMonth() + 1}`;
+        serie.push({
+          label: d.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
+          total: rawMap[key]?.total || 0,
+          valor: rawMap[key]?.valor || 0
+        });
+      }
+    }
+
     res.json({
-      total_doacoes: totalDoacoes,
-      valor_total: valorTotal,
+      periodo,
+      total_geral: totalGeral,
+      valor_geral: valorGeral,
+      total_periodo: totalPeriodo,
+      valor_periodo: valorPeriodo,
       por_tipo: porTipo,
-      mensal
+      serie
     });
   } catch (error) {
     console.error('Erro ao buscar estatísticas de doações:', error);

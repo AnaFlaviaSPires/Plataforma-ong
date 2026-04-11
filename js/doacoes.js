@@ -161,14 +161,10 @@
   function renderStats(stats) {
     if (!stats) return;
     const el = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
-    el('statTotal', stats.total_doacoes || 0);
-    el('statValor', formatMoeda(stats.valor_total || 0));
+    el('statTotal', stats.total_geral || 0);
+    el('statValor', formatMoeda(stats.valor_geral || 0));
     el('statTipos', (stats.por_tipo || []).length);
-
-    // Doações deste mês
-    const mensal = stats.mensal || [];
-    const esteMes = mensal.length ? mensal[mensal.length - 1].total : 0;
-    el('statMes', esteMes);
+    el('statMes', stats.total_periodo || 0);
   }
 
   // ---- Formulário dinâmico ----
