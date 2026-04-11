@@ -105,7 +105,7 @@ function updateCards(data) {
     // Taxa de presença
     const taxaEl = document.getElementById('cardTaxaPresenca');
     if (taxaEl) {
-        const taxa = freq.taxa_presenca_geral || 0;
+        const taxa = freq.taxa_presenca || 0;
         taxaEl.textContent = taxa + '%';
     }
 }
