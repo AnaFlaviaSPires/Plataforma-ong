@@ -133,20 +133,32 @@
   opacity: 0.8;
 }
 
-.assistant-header-close {
+.assistant-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.assistant-header-close,
+.assistant-header-clear {
   background: none;
   border: none;
   color: #fff;
-  font-size: 20px;
+  font-size: 16px;
   cursor: pointer;
-  padding: 4px;
+  padding: 4px 6px;
   border-radius: 6px;
   line-height: 1;
-  opacity: 0.8;
+  opacity: 0.7;
   transition: opacity 0.2s, background 0.2s;
 }
 
-.assistant-header-close:hover {
+.assistant-header-close {
+  font-size: 20px;
+}
+
+.assistant-header-close:hover,
+.assistant-header-clear:hover {
   opacity: 1;
   background: rgba(255,255,255,0.15);
 }

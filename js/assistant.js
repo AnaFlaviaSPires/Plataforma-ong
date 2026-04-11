@@ -26,6 +26,71 @@
     }
   } catch (_) { /* ignora */ }
 
+  // --- Contexto do usuário e página ---
+  function getUserData() {
+    try {
+      return JSON.parse(localStorage.getItem('user') || localStorage.getItem('userData') || 'null');
+    } catch (_) { return null; }
+  }
+
+  function getUserName() {
+    const user = getUserData();
+    if (!user) return null;
+    const nome = user.nome || user.name || '';
+    return nome.split(' ')[0] || null; // Primeiro nome
+  }
+
+  function getUserRole() {
+    const user = getUserData();
+    return user?.cargo || user?.role || null;
+  }
+
+  function getCurrentPage() {
+    const path = window.location.pathname;
+    const match = path.match(/([^/]+)\.html$/);
+    if (match) return match[1]; // ex: 'dashboard', 'alunos'
+    return null;
+  }
+
+  function getGreeting() {
+    const h = new Date().getHours();
+    if (h < 12) return 'Bom dia';
+    if (h < 18) return 'Boa tarde';
+    return 'Boa noite';
+  }
+
+  function getContextSuggestions() {
+    const page = getCurrentPage();
+    if (page && typeof assistantPageSuggestions !== 'undefined' && assistantPageSuggestions[page]) {
+      return assistantPageSuggestions[page];
+    }
+    return (typeof assistantSuggestions !== 'undefined') ? assistantSuggestions : [];
+  }
+
+  function buildWelcomeMessage() {
+    const nome = getUserName();
+    const cargo = getUserRole();
+    const page = getCurrentPage();
+    const greeting = getGreeting();
+
+    let msg = nome
+      ? `${greeting}, **${nome}**! 👋 Sou o assistente da plataforma.`
+      : `${greeting}! 👋 Sou o assistente da plataforma.`;
+
+    // Dica contextual da página
+    if (page && typeof assistantPageTips !== 'undefined' && assistantPageTips[page]) {
+      msg += `\n\n${assistantPageTips[page]}`;
+    }
+
+    // Dica do cargo (só na primeira vez)
+    if (cargo && typeof assistantRoleTips !== 'undefined' && assistantRoleTips[cargo]) {
+      msg += `\n\n💡 ${assistantRoleTips[cargo]}`;
+    }
+
+    msg += '\n\nComo posso te ajudar?';
+    return msg;
+  }
+
   // --- Utilitários ---
   function normalize(text) {
     return text
@@ -46,9 +111,7 @@
     for (const entry of assistantData) {
       for (const kw of entry.keywords) {
         const kwNorm = normalize(kw);
-        // Correspondência exata ou parcial
         if (normalized.includes(kwNorm) || kwNorm.includes(normalized)) {
-          // Priorizar matches mais específicos (keywords maiores)
           const score = kwNorm.split(' ').filter(w => normalized.includes(w)).length;
           if (score > bestScore) {
             bestScore = score;
@@ -63,22 +126,24 @@
 
   function resolveAction(action) {
     if (!action) return null;
-    // Se já é URL completa, retorna direto
     if (action.startsWith('http') || action.startsWith('/')) return action;
-    // Resolver relativo à pasta pages/
     const currentPath = window.location.pathname;
-    if (currentPath.includes('/pages/')) {
-      return action; // já estamos em pages/
-    }
+    if (currentPath.includes('/pages/')) return action;
     return 'pages/' + action;
   }
 
   function saveHistory() {
     try {
-      // Guardar apenas últimas 50 mensagens
       const toSave = state.messages.slice(-50);
       localStorage.setItem('assistant_history', JSON.stringify(toSave));
     } catch (_) { /* ignora */ }
+  }
+
+  // Formatar texto com markdown simples (**bold** e \n)
+  function formatText(text) {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
   }
 
   // --- Criar UI ---
@@ -115,7 +180,12 @@
             <span>Online • Sempre disponível</span>
           </div>
         </div>
-        <button class="assistant-header-close" aria-label="Fechar">&times;</button>
+        <div class="assistant-header-actions">
+          <button class="assistant-header-clear" aria-label="Limpar conversa" title="Limpar conversa">
+            <i class="bi bi-trash3"></i>
+          </button>
+          <button class="assistant-header-close" aria-label="Fechar">&times;</button>
+        </div>
       </div>
       <div class="assistant-body" id="assistantBody"></div>
       <div class="assistant-input-area">
@@ -133,6 +203,7 @@
     const input = win.querySelector('#assistantInput');
     const sendBtn = win.querySelector('#assistantSend');
     const closeBtn = win.querySelector('.assistant-header-close');
+    const clearBtn = win.querySelector('.assistant-header-clear');
     const badge = fab.querySelector('.assistant-fab-badge');
 
     // --- Renderizar mensagens ---
@@ -149,7 +220,7 @@
       el.className = `assistant-msg ${role}`;
       if (!animate) el.style.animation = 'none';
 
-      let html = text;
+      let html = formatText(text);
       if (role === 'bot' && action) {
         const resolvedAction = resolveAction(action);
         html += `<br><button class="assistant-action-btn" data-action="${resolvedAction}">
@@ -158,7 +229,6 @@
       }
       el.innerHTML = html;
 
-      // Event listener para botão de ação
       const actionBtn = el.querySelector('.assistant-action-btn');
       if (actionBtn) {
         actionBtn.addEventListener('click', () => {
@@ -192,10 +262,12 @@
     }
 
     function showSuggestions() {
-      if (typeof assistantSuggestions === 'undefined') return;
+      const suggestions = getContextSuggestions();
+      if (!suggestions || suggestions.length === 0) return;
+
       const container = document.createElement('div');
       container.className = 'assistant-suggestions';
-      assistantSuggestions.forEach(s => {
+      suggestions.forEach(s => {
         const chip = document.createElement('button');
         chip.className = 'assistant-suggestion-chip';
         chip.textContent = s.label;
@@ -209,10 +281,29 @@
       scrollToBottom();
     }
 
+    function clearConversation() {
+      state.messages = [];
+      state.firstOpen = true;
+      localStorage.removeItem('assistant_history');
+      body.innerHTML = '';
+
+      // Nova mensagem de boas-vindas
+      const welcomeText = buildWelcomeMessage();
+      state.messages.push({ role: 'bot', text: welcomeText, action: null, actionLabel: null });
+      state.firstOpen = false;
+      renderMessages();
+      showSuggestions();
+      saveHistory();
+    }
+
     // --- Enviar mensagem ---
     function handleSend(overrideText) {
       const text = overrideText || input.value.trim();
       if (!text) return;
+
+      // Remover sugestões se existirem
+      const chips = body.querySelector('.assistant-suggestions');
+      if (chips) chips.remove();
 
       // Msg do usuário
       state.messages.push({ role: 'user', text });
@@ -258,13 +349,13 @@
         badge.classList.remove('show');
         if (state.firstOpen) {
           state.firstOpen = false;
-          // Mensagem de boas-vindas
           if (state.messages.length === 0) {
-            const welcomeText = 'Olá! 👋 Sou o assistente da plataforma. Posso te ajudar a encontrar módulos, tirar dúvidas e navegar pelo sistema. Como posso ajudar?';
+            const welcomeText = buildWelcomeMessage();
             state.messages.push({ role: 'bot', text: welcomeText, action: null, actionLabel: null });
           }
           renderMessages();
           showSuggestions();
+          saveHistory();
         } else {
           renderMessages();
         }
@@ -276,6 +367,10 @@
       state.open = false;
       win.classList.remove('open');
       fab.classList.remove('open');
+    });
+
+    clearBtn.addEventListener('click', () => {
+      clearConversation();
     });
 
     input.addEventListener('keydown', (e) => {
@@ -295,11 +390,6 @@
         fab.classList.remove('open');
       }
     });
-
-    // Se já tem histórico, renderizar
-    if (state.messages.length > 0 && !state.firstOpen) {
-      // Será renderizado ao abrir
-    }
   }
 
   // --- Inicializar ---

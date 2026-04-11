@@ -174,7 +174,7 @@ const assistantData = [
   }
 ];
 
-// Sugestões rápidas exibidas ao abrir o chat
+// Sugestões padrão (fallback)
 const assistantSuggestions = [
   { label: "📊 Dashboard", query: "dashboard" },
   { label: "👦 Alunos", query: "cadastrar aluno" },
@@ -182,3 +182,100 @@ const assistantSuggestions = [
   { label: "💰 Doações", query: "doações" },
   { label: "❓ Ajuda", query: "como usar" }
 ];
+
+// Sugestões dinâmicas por página (baseado no nome do arquivo HTML)
+const assistantPageSuggestions = {
+  'dashboard': [
+    { label: "� O que mostra o dashboard?", query: "dashboard" },
+    { label: "👦 Ver alunos", query: "alunos" },
+    { label: "💰 Ver doações", query: "doações" },
+    { label: "📋 Fazer chamada", query: "chamada" }
+  ],
+  'alunos': [
+    { label: "➕ Como cadastrar aluno?", query: "como cadastrar aluno" },
+    { label: "🔍 Buscar aluno", query: "buscar aluno" },
+    { label: "📋 Fazer chamada", query: "chamada" },
+    { label: "📊 Ver dashboard", query: "dashboard" }
+  ],
+  'chamada': [
+    { label: "✅ Como registrar presença?", query: "como fazer chamada" },
+    { label: "🏫 Selecionar sala", query: "salas" },
+    { label: "👦 Ver alunos", query: "alunos" },
+    { label: "📊 Ver frequência", query: "frequencia" }
+  ],
+  'doacoes': [
+    { label: "➕ Como registrar doação?", query: "como registrar doação" },
+    { label: "� Doações em dinheiro", query: "dinheiro" },
+    { label: "📊 Ver dashboard", query: "dashboard" },
+    { label: "❓ Ajuda", query: "ajuda" }
+  ],
+  'professores': [
+    { label: "👨‍🏫 Gerenciar professores", query: "professores" },
+    { label: "📋 Fazer chamada", query: "chamada" },
+    { label: "🏫 Ver salas", query: "salas" },
+    { label: "📊 Dashboard", query: "dashboard" }
+  ],
+  'acompanhamento-social': [
+    { label: "📝 O que é o prontuário?", query: "prontuario" },
+    { label: "👦 Ver alunos", query: "alunos" },
+    { label: "📊 Dashboard", query: "dashboard" },
+    { label: "❓ Ajuda", query: "ajuda" }
+  ],
+  'calendario': [
+    { label: "📅 Como criar evento?", query: "evento" },
+    { label: "📊 Dashboard", query: "dashboard" },
+    { label: "👦 Alunos", query: "alunos" },
+    { label: "❓ Ajuda", query: "ajuda" }
+  ],
+  'perfil': [
+    { label: "🔑 Trocar senha", query: "trocar senha" },
+    { label: "📷 Alterar foto", query: "avatar" },
+    { label: "📊 Dashboard", query: "dashboard" },
+    { label: "❓ Ajuda", query: "ajuda" }
+  ],
+  'admin-usuarios': [
+    { label: "👥 Gerenciar usuários", query: "usuarios" },
+    { label: "✅ Aprovar cadastros", query: "aprovar" },
+    { label: "📋 Auditoria", query: "auditoria" },
+    { label: "📊 Dashboard", query: "dashboard" }
+  ],
+  'cursos': [
+    { label: "📚 Gerenciar cursos", query: "cursos" },
+    { label: "👨‍🏫 Ver professores", query: "professores" },
+    { label: "👦 Ver alunos", query: "alunos" },
+    { label: "📊 Dashboard", query: "dashboard" }
+  ],
+  'menu': [
+    { label: "📊 Abrir Dashboard", query: "dashboard" },
+    { label: "👦 Módulo Alunos", query: "alunos" },
+    { label: "📋 Fazer Chamada", query: "chamada" },
+    { label: "❓ Como usar a plataforma?", query: "como usar" }
+  ]
+};
+
+// Dica contextual por página (exibida no boas-vindas quando o usuário abre o chat naquela tela)
+const assistantPageTips = {
+  'dashboard': '📊 Você está no Dashboard! Aqui vê um resumo geral de alunos, doações e frequência.',
+  'alunos': '👦 Você está na tela de Alunos. Use o botão "Novo Aluno" para cadastrar, ou a busca para encontrar.',
+  'chamada': '📋 Você está na Chamada. Selecione uma sala e clique nos alunos para marcar presença.',
+  'doacoes': '💰 Aqui você gerencia as doações. Clique em "Nova Doação" para registrar uma contribuição.',
+  'professores': '👨‍🏫 Módulo de Professores — gerencie dados e visualize os educadores cadastrados.',
+  'acompanhamento-social': '📝 Acompanhamento Social — registre prontuários e atendimentos das famílias.',
+  'calendario': '📅 Calendário de Eventos — visualize e crie eventos importantes da ONG.',
+  'perfil': '👤 Seu Perfil — atualize nome, email, foto e altere sua senha.',
+  'configuracoes': '⚙️ Configurações — ajuste tema, idioma e preferências do sistema.',
+  'admin-usuarios': '👥 Administração de Usuários — aprove cadastros, altere cargos e gerencie acessos.',
+  'cursos': '📚 Módulo de Cursos — cadastre e gerencie cursos e oficinas.',
+  'documentos': '📄 Documentos — gere relatórios e gerencie arquivos da plataforma.',
+  'ponto': '⏰ Registro de Ponto — acompanhe a jornada de trabalho.',
+  'menu': '🏠 Menu Principal — escolha um módulo para começar.',
+  'auditoria': '🔍 Auditoria — veja o histórico de ações realizadas no sistema.'
+};
+
+// Dicas extras baseadas no cargo do usuário
+const assistantRoleTips = {
+  'admin': 'Como admin, você tem acesso total. Pode gerenciar usuários, aprovar cadastros e ver auditoria.',
+  'professor': 'Como professor, você pode registrar chamadas, ver alunos das suas turmas e acompanhar frequência.',
+  'secretaria': 'Como secretária, você pode cadastrar alunos, registrar doações e gerenciar documentos.',
+  'assistente_social': 'Como assistente social, você pode gerenciar prontuários e acompanhamento das famílias.'
+};
