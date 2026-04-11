@@ -160,22 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Preload de fontes (evita flash of unstyled text)
-    const fontPreloads = [
-      { href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap', as: 'style' },
-      { href: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css', as: 'style' }
-    ];
-    fontPreloads.forEach(f => {
-        if (!document.querySelector(`link[rel="preload"][href="${f.href}"]`)) {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.href = f.href;
-            link.as = f.as;
-            link.crossOrigin = 'anonymous';
-            document.head.appendChild(link);
-        }
-    });
-
     // Injetar CSS responsivo globalmente
     if (!document.querySelector('link[href*="responsive.css"]')) {
         const respCSS = document.createElement('link');
