@@ -6,6 +6,8 @@ const {
   getPontosFuncionario,
   getListaPontos,
   corrigirPonto,
+  editarPonto,
+  excluirPonto,
   getStatusAtual
 } = require('../controllers/pontoController');
 
@@ -48,6 +50,18 @@ router.get('/funcionario/:id',
 router.put('/corrigir',
   requireRole(['admin']),
   corrigirPonto
+);
+
+// Editar registro (admin apenas)
+router.put('/:id',
+  requireRole(['admin']),
+  editarPonto
+);
+
+// Excluir registro (admin apenas)
+router.delete('/:id',
+  requireRole(['admin']),
+  excluirPonto
 );
 
 module.exports = router;

@@ -217,6 +217,28 @@
     return data;
   }
 
+  async function apiEditar(id, tipo, timestamp, motivo) {
+    const resp = await fetch(API + '/ponto/' + id, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify({ tipo, timestamp, motivo })
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data.error || 'Erro ao editar ponto');
+    return data;
+  }
+
+  async function apiExcluir(id, motivo) {
+    const resp = await fetch(API + '/ponto/' + id, {
+      method: 'DELETE',
+      headers: getHeaders(),
+      body: JSON.stringify({ motivo })
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data.error || 'Erro ao excluir ponto');
+    return data;
+  }
+
   // ---- Renderização ----
 
   function renderTimeline(registros) {
@@ -339,8 +361,12 @@
     });
   }
 
+  // ID do funcionário aberto no modal (para recarregar após edição/exclusão)
+  let _funcAberto = null;
+
   async function abrirDetalhesFuncionario(id) {
     try {
+      _funcAberto = id;
       const dataInicio = document.getElementById('adminDataInicio')?.value || '';
       const dataFim = document.getElementById('adminDataFim')?.value || '';
       const data = await apiFuncionario(id, dataInicio, dataFim);
@@ -348,9 +374,13 @@
       document.getElementById('modalFuncNome').textContent = 'Registros - ' + (data.funcionario?.nome || 'Funcionário');
 
       const tbody = document.getElementById('modalFuncTabela');
+      const tbodyReg = document.getElementById('modalFuncRegistros');
+
       if (!data.pontos || data.pontos.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sem registros</td></tr>';
+        tbodyReg.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sem registros</td></tr>';
       } else {
+        // Resumo por dia
         const grouped = agruparPorData(data.pontos);
         const dates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
         let html = '';
@@ -367,6 +397,40 @@
           </tr>`;
         });
         tbody.innerHTML = html;
+
+        // Registros individuais com botões editar/excluir
+        const sorted = [...data.pontos].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        let regHtml = '';
+        sorted.forEach(r => {
+          const dt = new Date(r.timestamp);
+          const dataHora = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          const statusBadge = r.alterado
+            ? '<span class="badge bg-warning text-dark" title="' + (r.motivo_alteracao || '') + '"><i class="bi bi-pencil-fill me-1"></i>Editado</span>'
+            : '<span class="badge bg-light text-muted">Original</span>';
+          regHtml += `<tr>
+            <td class="small">${dataHora}</td>
+            <td><span class="badge ${tipoBadgeClass(r.tipo)}">${tipoLabel(r.tipo)}</span></td>
+            <td>${statusBadge}</td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-primary btn-editar-ponto me-1" data-id="${r.id}" data-tipo="${r.tipo}" data-timestamp="${r.timestamp}" title="Editar">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger btn-excluir-ponto" data-id="${r.id}" data-info="${tipoLabel(r.tipo)} - ${dataHora}" title="Excluir">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>`;
+        });
+        tbodyReg.innerHTML = regHtml;
+
+        // Listeners editar
+        tbodyReg.querySelectorAll('.btn-editar-ponto').forEach(btn => {
+          btn.addEventListener('click', () => abrirModalEditar(btn.dataset.id, btn.dataset.tipo, btn.dataset.timestamp));
+        });
+        // Listeners excluir
+        tbodyReg.querySelectorAll('.btn-excluir-ponto').forEach(btn => {
+          btn.addEventListener('click', () => abrirModalExcluir(btn.dataset.id, btn.dataset.info));
+        });
       }
 
       const modal = new bootstrap.Modal(document.getElementById('modalDetalhesFuncionario'));
@@ -374,6 +438,26 @@
     } catch (e) {
       showToast(e.message, 'danger');
     }
+  }
+
+  function abrirModalEditar(id, tipo, timestamp) {
+    document.getElementById('editarPontoId').value = id;
+    document.getElementById('editarTipo').value = tipo;
+    // Converter timestamp ISO para datetime-local
+    const dt = new Date(timestamp);
+    const local = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    document.getElementById('editarTimestamp').value = local;
+    document.getElementById('editarMotivo').value = '';
+    const modal = new bootstrap.Modal(document.getElementById('modalEditarPonto'));
+    modal.show();
+  }
+
+  function abrirModalExcluir(id, info) {
+    document.getElementById('excluirPontoId').value = id;
+    document.getElementById('excluirPontoInfo').textContent = info;
+    document.getElementById('excluirMotivo').value = '';
+    const modal = new bootstrap.Modal(document.getElementById('modalExcluirPonto'));
+    modal.show();
   }
 
   // ---- Ações ----
@@ -528,12 +612,12 @@
     // Filtro admin
     document.getElementById('btnFiltrarAdmin')?.addEventListener('click', carregarGestao);
 
-    // Correção de ponto
-    document.getElementById('btnConfirmarCorrecao')?.addEventListener('click', async () => {
-      const pontoId = document.getElementById('corrigirPontoId')?.value;
-      const novoTimestamp = document.getElementById('corrigirTimestamp')?.value;
-      const novoTipo = document.getElementById('corrigirTipo')?.value;
-      const motivo = document.getElementById('corrigirMotivo')?.value;
+    // Edição de ponto
+    document.getElementById('btnConfirmarEdicao')?.addEventListener('click', async () => {
+      const id = document.getElementById('editarPontoId')?.value;
+      const tipo = document.getElementById('editarTipo')?.value;
+      const timestamp = document.getElementById('editarTimestamp')?.value;
+      const motivo = document.getElementById('editarMotivo')?.value;
 
       if (!motivo || motivo.trim().length < 5) {
         showToast('Justificativa deve ter pelo menos 5 caracteres', 'warning');
@@ -541,10 +625,34 @@
       }
 
       try {
-        await apiCorrigir(parseInt(pontoId), novoTimestamp, novoTipo, motivo);
-        showToast('Registro corrigido com sucesso!', 'success');
-        const modal = bootstrap.Modal.getInstance(document.getElementById('modalCorrigirPonto'));
+        await apiEditar(parseInt(id), tipo, timestamp, motivo);
+        showToast('Registro atualizado com sucesso!', 'success');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarPonto'));
         if (modal) modal.hide();
+        // Recarregar detalhes do funcionário aberto
+        if (_funcAberto) await abrirDetalhesFuncionario(_funcAberto);
+        carregarGestao();
+      } catch (e) {
+        showToast(e.message, 'danger');
+      }
+    });
+
+    // Exclusão de ponto
+    document.getElementById('btnConfirmarExclusao')?.addEventListener('click', async () => {
+      const id = document.getElementById('excluirPontoId')?.value;
+      const motivo = document.getElementById('excluirMotivo')?.value;
+
+      if (!motivo || motivo.trim().length < 5) {
+        showToast('Justificativa deve ter pelo menos 5 caracteres', 'warning');
+        return;
+      }
+
+      try {
+        await apiExcluir(parseInt(id), motivo);
+        showToast('Registro excluído com sucesso!', 'success');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalExcluirPonto'));
+        if (modal) modal.hide();
+        if (_funcAberto) await abrirDetalhesFuncionario(_funcAberto);
         carregarGestao();
       } catch (e) {
         showToast(e.message, 'danger');

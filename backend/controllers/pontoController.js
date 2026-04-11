@@ -305,6 +305,92 @@ async function corrigirPonto(req, res, next) {
   }
 }
 
+// Editar registro de ponto (admin) — atualiza diretamente com auditoria
+async function editarPonto(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { tipo, timestamp, motivo } = req.body;
+
+    if (!motivo || motivo.trim().length < 5) {
+      return res.status(400).json({ error: 'Justificativa deve ter pelo menos 5 caracteres.' });
+    }
+
+    const ponto = await Ponto.findByPk(id);
+    if (!ponto) {
+      return res.status(404).json({ error: 'Registro de ponto não encontrado.' });
+    }
+
+    const dadosAntigos = ponto.toJSON();
+
+    // Validar tipo se fornecido
+    if (tipo) {
+      const tiposValidos = ['entrada', 'inicio_intervalo', 'fim_intervalo', 'saida'];
+      if (!tiposValidos.includes(tipo)) {
+        return res.status(400).json({ error: 'Tipo inválido.' });
+      }
+      ponto.tipo = tipo;
+    }
+
+    if (timestamp) {
+      ponto.timestamp = new Date(timestamp);
+    }
+
+    ponto.alterado = true;
+    ponto.alterado_por = req.user.id;
+    ponto.motivo_alteracao = motivo.trim();
+    await ponto.save();
+
+    await logAction(req, {
+      acao: 'UPDATE',
+      tabela: 'pontos',
+      registroId: ponto.id,
+      antigos: dadosAntigos,
+      novos: ponto.toJSON()
+    });
+
+    console.log(`[PONTO] Registro #${ponto.id} editado por ${req.user.nome}: ${motivo.trim()}`);
+
+    res.json({ message: 'Registro atualizado com sucesso', ponto: ponto.toJSON() });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// Excluir registro de ponto (admin) — hard delete com auditoria
+async function excluirPonto(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { motivo } = req.body;
+
+    if (!motivo || motivo.trim().length < 5) {
+      return res.status(400).json({ error: 'Justificativa deve ter pelo menos 5 caracteres.' });
+    }
+
+    const ponto = await Ponto.findByPk(id);
+    if (!ponto) {
+      return res.status(404).json({ error: 'Registro de ponto não encontrado.' });
+    }
+
+    const dadosAntigos = ponto.toJSON();
+
+    await ponto.destroy();
+
+    await logAction(req, {
+      acao: 'DELETE',
+      tabela: 'pontos',
+      registroId: id,
+      antigos: dadosAntigos,
+      novos: { motivo: motivo.trim() }
+    });
+
+    console.log(`[PONTO] Registro #${id} excluído por ${req.user.nome}: ${motivo.trim()}`);
+
+    res.json({ message: 'Registro excluído com sucesso' });
+  } catch (err) {
+    next(err);
+  }
+}
+
 // Status atual do funcionário no dia
 async function getStatusAtual(req, res, next) {
   try {
@@ -367,5 +453,7 @@ module.exports = {
   getPontosFuncionario,
   getListaPontos,
   corrigirPonto,
+  editarPonto,
+  excluirPonto,
   getStatusAtual
 };

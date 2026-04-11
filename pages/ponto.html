@@ -185,14 +185,16 @@
 
           <!-- Modal Detalhes do Funcionário -->
           <div class="modal fade" id="modalDetalhesFuncionario" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="modalFuncNome">Registros de Ponto</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                  <div class="table-responsive">
+                  <!-- Resumo por dia -->
+                  <h6 class="text-muted mb-2"><i class="bi bi-calendar3 me-1"></i>Resumo por Dia</h6>
+                  <div class="table-responsive mb-4">
                     <table class="table table-sm table-hover">
                       <thead class="table-light">
                         <tr>
@@ -206,24 +208,39 @@
                       <tbody id="modalFuncTabela"></tbody>
                     </table>
                   </div>
+                  <!-- Registros individuais -->
+                  <h6 class="text-muted mb-2"><i class="bi bi-list-ul me-1"></i>Registros Individuais</h6>
+                  <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Data/Hora</th>
+                          <th>Tipo</th>
+                          <th>Status</th>
+                          <th class="text-end">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody id="modalFuncRegistros"></tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Modal Corrigir Ponto -->
-          <div class="modal fade" id="modalCorrigirPonto" tabindex="-1" aria-hidden="true">
+          <!-- Modal Editar Ponto -->
+          <div class="modal fade" id="modalEditarPonto" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Corrigir Registro de Ponto</h5>
+                  <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editar Registro</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                  <input type="hidden" id="corrigirPontoId">
+                  <input type="hidden" id="editarPontoId">
                   <div class="mb-3">
                     <label class="form-label">Tipo</label>
-                    <select class="form-select" id="corrigirTipo">
+                    <select class="form-select" id="editarTipo">
                       <option value="entrada">Entrada</option>
                       <option value="inicio_intervalo">Início do Intervalo</option>
                       <option value="fim_intervalo">Fim do Intervalo</option>
@@ -232,16 +249,44 @@
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Data/Hora</label>
-                    <input type="datetime-local" class="form-control" id="corrigirTimestamp">
+                    <input type="datetime-local" class="form-control" id="editarTimestamp">
                   </div>
                   <div class="mb-3">
-                    <label class="form-label">Justificativa *</label>
-                    <textarea class="form-control" id="corrigirMotivo" rows="3" placeholder="Descreva o motivo da correção (mínimo 5 caracteres)"></textarea>
+                    <label class="form-label">Justificativa <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="editarMotivo" rows="3" placeholder="Descreva o motivo da edição (mínimo 5 caracteres)"></textarea>
                   </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-primary" id="btnConfirmarCorrecao">Salvar Correção</button>
+                  <button type="button" class="btn btn-primary" id="btnConfirmarEdicao"><i class="bi bi-check-lg me-1"></i>Salvar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Excluir Ponto -->
+          <div class="modal fade" id="modalExcluirPonto" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                  <h5 class="modal-title"><i class="bi bi-trash me-2"></i>Excluir Registro</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" id="excluirPontoId">
+                  <div class="alert alert-warning mb-3">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    Esta ação é <strong>irreversível</strong>. O registro será permanentemente removido.
+                  </div>
+                  <p class="mb-1"><strong>Registro:</strong> <span id="excluirPontoInfo">-</span></p>
+                  <div class="mb-3 mt-3">
+                    <label class="form-label">Justificativa <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="excluirMotivo" rows="3" placeholder="Descreva o motivo da exclusão (mínimo 5 caracteres)"></textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-danger" id="btnConfirmarExclusao"><i class="bi bi-trash me-1"></i>Excluir</button>
                 </div>
               </div>
             </div>
