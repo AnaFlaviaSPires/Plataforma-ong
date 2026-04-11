@@ -125,9 +125,9 @@ const getDashboardStats = async (req, res) => {
         ], raw: true
       }),
 
-      // Salas e professores
+      // Salas e professores (professores = usuários com cargo 'professor')
       Sala.count({ where: { ativo: true } }),
-      Professor.count({ where: { status: 'ativo' } }),
+      User.count({ where: { cargo: 'professor', ativo: true } }),
 
       Sala.findAll({
         where: { ativo: true }, attributes: ['id', 'nome', 'professor'],
