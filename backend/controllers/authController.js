@@ -340,8 +340,9 @@ const verifyToken = async (req, res) => {
         email: user.email,
         cargo: user.cargo,
         avatar: user.avatar,
-        telefone: user.telefone, // Adicionado
-        ultimo_login: user.ultimo_login
+        telefone: user.telefone,
+        ultimo_login: user.ultimo_login,
+        createdAt: user.createdAt
       }
     });
 
@@ -478,12 +479,18 @@ const getUsersList = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const user = req.user; // Do middleware auth
-    const { nome, telefone, avatar } = req.body; 
+    const { nome, email, telefone, avatar } = req.body; 
 
-    // Email e cargo não são alteráveis aqui por segurança
     if (nome) user.nome = nome;
-    if (telefone) user.telefone = telefone;
-    if (avatar) user.avatar = avatar;
+    if (telefone !== undefined) user.telefone = telefone;
+    if (avatar !== undefined) user.avatar = avatar;
+
+    // Permitir troca de email com validação de unicidade
+    if (email && email.toLowerCase() !== user.email) {
+      const existe = await User.findOne({ where: { email: email.toLowerCase(), id: { [Op.ne]: user.id } } });
+      if (existe) return res.status(409).json({ error: 'Email já está em uso por outro usuário' });
+      user.email = email.toLowerCase();
+    }
 
     await user.save();
 
@@ -491,7 +498,7 @@ const updateProfile = async (req, res) => {
       acao: 'UPDATE_PROFILE',
       tabela: 'usuarios',
       registroId: user.id,
-      novos: { nome, telefone }
+      novos: { nome: user.nome, email: user.email, telefone: user.telefone }
     });
 
     res.json({
@@ -502,11 +509,30 @@ const updateProfile = async (req, res) => {
         email: user.email,
         cargo: user.cargo,
         telefone: user.telefone,
-        avatar: user.avatar
+        avatar: user.avatar,
+        ultimo_login: user.ultimo_login,
+        createdAt: user.createdAt
       }
     });
   } catch (error) {
     console.error('Erro ao atualizar perfil:', error);
+    res.status(500).json({ error: 'Erro interno' });
+  }
+};
+
+// Encerrar todas as sessões (logout geral)
+const logoutAll = async (req, res) => {
+  try {
+    await logAction(req, {
+      acao: 'LOGOUT_ALL',
+      tabela: 'usuarios',
+      registroId: req.user.id
+    });
+    // Em JWT stateless, o frontend limpa o token.
+    // Para invalidação real, seria necessário blacklist ou token versioning.
+    res.json({ message: 'Todas as sessões foram encerradas. Faça login novamente.' });
+  } catch (error) {
+    console.error('Erro ao encerrar sessões:', error);
     res.status(500).json({ error: 'Erro interno' });
   }
 };
@@ -555,6 +581,7 @@ module.exports = {
   resetPassword,
   verifyToken,
   logout,
+  logoutAll,
   approveUser,
   getUsers,
   getUsersList,

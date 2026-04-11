@@ -12,7 +12,8 @@ const {
   getUsers,
   getUsersList,
   updateProfile,
-  changePassword
+  changePassword,
+  logoutAll
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -107,5 +108,6 @@ router.get('/professores', authMiddleware, async (req, res) => {
 });
 router.patch('/profile', authMiddleware, updateProfile);
 router.post('/change-password', authMiddleware, changePassword);
+router.post('/logout-all', authMiddleware, logoutAll);
 
 module.exports = router;
