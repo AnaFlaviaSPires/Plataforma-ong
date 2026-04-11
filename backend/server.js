@@ -39,28 +39,14 @@ const { sequelize, User } = require('./models');
 const app = express();
 const PORT = process.env.PORT || 3003;
 
-// Middleware de segurança
-app.use(helmet());
-
-// Rate limiting (apenas em produção)
-if (process.env.NODE_ENV === 'production') {
-  const limiter = rateLimit({
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutos
-    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // máximo 100 requests por IP
-    message: {
-      error: 'Muitas tentativas. Tente novamente em alguns minutos.'
-    }
-  });
-  app.use('/api/', limiter);
-}
-
-// CORS - Permitir origens do frontend
+// CORS — DEVE rodar ANTES de helmet para preflight OPTIONS funcionar
 const allowedOrigins = [
   'http://localhost:3003',
   'http://localhost:3000',
   'http://localhost:5500',
   'http://127.0.0.1:5500',
-  'https://plataforma-ong.vercel.app'
+  'https://plataforma-ong.vercel.app',
+  'https://plataforma-ong-backend.onrender.com'
 ];
 
 // Adicionar FRONTEND_URL do env se definida
@@ -80,8 +66,27 @@ app.use(cors({
     }
     return callback(new Error('CORS not allowed'), false);
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Middleware de segurança (após CORS)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
+
+// Rate limiting (apenas em produção)
+if (process.env.NODE_ENV === 'production') {
+  const limiter = rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutos
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // máximo 100 requests por IP
+    message: {
+      error: 'Muitas tentativas. Tente novamente em alguns minutos.'
+    }
+  });
+  app.use('/api/', limiter);
+}
 
 // Middleware para parsing JSON
 app.use(express.json({ limit: '10mb' }));
@@ -142,10 +147,9 @@ app.use('*', (req, res) => {
   });
 });
 
-// Inicializar servidor
-async function startServer() {
+// Inicializar banco de dados (separado do listen para nunca crashar o processo)
+async function initDatabase() {
   try {
-    // Testar conexão com banco
     await sequelize.authenticate();
     console.log('✅ Conexão com MySQL estabelecida com sucesso!');
     
@@ -155,7 +159,7 @@ async function startServer() {
       await sequelize.sync();
       console.log('✅ Tabelas verificadas/criadas com sucesso!');
     } catch (syncError) {
-      console.error('⚠️ Erro ao sincronizar tabelas (servidor vai iniciar mesmo assim):', syncError.message);
+      console.error('⚠️ Erro ao sincronizar tabelas:', syncError.message);
     }
 
     // Migração da tabela doacoes (executar uma vez com ALLOW_DB_SYNC=true)
@@ -164,35 +168,28 @@ async function startServer() {
         console.log('🔓 ALLOW_DB_SYNC ativo — executando migração da tabela doacoes...');
         const qi = sequelize.getQueryInterface();
 
-        // Verificar colunas existentes
         const cols = await qi.describeTable('doacoes').catch(() => null);
         if (cols) {
-          // Adicionar coluna quantidade se não existir
           if (!cols.quantidade) {
             await sequelize.query("ALTER TABLE doacoes ADD COLUMN quantidade INT NULL");
             console.log('  ✅ Coluna quantidade adicionada');
           }
-          // Adicionar coluna alterado_por se não existir
           if (!cols.alterado_por) {
             await sequelize.query("ALTER TABLE doacoes ADD COLUMN alterado_por INT NULL");
             console.log('  ✅ Coluna alterado_por adicionada');
           }
-          // Expandir ENUM tipo
           try {
             await sequelize.query("ALTER TABLE doacoes MODIFY COLUMN tipo ENUM('dinheiro','pix','alimentos','vestuario','material_higiene','material_escolar','brindes','outros') NOT NULL");
             console.log('  ✅ ENUM tipo expandido');
           } catch (e) { console.log('  ⚠️ ENUM tipo:', e.message); }
-          // Tornar nome_doador nullable
           try {
             await sequelize.query("ALTER TABLE doacoes MODIFY COLUMN nome_doador VARCHAR(150) NULL");
             console.log('  ✅ nome_doador agora aceita NULL');
           } catch (e) { console.log('  ⚠️ nome_doador:', e.message); }
-          // Alterar default status para recebida
           try {
             await sequelize.query("ALTER TABLE doacoes MODIFY COLUMN status ENUM('pendente','recebida','cancelada') NOT NULL DEFAULT 'recebida'");
             console.log('  ✅ Status default alterado para recebida');
           } catch (e) { console.log('  ⚠️ status:', e.message); }
-
           console.log('✅ Migração da tabela doacoes concluída!');
         } else {
           console.log('  ℹ️ Tabela doacoes não encontrada (será criada pelo sync)');
@@ -213,24 +210,29 @@ async function startServer() {
           cargo: 'admin',
           ativo: true
         });
-        console.log('👤 Usuário admin padrão criado: admin@ongnovoamanha.org / admin123');
+        console.log('👤 Usuário admin padrão criado');
       }
     } catch (seedError) {
       console.error('⚠️ Erro ao criar admin padrão:', seedError.message);
     }
 
-    // Iniciar servidor
-    app.listen(PORT, () => {
-      console.log(`🚀 Servidor rodando na porta ${PORT}`);
-      console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
-    });
-    
   } catch (error) {
-    console.error('❌ Erro ao inicializar servidor:', error);
-    console.log('💡 Dica: Execute o script setup.sql no MySQL Workbench primeiro');
-    process.exit(1);
+    console.error('⚠️ Banco de dados indisponível (servidor vai iniciar mesmo assim):', error.message);
+    console.log('💡 O servidor responderá com erro 503 até o banco reconectar.');
   }
+}
+
+// Inicializar servidor — SEMPRE faz listen, mesmo se o banco falhar
+async function startServer() {
+  // Iniciar HTTP primeiro (para CORS e health check funcionarem)
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor rodando na porta ${PORT}`);
+    console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+  });
+
+  // Depois tentar conectar ao banco (não bloqueia o listen)
+  await initDatabase();
 }
 
 startServer();
