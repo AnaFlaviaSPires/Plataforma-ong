@@ -2,11 +2,43 @@ const { Ponto, User } = require('../models');
 const { logAction } = require('../middleware/auditMiddleware');
 const { Op } = require('sequelize');
 
+// Coordenadas da ONG e raio permitido (em metros)
+const ONG_LAT = parseFloat(process.env.ONG_LATITUDE) || -22.8218;
+const ONG_LNG = parseFloat(process.env.ONG_LONGITUDE) || -45.1947;
+const ONG_RAIO_METROS = parseInt(process.env.ONG_RAIO_PONTO) || 100;
+
+// Calcular distância entre dois pontos (fórmula de Haversine)
+function calcularDistanciaMetros(lat1, lng1, lat2, lng2) {
+  const R = 6371000; // raio da Terra em metros
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 // Registrar ponto (entrada, inicio_intervalo, fim_intervalo, saida)
 async function registrarPonto(req, res, next) {
   try {
-    const { tipo } = req.body;
+    const { tipo, latitude, longitude } = req.body;
     const funcionarioId = req.user.id;
+
+    // Validação de geolocalização
+    if (latitude == null || longitude == null) {
+      return res.status(400).json({ error: 'Localização não informada. Ative o GPS/localização do seu dispositivo e tente novamente.' });
+    }
+
+    const distancia = calcularDistanciaMetros(latitude, longitude, ONG_LAT, ONG_LNG);
+    if (distancia > ONG_RAIO_METROS) {
+      console.log(`[PONTO] BLOQUEADO - ${req.user.nome} tentou registrar ponto a ${Math.round(distancia)}m da ONG (máx: ${ONG_RAIO_METROS}m)`);
+      return res.status(403).json({
+        error: `Você está a ${Math.round(distancia)} metros da ONG. O registro de ponto só é permitido dentro de um raio de ${ONG_RAIO_METROS} metros.`,
+        distancia: Math.round(distancia),
+        raioPermitido: ONG_RAIO_METROS
+      });
+    }
 
     const tiposValidos = ['entrada', 'inicio_intervalo', 'fim_intervalo', 'saida'];
     if (!tiposValidos.includes(tipo)) {

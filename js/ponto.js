@@ -142,11 +142,35 @@
     return resp.json();
   }
 
+  function obterLocalizacao() {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Seu navegador não suporta geolocalização. Use um navegador moderno.'));
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+        (err) => {
+          switch (err.code) {
+            case 1: reject(new Error('Permissão de localização negada. Ative a localização nas configurações do navegador.')); break;
+            case 2: reject(new Error('Não foi possível obter sua localização. Verifique se o GPS está ativado.')); break;
+            case 3: reject(new Error('Tempo esgotado ao obter localização. Tente novamente.')); break;
+            default: reject(new Error('Erro ao obter localização.'));
+          }
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    });
+  }
+
   async function apiRegistrar(tipo) {
+    // Obter localização antes de registrar
+    const coords = await obterLocalizacao();
+
     const resp = await fetch(API + '/ponto/registrar', {
       method: 'POST',
       headers: getHeaders(),
-      body: JSON.stringify({ tipo })
+      body: JSON.stringify({ tipo, latitude: coords.latitude, longitude: coords.longitude })
     });
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok) throw new Error(data.error || 'Erro ao registrar ponto');
