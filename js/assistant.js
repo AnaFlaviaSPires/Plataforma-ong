@@ -74,8 +74,8 @@
     const greeting = getGreeting();
 
     let msg = nome
-      ? `${greeting}, **${nome}**! 👋 Sou o assistente da plataforma.`
-      : `${greeting}! 👋 Sou o assistente da plataforma.`;
+      ? `${greeting}, **${nome}**! 👋 Eu sou o **Beta**, seu assistente da plataforma.`
+      : `${greeting}! 👋 Eu sou o **Beta**, seu assistente da plataforma.`;
 
     // Dica contextual da página
     if (page && typeof assistantPageTips !== 'undefined' && assistantPageTips[page]) {
@@ -160,8 +160,8 @@
     // FAB (botão flutuante)
     const fab = document.createElement('button');
     fab.className = 'assistant-fab';
-    fab.setAttribute('aria-label', 'Abrir assistente');
-    fab.setAttribute('title', 'Assistente');
+    fab.setAttribute('aria-label', 'Abrir Beta');
+    fab.setAttribute('title', 'Beta — Assistente');
     fab.innerHTML = `
       <i class="bi bi-chat-dots-fill"></i>
       <span class="assistant-fab-badge${state.firstOpen ? ' show' : ''}"></span>
@@ -174,10 +174,10 @@
     win.innerHTML = `
       <div class="assistant-header">
         <div class="assistant-header-info">
-          <div class="assistant-header-avatar">🤖</div>
+          <div class="assistant-header-avatar">🐾</div>
           <div class="assistant-header-text">
-            <h4>Assistente</h4>
-            <span>Online • Sempre disponível</span>
+            <h4>Beta</h4>
+            <span>Online • Sempre por aqui</span>
           </div>
         </div>
         <div class="assistant-header-actions">
@@ -327,7 +327,7 @@
           action = match.action;
           actionLabel = match.actionLabel;
         } else {
-          botText = 'Desculpe, não entendi sua pergunta. Tente algo como "como fazer chamada" ou "onde vejo alunos". Você também pode acessar o Guia da plataforma.';
+          botText = 'Hmm, não entendi muito bem. 🤔 Tente algo como "como fazer chamada" ou "onde vejo alunos". Posso também te levar ao Guia da plataforma!';
           action = 'guia.html';
           actionLabel = 'Abrir Guia';
         }

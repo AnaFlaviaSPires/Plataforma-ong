@@ -156,19 +156,19 @@ const assistantData = [
   // === CUMPRIMENTOS ===
   {
     keywords: ["oi", "ola", "bom dia", "boa tarde", "boa noite", "hey", "eai", "e ai"],
-    response: "Olá! 👋 Sou o assistente da plataforma. Como posso te ajudar hoje?",
+    response: "Oi! � Eu sou o Beta! Como posso te ajudar hoje?",
     action: null,
     actionLabel: null
   },
   {
     keywords: ["obrigado", "obrigada", "valeu", "thanks", "brigado"],
-    response: "De nada! 😊 Se precisar de mais alguma coisa, é só perguntar.",
+    response: "De nada! 😊 O Beta está sempre por aqui se precisar.",
     action: null,
     actionLabel: null
   },
   {
-    keywords: ["quem e voce", "o que voce faz", "assistente", "bot", "chatbot"],
-    response: "Sou o assistente da plataforma! Posso te ajudar a navegar pelo sistema, encontrar módulos e tirar dúvidas sobre funcionalidades.",
+    keywords: ["quem e voce", "o que voce faz", "assistente", "bot", "chatbot", "beta"],
+    response: "Eu sou o **Beta**! 🐾 Seu assistente da plataforma. Posso te ajudar a navegar pelo sistema, encontrar módulos e tirar dúvidas. É só perguntar!",
     action: null,
     actionLabel: null
   }
