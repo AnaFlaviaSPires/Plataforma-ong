@@ -124,13 +124,13 @@ const getDashboardStats = async (req, res) => {
 
     // === ESTATÍSTICAS DE DOAÇÕES ===
     const totalDoacoes = await Doacao.count();
-    const doacoesConfirmadas = await Doacao.count({ where: { status: 'confirmada' } });
+    const doacoesConfirmadas = await Doacao.count({ where: { status: 'recebida' } });
     const doacoesPendentes = await Doacao.count({ where: { status: 'pendente' } });
     
     // Valor total de doações em dinheiro
-    const valorTotalDoacoes = await Doacao.sum('valor', { 
-      where: { tipo: 'dinheiro', status: 'confirmada' } 
-    }) || 0;
+    const valorDinheiro = await Doacao.sum('valor', { where: { tipo: 'dinheiro' } }) || 0;
+    const valorPix = await Doacao.sum('valor', { where: { tipo: 'pix' } }) || 0;
+    const valorTotalDoacoes = parseFloat(valorDinheiro) + parseFloat(valorPix);
 
     // Doações por tipo
     const doacoesPorTipo = await Doacao.findAll({
@@ -164,8 +164,7 @@ const getDashboardStats = async (req, res) => {
         [Doacao.sequelize.fn('SUM', Doacao.sequelize.col('valor')), 'valor']
       ],
       where: {
-        tipo: 'dinheiro',
-        status: 'confirmada',
+        tipo: { [Op.in]: ['dinheiro', 'pix'] },
         created_at: { [Op.gte]: inicioSeisMeses }
       },
       group: [

@@ -10,11 +10,8 @@ module.exports = (sequelize) => {
     // Dados do doador
     nome_doador: {
       type: DataTypes.STRING(150),
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        len: [2, 150]
-      }
+      allowNull: true,
+      defaultValue: null
     },
     email_doador: {
       type: DataTypes.STRING(150),
@@ -34,11 +31,18 @@ module.exports = (sequelize) => {
 
     // Informações da doação
     tipo: {
-      type: DataTypes.ENUM('alimentos', 'materiais_higiene', 'materiais_escolares', 'dinheiro', 'outros'),
+      type: DataTypes.ENUM('dinheiro', 'pix', 'alimentos', 'vestuario', 'material_higiene', 'material_escolar', 'brindes', 'outros'),
       allowNull: false
     },
     valor: {
       type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      validate: {
+        min: 0
+      }
+    },
+    quantidade: {
+      type: DataTypes.INTEGER,
       allowNull: true,
       validate: {
         min: 0
@@ -57,7 +61,7 @@ module.exports = (sequelize) => {
     status: {
       type: DataTypes.ENUM('pendente', 'recebida', 'cancelada'),
       allowNull: false,
-      defaultValue: 'pendente'
+      defaultValue: 'recebida'
     },
     data_doacao: {
       type: DataTypes.DATE,
@@ -81,10 +85,14 @@ module.exports = (sequelize) => {
         model: 'usuarios',
         key: 'id'
       }
+    },
+    alterado_por: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     tableName: 'doacoes',
-    paranoid: true // Habilita soft delete (deletedAt)
+    paranoid: true
   });
 
   return Doacao;

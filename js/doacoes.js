@@ -1,415 +1,360 @@
-class DoacoesManager {
-    constructor() {
-        this.API_BASE_URL = window.API_BASE_URL || 'http://localhost:3003/api';
-        this.doacoes = [];
-        this.ultimoId = 1;
-        this.filtroTimeout = null;
-        this._filtrando = false;
-        this.setupEventListeners();
-        this.carregarDoacoesIniciais();
+// ============================================================
+// Módulo Doações - Frontend Completo
+// ============================================================
+(function() {
+  'use strict';
+
+  const API = window.API_BASE_URL || 'http://localhost:3003/api';
+
+  function getToken() { return localStorage.getItem('authToken'); }
+
+  function getHeaders() {
+    const h = { 'Content-Type': 'application/json' };
+    const t = getToken();
+    if (t) h['Authorization'] = 'Bearer ' + t;
+    return h;
+  }
+
+  function getUserData() {
+    try { return JSON.parse(localStorage.getItem('userData') || '{}'); } catch { return {}; }
+  }
+
+  function showToast(msg, type) {
+    const el = document.getElementById('doacaoToast');
+    const m = document.getElementById('doacaoToastMsg');
+    if (!el || !m) return;
+    el.className = 'toast align-items-center border-0 text-white bg-' + (type || 'primary');
+    m.textContent = msg;
+    new bootstrap.Toast(el, { delay: 3500 }).show();
+  }
+
+  function formatMoeda(v) {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
+  }
+
+  function formatDate(d) {
+    if (!d) return '-';
+    const dt = new Date(d);
+    return dt.toLocaleDateString('pt-BR');
+  }
+
+  function formatDateInput(d) {
+    if (!d) return '';
+    const dt = new Date(d);
+    return dt.toISOString().split('T')[0];
+  }
+
+  const TIPO_LABELS = {
+    'dinheiro': 'Dinheiro',
+    'pix': 'Pix',
+    'alimentos': 'Alimentos',
+    'vestuario': 'Vestuário',
+    'material_higiene': 'Material de Higiene',
+    'material_escolar': 'Material Escolar',
+    'brindes': 'Brindes',
+    'outros': 'Outros'
+  };
+
+  const TIPO_BADGES = {
+    'dinheiro': 'bg-success',
+    'pix': 'bg-info text-dark',
+    'alimentos': 'bg-warning text-dark',
+    'vestuario': 'bg-primary',
+    'material_higiene': 'bg-secondary',
+    'material_escolar': 'bg-dark',
+    'brindes': 'bg-danger',
+    'outros': 'bg-secondary'
+  };
+
+  const TIPOS_MONETARIOS = ['dinheiro', 'pix'];
+
+  // ---- Máscara monetária ----
+  function aplicarMascaraMonetaria(input) {
+    if (!input) return;
+    input.addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '');
+      if (!v) { e.target.value = ''; return; }
+      while (v.length < 3) v = '0' + v;
+      const inteiro = v.slice(0, -2);
+      const centavos = v.slice(-2);
+      e.target.value = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + centavos;
+    });
+  }
+
+  function parseMoeda(str) {
+    if (!str) return 0;
+    return parseFloat(str.replace(/\./g, '').replace(',', '.')) || 0;
+  }
+
+  // ---- API ----
+  async function apiGet(endpoint) {
+    const r = await fetch(API + endpoint, { headers: getHeaders() });
+    if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || 'Erro na requisição'); }
+    return r.json();
+  }
+
+  async function apiPost(endpoint, body) {
+    const r = await fetch(API + endpoint, { method: 'POST', headers: getHeaders(), body: JSON.stringify(body) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Erro ao salvar');
+    return d;
+  }
+
+  async function apiPut(endpoint, body) {
+    const r = await fetch(API + endpoint, { method: 'PUT', headers: getHeaders(), body: JSON.stringify(body) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Erro ao atualizar');
+    return d;
+  }
+
+  async function apiDelete(endpoint) {
+    const r = await fetch(API + endpoint, { method: 'DELETE', headers: getHeaders() });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Erro ao excluir');
+    return d;
+  }
+
+  // ---- Renderização ----
+  function renderTabela(doacoes) {
+    const tbody = document.getElementById('tabelaDoacoes');
+    const empty = document.getElementById('emptyState');
+    const tableCard = document.querySelector('.donation-table');
+    if (!tbody) return;
+
+    if (!doacoes || !doacoes.length) {
+      tbody.innerHTML = '';
+      if (tableCard) tableCard.classList.add('d-none');
+      if (empty) empty.classList.remove('d-none');
+      return;
     }
 
-    setupEventListeners() {
-        // Controle de Permissões
-        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        const userRole = (userData.cargo || 'guest').toLowerCase();
-        const canEdit = ['admin', 'secretaria'].includes(userRole);
+    if (tableCard) tableCard.classList.remove('d-none');
+    if (empty) empty.classList.add('d-none');
 
-        const btnNova = document.getElementById('btnNovaDoacao');
-        if (btnNova) {
-            if (!canEdit) {
-                btnNova.remove();
-            }
-        }
+    tbody.innerHTML = doacoes.map(d => {
+      const valorQtd = TIPOS_MONETARIOS.includes(d.tipo)
+        ? formatMoeda(d.valor)
+        : (d.quantidade ? d.quantidade + ' un.' : '-');
 
-        const searchInput = document.getElementById('searchInput');
-        const tipoFilter = document.getElementById('tipoFilter');
-        const dataFilter = document.getElementById('dataFilter');
-        const limparFiltros = document.getElementById('limparFiltros');
-        const tipoOrdenacao = document.getElementById('ordenacaoSelect');
+      return `<tr>
+        <td>${formatDate(d.data_doacao)}</td>
+        <td>${d.nome_doador || '<span class="text-muted">Anônimo</span>'}</td>
+        <td><span class="badge ${TIPO_BADGES[d.tipo] || 'bg-secondary'}">${TIPO_LABELS[d.tipo] || d.tipo}</span></td>
+        <td>${valorQtd}</td>
+        <td><small>${d.observacoes || d.descricao_itens || '-'}</small></td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-outline-primary me-1 btn-editar" data-id="${d.id}" title="Editar"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-outline-danger btn-excluir" data-id="${d.id}" title="Excluir"><i class="bi bi-trash"></i></button>
+        </td>
+      </tr>`;
+    }).join('');
 
-        const dispararFiltros = () => this.dispararAplicarFiltros();
+    // Event listeners
+    tbody.querySelectorAll('.btn-editar').forEach(btn => {
+      btn.addEventListener('click', () => abrirEdicao(doacoes.find(d => d.id == btn.dataset.id)));
+    });
+    tbody.querySelectorAll('.btn-excluir').forEach(btn => {
+      btn.addEventListener('click', () => abrirExclusao(btn.dataset.id));
+    });
+  }
 
-        if (searchInput) searchInput.addEventListener('input', dispararFiltros);
-        if (tipoFilter) tipoFilter.addEventListener('change', dispararFiltros);
-        if (dataFilter) dataFilter.addEventListener('change', dispararFiltros);
-        if (tipoOrdenacao) tipoOrdenacao.addEventListener('change', dispararFiltros);
-        if (limparFiltros) limparFiltros.addEventListener('click', () => {
-            this.limparFiltros();
-            this.dispararAplicarFiltros();
-        });
+  function renderStats(stats) {
+    if (!stats) return;
+    const el = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+    el('statTotal', stats.total_doacoes || 0);
+    el('statValor', formatMoeda(stats.valor_total || 0));
+    el('statTipos', (stats.por_tipo || []).length);
 
-        const tipoDoacao = document.getElementById('doacaoTipo');
-        const valorField = document.getElementById('valorField');
-        const descricaoField = document.getElementById('descricaoField');
-        const valorInput = document.getElementById('doacaoValor');
+    // Doações deste mês
+    const mensal = stats.mensal || [];
+    const esteMes = mensal.length ? mensal[mensal.length - 1].total : 0;
+    el('statMes', esteMes);
+  }
 
-        if (tipoDoacao) {
-            tipoDoacao.addEventListener('change', (e) => {
-                const tipo = e.target.value;
-                if (tipo === 'dinheiro') {
-                    if (valorField) valorField.style.display = 'block';
-                    if (descricaoField) descricaoField.style.display = 'none';
-                } else if (tipo) {
-                    if (valorField) valorField.style.display = 'none';
-                    if (descricaoField) descricaoField.style.display = 'block';
-                } else {
-                    if (valorField) valorField.style.display = 'none';
-                    if (descricaoField) descricaoField.style.display = 'none';
-                }
-            });
-        }
+  // ---- Formulário dinâmico ----
+  function toggleCamposFormulario(tipo) {
+    const campoValor = document.getElementById('campoValor');
+    const campoQtd = document.getElementById('campoQuantidade');
 
-        // Máscara de moeda brasileira para o campo de valor
-        if (valorInput) {
-            valorInput.addEventListener('input', (e) => {
-                let v = e.target.value;
-                // mantém apenas dígitos
-                v = v.replace(/\D/g, '');
-                if (!v) {
-                    e.target.value = '';
-                    return;
-                }
-                // garante pelo menos 3 dígitos (centavos)
-                while (v.length < 3) {
-                    v = '0' + v;
-                }
-                const inteiro = v.slice(0, -2);
-                const centavos = v.slice(-2);
-                // formata parte inteira com separador de milhar
-                const inteiroFormatado = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                e.target.value = `${inteiroFormatado},${centavos}`;
-            });
-        }
-
-        const salvarBtn = document.getElementById('salvarDoacao');
-        if (salvarBtn) salvarBtn.addEventListener('click', () => this.salvarDoacao());
+    if (!tipo) {
+      if (campoValor) campoValor.classList.add('d-none');
+      if (campoQtd) campoQtd.classList.add('d-none');
+      return;
     }
 
-    async carregarDoacoesIniciais() {
-        try {
-            const token = localStorage.getItem('authToken');
-            const headers = {};
-            if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (TIPOS_MONETARIOS.includes(tipo)) {
+      if (campoValor) campoValor.classList.remove('d-none');
+      if (campoQtd) campoQtd.classList.add('d-none');
+    } else {
+      if (campoValor) campoValor.classList.add('d-none');
+      if (campoQtd) campoQtd.classList.remove('d-none');
+    }
+  }
 
-            const resp = await fetch(`${this.API_BASE_URL}/doacoes`, { headers });
-            if (!resp.ok) throw new Error('Falha ao carregar doações');
-            const data = await resp.json();
-            const doacoesList = data.doacoes || data; // Pode vir { doacoes: [] } ou []
+  function limparFormulario() {
+    document.getElementById('doacaoId').value = '';
+    document.getElementById('formDoacao').reset();
+    document.getElementById('doacaoData').value = new Date().toISOString().split('T')[0];
+    toggleCamposFormulario('');
+    document.getElementById('modalDoacaoTitulo').innerHTML = '<i class="bi bi-plus-circle me-2"></i>Cadastrar Doação';
+  }
 
-            if (Array.isArray(doacoesList)) {
-                this.doacoes = doacoesList.map((item, index) => ({
-                    id: item.id || index + 1,
-                    tipo: this.mapearTipoBackendParaUI(item.tipo),
-                    valor: item.valor ?? null,
-                    descricao: item.descricao_itens || item.observacoes || '',
-                    doador: item.nome_doador || '',
-                    dataCadastro: item.data_doacao ? new Date(item.data_doacao) : new Date()
-                }));
+  function abrirEdicao(doacao) {
+    if (!doacao) return;
+    document.getElementById('modalDoacaoTitulo').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Doação';
+    document.getElementById('doacaoId').value = doacao.id;
+    document.getElementById('doacaoData').value = formatDateInput(doacao.data_doacao);
+    document.getElementById('doacaoDoador').value = doacao.nome_doador || '';
+    document.getElementById('doacaoTipo').value = doacao.tipo;
+    toggleCamposFormulario(doacao.tipo);
 
-                const maiorId = this.doacoes.reduce((max, d) => Math.max(max, d.id || 0), 0);
-                this.ultimoId = maiorId > 0 ? maiorId + 1 : 1;
-            }
-        } catch (err) {
-            console.warn('Nao foi possivel carregar doacoes do backend.', err);
-        } finally {
-            this.renderizarDoacoes();
-        }
+    if (TIPOS_MONETARIOS.includes(doacao.tipo)) {
+      const val = parseFloat(doacao.valor || 0);
+      const cents = Math.round(val * 100).toString();
+      const inteiro = cents.slice(0, -2) || '0';
+      document.getElementById('doacaoValor').value = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + cents.slice(-2).padStart(2, '0');
+    } else {
+      document.getElementById('doacaoQuantidade').value = doacao.quantidade || '';
     }
 
-    mapearTipoBackendParaUI(tipoBackend) {
-        switch (tipoBackend) {
-            case 'dinheiro':
-                return 'dinheiro';
-            case 'alimentos':
-                return 'alimento';
-            case 'materiais_escolares':
-                return 'material_escolar';
-            case 'materiais_higiene':
-                return 'higiene';
-            default:
-                return 'outros';
-        }
+    document.getElementById('doacaoObs').value = doacao.observacoes || doacao.descricao_itens || '';
+    new bootstrap.Modal(document.getElementById('modalDoacao')).show();
+  }
+
+  function abrirExclusao(id) {
+    document.getElementById('excluirDoacaoId').value = id;
+    new bootstrap.Modal(document.getElementById('modalExcluir')).show();
+  }
+
+  // ---- Ações ----
+  async function salvarDoacao() {
+    const id = document.getElementById('doacaoId').value;
+    const tipo = document.getElementById('doacaoTipo').value;
+    const data_doacao = document.getElementById('doacaoData').value;
+    const nome_doador = document.getElementById('doacaoDoador').value.trim();
+    const observacoes = document.getElementById('doacaoObs').value.trim();
+
+    if (!tipo) { showToast('Selecione o tipo de doação.', 'warning'); return; }
+
+    let valor = null, quantidade = null;
+    if (TIPOS_MONETARIOS.includes(tipo)) {
+      valor = parseMoeda(document.getElementById('doacaoValor').value);
+      if (!valor || valor <= 0) { showToast('Informe o valor da doação.', 'warning'); return; }
+    } else {
+      quantidade = parseInt(document.getElementById('doacaoQuantidade').value) || 0;
+      if (quantidade <= 0) { showToast('Informe a quantidade doada.', 'warning'); return; }
     }
 
-    mapearTipoUIParaBackend(tipoUI) {
-        switch (tipoUI) {
-            case 'dinheiro':
-                return 'dinheiro';
-            case 'alimento':
-                return 'alimentos';
-            case 'material_escolar':
-                return 'materiais_escolares';
-            case 'higiene':
-                return 'materiais_higiene';
-            default:
-                return 'outros';
-        }
+    const payload = { tipo, nome_doador, valor, quantidade, observacoes, data_doacao };
+
+    try {
+      if (id) {
+        await apiPut('/doacoes/' + id, payload);
+        showToast('Doação atualizada com sucesso!', 'success');
+      } else {
+        await apiPost('/doacoes', payload);
+        showToast('Doação registrada com sucesso!', 'success');
+      }
+
+      bootstrap.Modal.getInstance(document.getElementById('modalDoacao'))?.hide();
+      limparFormulario();
+      await carregarDados();
+    } catch (e) {
+      showToast(e.message, 'danger');
+    }
+  }
+
+  async function excluirDoacao() {
+    const id = document.getElementById('excluirDoacaoId').value;
+    if (!id) return;
+
+    try {
+      await apiDelete('/doacoes/' + id);
+      showToast('Doação excluída com sucesso!', 'success');
+      bootstrap.Modal.getInstance(document.getElementById('modalExcluir'))?.hide();
+      await carregarDados();
+    } catch (e) {
+      showToast(e.message, 'danger');
+    }
+  }
+
+  // ---- Carregamento ----
+  async function carregarDados() {
+    const search = document.getElementById('filtroSearch')?.value || '';
+    const tipo = document.getElementById('filtroTipo')?.value || '';
+    const dataInicio = document.getElementById('filtroDataInicio')?.value || '';
+    const dataFim = document.getElementById('filtroDataFim')?.value || '';
+
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (tipo) params.append('tipo', tipo);
+    if (dataInicio) params.append('dataInicio', dataInicio);
+    if (dataFim) params.append('dataFim', dataFim);
+    params.append('limit', '200');
+
+    try {
+      const [listData, statsData] = await Promise.all([
+        apiGet('/doacoes?' + params.toString()),
+        apiGet('/doacoes/estatisticas')
+      ]);
+      renderTabela(listData.doacoes || []);
+      renderStats(statsData);
+    } catch (e) {
+      console.error('Erro ao carregar doações:', e);
+      showToast('Erro ao carregar dados.', 'danger');
+    }
+  }
+
+  // ---- Inicialização ----
+  document.addEventListener('DOMContentLoaded', async () => {
+    const token = getToken();
+    if (!token) { window.location.href = '../index.html'; return; }
+
+    const userData = getUserData();
+    const cargo = (userData.cargo || '').toLowerCase();
+    const permitido = ['admin', 'secretaria'].includes(cargo);
+
+    document.getElementById('loadingScreen').classList.add('d-none');
+
+    if (!permitido) {
+      document.getElementById('acessoNegado').classList.remove('d-none');
+      return;
     }
 
-    async salvarDoacao() {
-        const tipo = document.getElementById('doacaoTipo').value;
-        const valorInput = document.getElementById('doacaoValor');
-        const descricaoInput = document.getElementById('doacaoDescricao');
-        const doadorInput = document.getElementById('doadorNome');
+    document.getElementById('conteudoPrincipal').classList.remove('d-none');
 
-        if (!tipo) {
-            this.mostrarMensagem('Selecione o tipo de doação.', 'danger');
-            return;
-        }
+    // Data padrão no formulário
+    document.getElementById('doacaoData').value = new Date().toISOString().split('T')[0];
 
-        let valor = null;
-        let descricao = '';
+    // Máscara monetária
+    aplicarMascaraMonetaria(document.getElementById('doacaoValor'));
 
-        if (tipo === 'dinheiro') {
-            // converter texto formatado (ex: 1.234,56) para número JS
-            let bruto = (valorInput?.value || '').toString().trim();
-            bruto = bruto.replace(/\./g, '').replace(',', '.');
-            valor = parseFloat(bruto || '0');
-            if (!valor || valor <= 0) {
-                this.mostrarMensagem('Informe um valor em dinheiro válido.', 'danger');
-                return;
-            }
-        } else {
-            descricao = (descricaoInput?.value || '').trim();
-            if (!descricao) {
-                this.mostrarMensagem('Descreva o que foi doado.', 'danger');
-                return;
-            }
-        }
+    // Toggle campos conforme tipo
+    document.getElementById('doacaoTipo')?.addEventListener('change', e => toggleCamposFormulario(e.target.value));
 
-        const doador = (doadorInput?.value || '').trim();
+    // Salvar
+    document.getElementById('btnSalvarDoacao')?.addEventListener('click', salvarDoacao);
 
-        const tipoBackend = this.mapearTipoUIParaBackend(tipo);
+    // Excluir
+    document.getElementById('btnConfirmarExcluir')?.addEventListener('click', excluirDoacao);
 
-        const payload = {
-            nome_doador: doador || 'Anonimo',
-            tipo: tipoBackend,
-            valor: valor || 0,
-            descricao_itens: descricao // Mapeando para o campo correto do backend
-        };
+    // Filtros
+    document.getElementById('btnFiltrar')?.addEventListener('click', carregarDados);
+    document.getElementById('btnLimparFiltros')?.addEventListener('click', () => {
+      ['filtroSearch', 'filtroTipo', 'filtroDataInicio', 'filtroDataFim'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      carregarDados();
+    });
 
-        try {
-            const token = localStorage.getItem('authToken');
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = `Bearer ${token}`;
+    // Limpar form ao abrir modal para novo
+    document.getElementById('btnNovaDoacao')?.addEventListener('click', limparFormulario);
 
-            const resp = await fetch(`${this.API_BASE_URL}/doacoes`, {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(payload)
-            });
+    // Limpar form ao fechar modal
+    document.getElementById('modalDoacao')?.addEventListener('hidden.bs.modal', limparFormulario);
 
-            if (!resp.ok) {
-                throw new Error('Erro ao salvar doacao');
-            }
-
-            const criada = await resp.json();
-
-            const doacao = {
-                id: criada.id || this.ultimoId++,
-                tipo,
-                valor,
-                descricao,
-                doador,
-                dataCadastro: criada.data_doacao ? new Date(criada.data_doacao) : new Date()
-            };
-
-            this.doacoes.push(doacao);
-            this.limparFormulario();
-            this.aplicarFiltros();
-            this.mostrarMensagem('Doação registrada com sucesso!', 'success');
-        } catch (err) {
-            this.mostrarMensagem('Não foi possível salvar a doação. Tente novamente.', 'danger');
-        }
-
-        const modalEl = document.getElementById('novaDoacaoModal');
-        if (modalEl && window.bootstrap) {
-            const modal = window.bootstrap.Modal.getInstance(modalEl) || new window.bootstrap.Modal(modalEl);
-            modal.hide();
-        }
-    }
-
-    limparFormulario() {
-        const form = document.getElementById('doacaoForm');
-        if (form) form.reset();
-
-        const valorField = document.getElementById('valorField');
-        const descricaoField = document.getElementById('descricaoField');
-        if (valorField) valorField.style.display = 'none';
-        if (descricaoField) descricaoField.style.display = 'none';
-    }
-
-    aplicarFiltros() {
-        if (this._filtrando) return;
-        this._filtrando = true;
-        const searchTerm = (document.getElementById('searchInput')?.value || '').toLowerCase();
-        const tipoFilter = document.getElementById('tipoFilter')?.value || '';
-        const dataFilter = document.getElementById('dataFilter')?.value || '';
-        const ordenacao = document.getElementById('ordenacaoSelect')?.value || '';
-
-        let resultado = this.doacoes.filter(d => {
-            const texto = `${d.doador || ''} ${d.descricao || ''}`.toLowerCase();
-
-            const matchSearch = !searchTerm || texto.includes(searchTerm);
-            const matchTipo = !tipoFilter || d.tipo === tipoFilter;
-
-            let matchData = true;
-            if (dataFilter) {
-                const dataStr = this.formatarData(d.dataCadastro, true);
-                matchData = dataStr === dataFilter;
-            }
-
-            return matchSearch && matchTipo && matchData;
-        });
-
-        if (ordenacao) {
-            resultado = this.ordenar(resultado, ordenacao);
-        }
-
-        this.renderizarDoacoes(resultado);
-        this._filtrando = false;
-    }
-
-    ordenar(lista, criterio) {
-        const copia = [...lista];
-
-        switch (criterio) {
-            case 'dataRecente':
-                copia.sort((a, b) => b.dataCadastro - a.dataCadastro);
-                break;
-            case 'dataAntiga':
-                copia.sort((a, b) => a.dataCadastro - b.dataCadastro);
-                break;
-            case 'nomeAZ':
-                copia.sort((a, b) => (a.doador || '').localeCompare(b.doador || ''));
-                break;
-            case 'nomeZA':
-                copia.sort((a, b) => (b.doador || '').localeCompare(a.doador || ''));
-                break;
-            case 'valorMaior':
-                copia.sort((a, b) => (b.valor || 0) - (a.valor || 0));
-                break;
-            case 'valorMenor':
-                copia.sort((a, b) => (a.valor || 0) - (b.valor || 0));
-                break;
-        }
-
-        return copia;
-    }
-
-    limparFiltros() {
-        const searchInput = document.getElementById('searchInput');
-        const tipoFilter = document.getElementById('tipoFilter');
-        const dataFilter = document.getElementById('dataFilter');
-        const ordenacao = document.getElementById('ordenacaoSelect');
-
-        if (searchInput) searchInput.value = '';
-        if (tipoFilter) tipoFilter.value = '';
-        if (dataFilter) dataFilter.value = '';
-        if (ordenacao) ordenacao.value = '';
-
-        this.renderizarDoacoes(this.doacoes);
-    }
-
-    renderizarDoacoes(lista = null) {
-        const tbody = document.getElementById('doacoesTableBody');
-        const emptyState = document.getElementById('emptyState');
-        const doacoes = lista || this.doacoes;
-
-        if (!tbody) return;
-
-        tbody.innerHTML = '';
-
-        if (!doacoes.length) {
-            if (emptyState) emptyState.style.display = 'block';
-            return;
-        }
-
-        if (emptyState) emptyState.style.display = 'none';
-
-        doacoes.forEach(d => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${this.formatarData(d.dataCadastro)}</td>
-                <td>${d.doador || '-'}</td>
-                <td>${this.formatarTipo(d.tipo)}</td>
-                <td>${d.descricao || '-'}</td>
-                <td>${d.tipo === 'dinheiro' ? this.formatarMoeda(d.valor) : '-'}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    formatarData(data, formatoInput = false) {
-        if (!(data instanceof Date)) return '';
-
-        const ano = data.getFullYear();
-        const mes = String(data.getMonth() + 1).padStart(2, '0');
-        const dia = String(data.getDate()).padStart(2, '0');
-
-        if (formatoInput) {
-            return `${ano}-${mes}-${dia}`;
-        }
-
-        return `${dia}/${mes}/${ano}`;
-    }
-
-    formatarTipo(tipo) {
-        switch (tipo) {
-            case 'dinheiro': return 'Dinheiro';
-            case 'alimento': return 'Alimento';
-            case 'material_escolar': return 'Material escolar';
-            case 'higiene': return 'Produtos de higiene';
-            case 'outros': return 'Outros';
-            default: return tipo;
-        }
-    }
-
-    formatarMoeda(valor) {
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(valor || 0);
-    }
-
-    dispararAplicarFiltros() {
-        if (this.filtroTimeout) {
-            clearTimeout(this.filtroTimeout);
-        }
-        this.filtroTimeout = setTimeout(() => {
-            this.aplicarFiltros();
-        }, 150);
-    }
-
-    mostrarMensagem(texto, tipo = 'info') {
-        let container = document.querySelector('.doacoes-toast');
-        if (!container) {
-            container = document.createElement('div');
-            container.className = 'doacoes-toast';
-            document.body.appendChild(container);
-        }
-
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${tipo} alert-dismissible fade show mb-2`;
-        alertDiv.innerHTML = `
-            ${texto}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-
-        container.appendChild(alertDiv);
-
-        setTimeout(() => {
-            alertDiv.classList.remove('show');
-            alertDiv.classList.add('hide');
-            setTimeout(() => alertDiv.remove(), 300);
-        }, 4000);
-    }
-}
-
-if (!window.__doacoesManagerInitialized__) {
-	window.__doacoesManagerInitialized__ = true;
-	document.addEventListener('DOMContentLoaded', () => {
-		window.doacoesManager = new DoacoesManager();
-	});
-}
+    // Carregar dados
+    await carregarDados();
+  });
+})();

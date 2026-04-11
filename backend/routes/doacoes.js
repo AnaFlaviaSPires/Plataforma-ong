@@ -1,9 +1,12 @@
 const express = require('express');
 const { body, param, query } = require('express-validator');
-const { authMiddleware } = require('../middleware/authMiddleware');
+const { authMiddleware, requireRole } = require('../middleware/authMiddleware');
 const {
   getDoacoes,
   createDoacao,
+  updateDoacao,
+  deleteDoacao,
+  getEstatisticas,
   confirmarDoacao,
   cancelarDoacao,
   getLixeira,
@@ -12,69 +15,67 @@ const {
 
 const router = express.Router();
 
-const { requireRole } = require('../middleware/authMiddleware');
-
 // Rotas protegidas
 router.use(authMiddleware);
 
-// Rota de lixeira (admin)
+const tiposValidos = ['dinheiro', 'pix', 'alimentos', 'vestuario', 'material_higiene', 'material_escolar', 'brindes', 'outros'];
+
+// Estatísticas agregadas (todos os cargos — sem dados sensíveis)
+router.get('/estatisticas',
+  requireRole(['admin', 'secretaria', 'professor', 'assistente_social']),
+  getEstatisticas
+);
+
+// Lixeira (admin)
 router.get('/lixeira', requireRole(['admin']), getLixeira);
 
-// Validações básicas para filtros
-const listValidation = [
-  query('page').optional().isInt({ min: 1 }).toInt(),
-  query('limit').optional().isInt({ min: 1, max: 100 }).toInt(),
-  query('tipo').optional().isIn(['alimentos', 'materiais_higiene', 'materiais_escolares', 'dinheiro', 'outros']),
-  query('status').optional().isIn(['pendente', 'recebida', 'cancelada']),
-  query('data').optional().isISO8601()
-];
-
-// Validações para criação de doação
+// Validações
 const doacaoValidation = [
-  body('nome_doador')
-    .isLength({ min: 2, max: 150 })
-    .withMessage('Nome do doador deve ter entre 2 e 150 caracteres'),
-  body('email_doador')
-    .optional()
-    .isEmail()
-    .withMessage('Email do doador inválido'),
   body('tipo')
-    .isIn(['alimentos', 'materiais_higiene', 'materiais_escolares', 'dinheiro', 'outros'])
+    .isIn(tiposValidos)
     .withMessage('Tipo de doação inválido'),
   body('valor')
     .optional()
     .isFloat({ min: 0 })
-    .withMessage('Valor deve ser um número positivo')
+    .withMessage('Valor deve ser um número positivo'),
+  body('quantidade')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Quantidade deve ser um número inteiro positivo')
 ];
 
-// Validação para ID
 const idValidation = [
-  param('id')
-    .isInt({ min: 1 })
-    .withMessage('ID deve ser um número inteiro positivo')
+  param('id').isInt({ min: 1 }).withMessage('ID inválido')
 ];
 
-// Rotas
-router.get('/', listValidation, getDoacoes);
-router.post('/', doacaoValidation, createDoacao);
-
-router.patch('/:id/confirmar', 
-  idValidation, 
-  requireRole(['admin']), 
-  confirmarDoacao
+// CRUD — admin e secretaria
+router.get('/',
+  requireRole(['admin', 'secretaria']),
+  getDoacoes
 );
 
-router.patch('/:id/cancelar', 
-  idValidation, 
-  requireRole(['admin']), 
-  cancelarDoacao
+router.post('/',
+  requireRole(['admin', 'secretaria']),
+  doacaoValidation,
+  createDoacao
 );
 
-// Restaurar da lixeira (apenas admin)
-router.post('/:id/restore',
+router.put('/:id',
+  requireRole(['admin', 'secretaria']),
   idValidation,
-  requireRole(['admin']),
-  restoreDoacao
+  doacaoValidation,
+  updateDoacao
 );
+
+router.delete('/:id',
+  requireRole(['admin', 'secretaria']),
+  idValidation,
+  deleteDoacao
+);
+
+// Status (admin)
+router.patch('/:id/confirmar', idValidation, requireRole(['admin']), confirmarDoacao);
+router.patch('/:id/cancelar', idValidation, requireRole(['admin']), cancelarDoacao);
+router.post('/:id/restore', idValidation, requireRole(['admin']), restoreDoacao);
 
 module.exports = router;

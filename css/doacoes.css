@@ -2,13 +2,13 @@
 
 :root {
   --doacoes-purple: #663399;
-  --doacoes-yellow: #FFE066;
 }
 
 body {
   font-family: 'Poppins', sans-serif;
 }
 
+/* Cards estatísticas */
 .donation-stats .stat-card {
   background: #ffffff;
   border-radius: 15px;
@@ -17,11 +17,16 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  transition: transform 0.15s;
+}
+
+.donation-stats .stat-card:hover {
+  transform: translateY(-2px);
 }
 
 .donation-stats .stat-icon {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: rgba(102, 51, 153, 0.08);
   display: flex;
@@ -29,51 +34,77 @@ body {
   justify-content: center;
   color: var(--doacoes-purple);
   font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
 .donation-stats .stat-value {
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
+  white-space: nowrap;
 }
 
 .donation-stats .stat-label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #6c757d;
 }
 
+/* Filtros */
 .donation-filters .form-select,
 .donation-filters .form-control {
-  min-width: 160px;
+  font-size: 0.875rem;
 }
 
+/* Tabela */
 .donation-table .table {
   margin-bottom: 0;
 }
 
 .donation-table .table thead th {
   border-bottom-width: 2px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #555;
 }
 
+.donation-table .table tbody td {
+  vertical-align: middle;
+  font-size: 0.9rem;
+}
+
+.donation-table .badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+}
+
+/* Botão principal roxo */
 .btn-purple {
   background-color: var(--doacoes-purple);
   border-color: var(--doacoes-purple);
   color: #fff;
 }
 
-.btn-purple:hover {
+.btn-purple:hover,
+.btn-purple:focus {
   background-color: #552b80;
   border-color: #552b80;
+  color: #fff;
 }
 
+.btn-purple:active {
+  background-color: #4a2570;
+}
+
+/* Modal header roxo */
 .modal-header.bg-purple {
   background-color: var(--doacoes-purple) !important;
 }
 
-/* Mensagens toast simples para validações de formulário */
-.doacoes-toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1055;
-  min-width: 260px;
+/* Responsividade mobile */
+@media (max-width: 768px) {
+  .donation-stats .stat-value { font-size: 1rem; }
+  .donation-stats .stat-label { font-size: 0.75rem; }
+  .donation-filters .row > div { min-width: 100%; }
 }
