@@ -66,9 +66,9 @@
                       <div id="cfgAvatarImgPreview" style="display:none"><img id="cfgAvatarImg" src="" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;border:2px solid var(--primary-color,#663399)"><button type="button" class="btn btn-sm btn-outline-danger ms-1" id="cfgRemoveImg"><i class="bi bi-x"></i></button></div>
                     </div>
                   </div>
-                  <div class="col-md-6"><label class="form-label fw-medium">Nome</label><input type="text" class="form-control" id="cfgNome"></div>
-                  <div class="col-md-6"><label class="form-label fw-medium">Email</label><input type="email" class="form-control" id="cfgEmail"><div class="invalid-feedback" id="cfgEmailErr"></div></div>
-                  <div class="col-md-6"><label class="form-label fw-medium">Telefone</label><input type="text" class="form-control" id="cfgTelefone" placeholder="(00) 00000-0000"></div>
+                  <div class="col-md-6"><label class="form-label fw-medium">Nome</label><input type="text" class="form-control" id="cfgNome" autocomplete="off"></div>
+                  <div class="col-md-6"><label class="form-label fw-medium">Email</label><input type="email" class="form-control" id="cfgEmail" autocomplete="off"><div class="invalid-feedback" id="cfgEmailErr"></div></div>
+                  <div class="col-md-6"><label class="form-label fw-medium">Telefone</label><input type="text" class="form-control" id="cfgTelefone" placeholder="(00) 00000-0000" autocomplete="off"></div>
                   <div class="col-md-6"><label class="form-label fw-medium">Cargo</label><input type="text" class="form-control" id="cfgCargo" readonly></div>
                   <div class="col-md-6"><label class="form-label fw-medium">Conta criada em</label><input type="text" class="form-control" id="cfgCriadoEm" readonly></div>
                   <div class="col-md-6"><label class="form-label fw-medium">Último login</label><input type="text" class="form-control" id="cfgUltimoLogin" readonly></div>
@@ -79,9 +79,9 @@
               <div class="tab-pane fade" id="cfgSeg">
                 <div class="row g-3" style="max-width:450px">
                   <div class="col-12"><h6 class="fw-bold mb-0">Alterar senha</h6><small class="text-muted">A nova senha deve ter pelo menos 6 caracteres</small></div>
-                  <div class="col-12"><label class="form-label">Senha atual</label><input type="password" class="form-control" id="cfgSenhaAtual"></div>
-                  <div class="col-12"><label class="form-label">Nova senha</label><input type="password" class="form-control" id="cfgNovaSenha"><div class="invalid-feedback" id="cfgSenhaErr"></div></div>
-                  <div class="col-12"><label class="form-label">Confirmar nova senha</label><input type="password" class="form-control" id="cfgConfirmaSenha"><div class="invalid-feedback" id="cfgConfirmaErr"></div></div>
+                  <div class="col-12"><label class="form-label">Senha atual</label><input type="password" class="form-control" id="cfgSenhaAtual" autocomplete="new-password"></div>
+                  <div class="col-12"><label class="form-label">Nova senha</label><input type="password" class="form-control" id="cfgNovaSenha" autocomplete="new-password"><div class="invalid-feedback" id="cfgSenhaErr"></div></div>
+                  <div class="col-12"><label class="form-label">Confirmar nova senha</label><input type="password" class="form-control" id="cfgConfirmaSenha" autocomplete="new-password"><div class="invalid-feedback" id="cfgConfirmaErr"></div></div>
                   <div class="col-12"><button type="button" class="btn btn-primary btn-sm" id="cfgBtnSenha" style="background:#6f42c1;border-color:#6f42c1"><i class="bi bi-key me-1"></i>Alterar Senha</button></div>
                   <div class="col-12 mt-4 pt-3 border-top">
                     <h6 class="fw-bold mb-1">Sessões</h6>

@@ -195,7 +195,7 @@
 
     const searchHTML = `
       <div class="position-relative me-2 d-none d-md-block" id="globalSearchWrap">
-        <input type="text" class="form-control form-control-sm" id="globalSearchInput" placeholder="Buscar..." style="width:200px;border-radius:20px;padding-left:32px;font-size:0.8rem;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff">
+        <input type="search" class="form-control form-control-sm" id="globalSearchInput" placeholder="Buscar..." autocomplete="off" name="globalSearch" style="width:200px;border-radius:20px;padding-left:32px;font-size:0.8rem;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff">
         <i class="bi bi-search position-absolute" style="left:10px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.6);font-size:0.8rem"></i>
         <div id="globalSearchResults" class="dropdown-menu shadow p-0" style="min-width:350px;max-height:400px;overflow-y:auto;display:none;position:absolute;top:38px;right:0;z-index:1055;border-radius:12px"></div>
       </div>
