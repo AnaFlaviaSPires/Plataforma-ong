@@ -95,15 +95,18 @@ async function loadDashboardData() {
 function updateCards(data) {
     const stats = data.estatisticas_gerais || {};
     const doacoes = data.doacoes || {};
+    const freq = data.frequencia || {};
 
     document.getElementById('cardTotalAlunos').textContent = stats.total_alunos || 0;
     document.getElementById('cardTotalProfessores').textContent = stats.total_professores || 0;
     document.getElementById('cardTotalSalas').textContent = stats.total_salas || 0;
     document.getElementById('cardTotalDoacoes').textContent = doacoes.total || 0;
-    
-    const valorEl = document.getElementById('cardValorTotal');
-    if (valorEl) {
-        valorEl.textContent = formatCurrency(doacoes.valor_total || 0);
+
+    // Taxa de presença
+    const taxaEl = document.getElementById('cardTaxaPresenca');
+    if (taxaEl) {
+        const taxa = freq.taxa_presenca_geral || 0;
+        taxaEl.textContent = taxa + '%';
     }
 }
 
@@ -111,124 +114,157 @@ function formatCurrency(value) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
 }
 
+// Configuração global de Chart.js
+Chart.defaults.font.family = "'Poppins', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#64748b';
+Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(30,41,59,0.92)';
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.titleFont = { weight: '600', size: 13 };
+Chart.defaults.plugins.tooltip.bodyFont = { size: 12 };
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.pointStyle = 'circle';
+Chart.defaults.plugins.legend.labels.padding = 16;
+
+const CHART_PALETTE = {
+    purple:     '#7c3aed',
+    purpleLight:'#a78bfa',
+    violet:     '#8b5cf6',
+    indigo:     '#6366f1',
+    blue:       '#3b82f6',
+    sky:        '#0ea5e9',
+    teal:       '#14b8a6',
+    green:      '#10b981',
+    amber:      '#f59e0b',
+    orange:     '#f97316',
+    red:        '#ef4444',
+    pink:       '#ec4899',
+    gray:       '#94a3b8'
+};
+
+const GRID_STYLE = { color: 'rgba(0,0,0,0.04)', drawBorder: false };
+const TICK_STYLE = { padding: 8, font: { size: 11 } };
+
 function updateCharts(data) {
-    console.log('Atualizando graficos...');
-    
-    // 1. Alunos por Status
+    // 1. Alunos por Status (Doughnut)
     let statusData = data.alunos?.por_status || [];
     if (!Array.isArray(statusData)) statusData = [statusData];
-    
-    const statusLabels = {
-        'matriculado': 'Matriculados',
-        'inativo': 'Inativos',
-        'cancelado': 'Cancelados',
-        'formado': 'Formados',
-        'aguardando_vaga': 'Aguardando Vaga'
+
+    const statusCfg = {
+        'matriculado':      { label: 'Matriculados',    color: CHART_PALETTE.green },
+        'inativo':          { label: 'Inativos',        color: CHART_PALETTE.gray },
+        'cancelado':        { label: 'Cancelados',      color: CHART_PALETTE.red },
+        'formado':          { label: 'Formados',        color: CHART_PALETTE.blue },
+        'aguardando_vaga':  { label: 'Aguardando Vaga', color: CHART_PALETTE.amber }
     };
-    const statusColors = {
-        'matriculado': '#9b59b6',
-        'inativo': '#95a5a6',
-        'cancelado': '#8e44ad',
-        'formado': '#3498db',
-        'aguardando_vaga': '#f39c12'
-    };
-    
-    // Garantir que todas as 5 categorias apareçam (mesmo com 0)
-    const allStatuses = ['matriculado', 'inativo', 'cancelado', 'formado', 'aguardando_vaga'];
+    const allStatuses = Object.keys(statusCfg);
     const statusMap = {};
     statusData.forEach(s => { statusMap[s.status] = parseInt(s.total) || 0; });
-    const fullStatusData = allStatuses.map(s => statusMap[s] || 0);
-    const fullStatusLabelsArr = allStatuses.map(s => statusLabels[s]);
-    const fullStatusColorsArr = allStatuses.map(s => statusColors[s]);
 
     createOrUpdateChart('chartAlunosStatus', {
         type: 'doughnut',
         data: {
-            labels: fullStatusLabelsArr,
+            labels: allStatuses.map(s => statusCfg[s].label),
             datasets: [{
-                data: fullStatusData,
-                backgroundColor: fullStatusColorsArr
+                data: allStatuses.map(s => statusMap[s] || 0),
+                backgroundColor: allStatuses.map(s => statusCfg[s].color),
+                borderWidth: 2,
+                borderColor: '#fff',
+                hoverOffset: 6
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: true, maintainAspectRatio: false,
+            cutout: '65%',
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        generateLabels: function(chart) {
-                            const data = chart.data;
-                            return data.labels.map((label, i) => ({
-                                text: label + ' (' + data.datasets[0].data[i] + ')',
-                                fillStyle: data.datasets[0].backgroundColor[i],
-                                hidden: false,
-                                index: i
-                            }));
-                        }
+                legend: { position: 'bottom', labels: {
+                    generateLabels: function(chart) {
+                        return chart.data.labels.map((label, i) => ({
+                            text: label + ' (' + chart.data.datasets[0].data[i] + ')',
+                            fillStyle: chart.data.datasets[0].backgroundColor[i],
+                            strokeStyle: 'transparent', hidden: false, index: i
+                        }));
                     }
-                }
+                }},
+                tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.parsed } }
             }
         }
     });
 
-    // 2. Alunos por Sala
+    // 2. Alunos por Sala (Horizontal Bar)
     let alunosSala = data.alunos?.por_sala || [];
     if (!Array.isArray(alunosSala)) alunosSala = [alunosSala];
-    
+
+    const salaLabels = alunosSala.length > 0 ? alunosSala.map(s => s.sala_nome || 'Sem nome') : ['Nenhuma sala'];
+    const salaData = alunosSala.length > 0 ? alunosSala.map(s => parseInt(s.total_alunos) || 0) : [0];
+
     createOrUpdateChart('chartAlunosSala', {
         type: 'bar',
         data: {
-            labels: alunosSala.length > 0 ? alunosSala.map(s => s.sala_nome || 'Sem nome') : ['Nenhuma sala'],
+            labels: salaLabels,
             datasets: [{
                 label: 'Alunos',
-                data: alunosSala.length > 0 ? alunosSala.map(s => parseInt(s.total_alunos) || 0) : [0],
-                backgroundColor: '#9b59b6',
-                borderRadius: 5
+                data: salaData,
+                backgroundColor: CHART_PALETTE.violet,
+                borderRadius: 6,
+                borderSkipped: false,
+                maxBarThickness: 40
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: true, position: 'top' } },
-            scales: { y: { beginAtZero: true } }
+            indexAxis: salaLabels.length > 6 ? 'y' : 'x',
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.x || ctx.parsed.y || ctx.parsed + ' alunos' } }
+            },
+            scales: {
+                x: { grid: GRID_STYLE, ticks: TICK_STYLE, beginAtZero: true },
+                y: { grid: { display: false }, ticks: TICK_STYLE }
+            }
         }
     });
 
-    // 3. Frequencia por Sala
+    // 3. Frequência por Sala (Grouped Bar)
     let freqSala = data.frequencia?.por_sala || [];
     if (!Array.isArray(freqSala)) freqSala = [freqSala];
-    
-    const totalPresFreq = freqSala.reduce((acc, s) => acc + (parseInt(s.presencas) || 0), 0);
-    const totalFaltFreq = freqSala.reduce((acc, s) => acc + (parseInt(s.faltas) || 0), 0);
+
+    const totalPres = freqSala.reduce((a, s) => a + (parseInt(s.presencas) || 0), 0);
+    const totalFalt = freqSala.reduce((a, s) => a + (parseInt(s.faltas) || 0), 0);
+
     createOrUpdateChart('chartFrequenciaSala', {
         type: 'bar',
         data: {
             labels: freqSala.length > 0 ? freqSala.map(s => s.sala_nome || 'Sem nome') : ['Nenhuma sala'],
             datasets: [
                 {
-                    label: 'Presencas (' + totalPresFreq + ')',
+                    label: 'Presencas (' + totalPres + ')',
                     data: freqSala.length > 0 ? freqSala.map(s => parseInt(s.presencas) || 0) : [0],
-                    backgroundColor: '#9b59b6',
-                    borderRadius: 5
+                    backgroundColor: CHART_PALETTE.green,
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    maxBarThickness: 36
                 },
                 {
-                    label: 'Faltas (' + totalFaltFreq + ')',
+                    label: 'Faltas (' + totalFalt + ')',
                     data: freqSala.length > 0 ? freqSala.map(s => parseInt(s.faltas) || 0) : [0],
-                    backgroundColor: '#8e44ad',
-                    borderRadius: 5
+                    backgroundColor: CHART_PALETTE.red,
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    maxBarThickness: 36
                 }
             ]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: true, position: 'top' } },
-            scales: { y: { beginAtZero: true } }
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'top' } },
+            scales: {
+                x: { grid: { display: false }, ticks: TICK_STYLE },
+                y: { grid: GRID_STYLE, ticks: TICK_STYLE, beginAtZero: true }
+            }
         }
     });
-
-    // Doacoes carregadas separadamente via loadDoacoesStats
 }
 
 const TIPO_LABELS_DASH = {
@@ -236,7 +272,11 @@ const TIPO_LABELS_DASH = {
     'vestuario': 'Vestuario', 'material_higiene': 'Higiene',
     'material_escolar': 'Escolar', 'brindes': 'Brindes', 'outros': 'Outros'
 };
-const TIPO_COLORS_DASH = ['#9b59b6','#3498db','#f39c12','#2ecc71','#e74c3c','#1abc9c','#e67e22','#95a5a6'];
+const TIPO_COLORS_DASH = [
+    CHART_PALETTE.purple, CHART_PALETTE.blue, CHART_PALETTE.amber,
+    CHART_PALETTE.green, CHART_PALETTE.red, CHART_PALETTE.teal,
+    CHART_PALETTE.orange, CHART_PALETTE.gray
+];
 
 async function loadDoacoesStats(periodo) {
     const token = localStorage.getItem('authToken');
@@ -268,29 +308,45 @@ async function loadDoacoesStats(periodo) {
                     {
                         label: 'Quantidade (' + totalQtd + ')',
                         data: serie.map(s => s.total || 0),
-                        backgroundColor: '#9b59b6',
-                        borderRadius: 5,
+                        backgroundColor: CHART_PALETTE.violet,
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        maxBarThickness: 32,
                         yAxisID: 'y'
                     },
                     {
                         label: 'Valor (' + formatCurrency(totalVal) + ')',
                         data: serie.map(s => s.valor || 0),
                         type: 'line',
-                        borderColor: '#8e44ad',
-                        backgroundColor: 'rgba(142, 68, 173, 0.1)',
+                        borderColor: CHART_PALETTE.green,
+                        backgroundColor: 'rgba(16,185,129,0.08)',
+                        pointBackgroundColor: CHART_PALETTE.green,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
                         fill: true,
-                        tension: 0.4,
+                        tension: 0.35,
+                        borderWidth: 2,
                         yAxisID: 'y1'
                     }
                 ]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: true, position: 'top' } },
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => {
+                                if (ctx.datasetIndex === 1) return ' ' + formatCurrency(ctx.parsed.y);
+                                return ' ' + ctx.parsed.y + ' doacoes';
+                            }
+                        }
+                    }
+                },
                 scales: {
-                    y: { type: 'linear', position: 'left', beginAtZero: true, title: { display: true, text: 'Qtd' } },
-                    y1: { type: 'linear', position: 'right', beginAtZero: true, title: { display: true, text: 'R$' }, grid: { drawOnChartArea: false } }
+                    y:  { type: 'linear', position: 'left', beginAtZero: true, grid: GRID_STYLE, ticks: { ...TICK_STYLE, stepSize: 1 }, title: { display: true, text: 'Qtd', font: { size: 11 } } },
+                    y1: { type: 'linear', position: 'right', beginAtZero: true, grid: { drawOnChartArea: false }, ticks: TICK_STYLE, title: { display: true, text: 'R$', font: { size: 11 } } },
+                    x:  { grid: { display: false }, ticks: TICK_STYLE }
                 }
             }
         });
@@ -303,27 +359,26 @@ async function loadDoacoesStats(periodo) {
                 labels: porTipo.map(t => TIPO_LABELS_DASH[t.tipo] || t.tipo),
                 datasets: [{
                     data: porTipo.map(t => parseInt(t.total) || 0),
-                    backgroundColor: TIPO_COLORS_DASH.slice(0, porTipo.length)
+                    backgroundColor: TIPO_COLORS_DASH.slice(0, porTipo.length),
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                    hoverOffset: 6
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
+                responsive: true, maintainAspectRatio: false,
+                cutout: '65%',
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            generateLabels: function(chart) {
-                                const data = chart.data;
-                                return data.labels.map((label, i) => ({
-                                    text: label + ' (' + data.datasets[0].data[i] + ')',
-                                    fillStyle: data.datasets[0].backgroundColor[i],
-                                    hidden: false,
-                                    index: i
-                                }));
-                            }
+                    legend: { position: 'bottom', labels: {
+                        generateLabels: function(chart) {
+                            return chart.data.labels.map((label, i) => ({
+                                text: label + ' (' + chart.data.datasets[0].data[i] + ')',
+                                fillStyle: chart.data.datasets[0].backgroundColor[i],
+                                strokeStyle: 'transparent', hidden: false, index: i
+                            }));
                         }
-                    }
+                    }},
+                    tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.parsed } }
                 }
             }
         });
@@ -406,22 +461,26 @@ function showFrequenciaAluno(data) {
                 {
                     label: 'Presente',
                     data: historico.length > 0 ? historico.map(h => h.presente || 0) : [0],
-                    backgroundColor: '#9b59b6',
-                    borderRadius: 5
+                    backgroundColor: CHART_PALETTE.green,
+                    borderRadius: 6,
+                    borderSkipped: false
                 },
                 {
                     label: 'Falta',
                     data: historico.length > 0 ? historico.map(h => h.falta || 0) : [0],
-                    backgroundColor: '#8e44ad',
-                    borderRadius: 5
+                    backgroundColor: CHART_PALETTE.red,
+                    borderRadius: 6,
+                    borderSkipped: false
                 }
             ]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: true, position: 'top' } },
-            scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'top' } },
+            scales: {
+                x: { stacked: true, grid: { display: false }, ticks: TICK_STYLE },
+                y: { stacked: true, beginAtZero: true, grid: GRID_STYLE, ticks: TICK_STYLE }
+            }
         }
     });
 }
