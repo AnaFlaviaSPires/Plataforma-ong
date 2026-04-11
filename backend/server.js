@@ -30,6 +30,8 @@ const eventosRoutes = require('./routes/eventos');
 const documentosRoutes = require('./routes/documentos');
 const pontoRoutes = require('./routes/ponto');
 const socialRoutes = require('./routes/social');
+const notificacoesRoutes = require('./routes/notificacoes');
+const buscaGlobalRoutes = require('./routes/buscaGlobal');
 
 // Importar configuração do banco
 const { sequelize, User } = require('./models');
@@ -98,6 +100,8 @@ app.use('/api/eventos', eventosRoutes);
 app.use('/api/documentos', documentosRoutes);
 app.use('/api/ponto', pontoRoutes);
 app.use('/api/social', socialRoutes);
+app.use('/api/notificacoes', notificacoesRoutes);
+app.use('/api/busca-global', buscaGlobalRoutes);
 
 // Rota de health check
 app.get('/api/health', (req, res) => {

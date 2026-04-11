@@ -1,0 +1,137 @@
+/* ================================================
+   RESPONSIVE GLOBAL — Mobile & Tablet
+   ================================================ */
+
+/* --- TABELAS: scroll horizontal em mobile --- */
+@media (max-width: 768px) {
+  .table-responsive { -webkit-overflow-scrolling: touch; }
+
+  /* Tabelas padrão ficam com scroll */
+  table.table { min-width: 600px; }
+
+  /* Exceção: tabelas que já são compactas */
+  table.table-sm { min-width: auto; }
+}
+
+/* --- MODAIS: fullscreen em mobile --- */
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0 !important;
+    max-width: 100% !important;
+    min-height: 100vh;
+  }
+  .modal-content {
+    border-radius: 0 !important;
+    min-height: 100vh;
+  }
+  .modal-dialog-centered { align-items: flex-start !important; }
+  .modal-dialog-scrollable .modal-body { max-height: calc(100vh - 120px); }
+  .modal-lg, .modal-xl { max-width: 100% !important; }
+}
+
+/* --- BOTÕES: maior em mobile --- */
+@media (max-width: 576px) {
+  .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.85rem; min-height: 38px; }
+  .btn:not(.btn-sm):not(.btn-close):not(.avatar-option) { min-height: 44px; font-size: 0.9rem; }
+}
+
+/* --- CARDS: padding reduzido em mobile --- */
+@media (max-width: 768px) {
+  .card-body { padding: 0.8rem; }
+  .card-header { padding: 0.6rem 0.8rem; }
+}
+
+/* --- NAVBAR --- */
+@media (max-width: 768px) {
+  .navbar { padding: 0.5rem 1rem !important; height: auto !important; min-height: 56px; }
+  .navbar-brand .h5 { font-size: 0.9rem !important; }
+  .navbar-brand i { font-size: 1.3rem !important; }
+  body { padding-top: 56px !important; }
+}
+
+/* --- FORMULÁRIOS --- */
+@media (max-width: 576px) {
+  .form-control, .form-select { font-size: 16px !important; /* evita zoom no iOS */ }
+  .row.g-3 > [class*="col-md-"], .row.g-3 > [class*="col-lg-"] { flex: 0 0 100%; max-width: 100%; }
+}
+
+/* --- TABS: scroll horizontal se muitas abas --- */
+@media (max-width: 768px) {
+  .nav-tabs, .social-tabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar, .social-tabs::-webkit-scrollbar { display: none; }
+  .nav-tabs .nav-item, .social-tabs .nav-item { flex-shrink: 0; }
+  .nav-tabs .nav-link, .social-tabs .nav-link { white-space: nowrap; font-size: 0.75rem; padding: 0.4rem 0.7rem; }
+}
+
+/* --- HERO section no menu --- */
+@media (max-width: 576px) {
+  .hero-section { height: 250px !important; }
+  .hero-content h1 { font-size: 1.4rem !important; }
+  .hero-content p { font-size: 0.9rem !important; }
+  .cards-container { margin-top: -60px !important; gap: 0.8rem !important; padding: 0.5rem !important; grid-template-columns: 1fr !important; }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .cards-container { grid-template-columns: repeat(2, 1fr) !important; gap: 1rem !important; }
+}
+
+/* --- BREADCRUMBS --- */
+@media (max-width: 576px) {
+  nav[aria-label="breadcrumb"] { padding: 0.3rem 0.8rem !important; }
+  .breadcrumb { font-size: 0.7rem !important; }
+}
+
+/* --- BADGE e alertas --- */
+@media (max-width: 576px) {
+  .badge { font-size: 0.7rem; }
+  .alert { font-size: 0.85rem; padding: 0.6rem; }
+}
+
+/* --- PONTO: timeline compacta --- */
+@media (max-width: 576px) {
+  .timeline-item { padding: 0.5rem !important; }
+  .admin-func-card { padding: 0.7rem !important; }
+}
+
+/* --- SOCIAL: tabs e formulários compactos --- */
+@media (max-width: 576px) {
+  .social-header { padding: 0.8rem !important; }
+  .social-header h1 { font-size: 1.2rem !important; }
+  .social-form .form-label { font-size: 0.75rem; }
+  .social-dyn-table input.form-control-sm { font-size: 0.78rem; padding: 0.2rem 0.4rem; }
+}
+
+/* --- DROPDOWN: posição correta em mobile --- */
+@media (max-width: 768px) {
+  #notifDropdown, #globalSearchResults {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    top: 60px !important;
+    width: auto !important;
+    min-width: auto !important;
+  }
+}
+
+/* --- UTILITIES --- */
+@media (max-width: 576px) {
+  .d-mobile-none { display: none !important; }
+  .w-mobile-100 { width: 100% !important; }
+}
+
+@media (max-width: 768px) {
+  .d-tablet-none { display: none !important; }
+}
+
+/* --- PRINT: esconder elementos UI --- */
+@media print {
+  .navbar, .no-print, nav[aria-label="breadcrumb"], #notifBell, #globalSearchWrap { display: none !important; }
+  body { padding-top: 0 !important; }
+  .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+}

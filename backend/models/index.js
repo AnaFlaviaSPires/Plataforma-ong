@@ -20,6 +20,7 @@ const SocialDespesaModel = require('./SocialDespesa');
 const SocialResponsavelModel = require('./SocialResponsavel');
 const SocialHistoricoModel = require('./SocialHistorico');
 const SocialAnexoModel = require('./SocialAnexo');
+const NotificacaoModel = require('./Notificacao');
 
 // Inicializar modelos
 const User = UserModel(sequelize);
@@ -43,6 +44,7 @@ const SocialDespesa = SocialDespesaModel(sequelize);
 const SocialResponsavel = SocialResponsavelModel(sequelize);
 const SocialHistorico = SocialHistoricoModel(sequelize);
 const SocialAnexo = SocialAnexoModel(sequelize);
+const Notificacao = NotificacaoModel(sequelize);
 
 // Definir associações
 
@@ -241,6 +243,10 @@ Ponto.belongsTo(User, {
   as: 'funcionario'
 });
 
+// Notificações
+User.hasMany(Notificacao, { foreignKey: 'usuario_id', as: 'notificacoes' });
+Notificacao.belongsTo(User, { foreignKey: 'usuario_id', as: 'usuario' });
+
 // Acompanhamento Social — associações
 SocialProntuario.belongsTo(Aluno, { foreignKey: 'aluno_id', as: 'aluno' });
 Aluno.hasMany(SocialProntuario, { foreignKey: 'aluno_id', as: 'prontuarios_sociais' });
@@ -319,5 +325,6 @@ module.exports = {
   SocialDespesa,
   SocialResponsavel,
   SocialHistorico,
-  SocialAnexo
+  SocialAnexo,
+  Notificacao
 };

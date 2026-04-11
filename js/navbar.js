@@ -522,6 +522,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Injetar CSS responsivo globalmente
+    if (!document.querySelector('link[href*="responsive.css"]')) {
+        const respCSS = document.createElement('link');
+        respCSS.rel = 'stylesheet';
+        respCSS.href = (document.querySelector('link[href*="global.css"]')?.href || '').replace('global.css', 'responsive.css') || '../css/responsive.css';
+        document.head.appendChild(respCSS);
+    }
+
+    // Injetar UX enhancements (notificações, breadcrumbs, busca global)
+    if (!document.querySelector('script[src*="ux-enhancements"]')) {
+        const uxScript = document.createElement('script');
+        uxScript.src = (document.querySelector('script[src*="navbar"]')?.src || '').replace('navbar.js', 'ux-enhancements.js') || '../js/ux-enhancements.js';
+        uxScript.defer = true;
+        document.body.appendChild(uxScript);
+    }
+
     // Executar
     injectNavbar();
     injectConfigModal();
