@@ -143,20 +143,57 @@ async function startServer() {
     await sequelize.authenticate();
     console.log('✅ Conexão com MySQL estabelecida com sucesso!');
     
-    // Sincronizar models com o banco
-    // alter:true adiciona novas colunas/tipos sem destruir dados existentes
-    // Requer ALLOW_DB_SYNC=true no ambiente (trava de segurança)
+    // Sincronizar models com o banco (só cria tabelas que não existem)
     try {
       console.log('🔄 Verificando tabelas no banco de dados...');
-      if (process.env.ALLOW_DB_SYNC === 'true') {
-        console.log('🔓 ALLOW_DB_SYNC ativo — sincronizando com alter:true');
-        await sequelize.sync({ alter: true });
-      } else {
-        await sequelize.sync();
-      }
+      await sequelize.sync();
       console.log('✅ Tabelas verificadas/criadas com sucesso!');
     } catch (syncError) {
       console.error('⚠️ Erro ao sincronizar tabelas (servidor vai iniciar mesmo assim):', syncError.message);
+    }
+
+    // Migração da tabela doacoes (executar uma vez com ALLOW_DB_SYNC=true)
+    if (process.env.ALLOW_DB_SYNC === 'true') {
+      try {
+        console.log('🔓 ALLOW_DB_SYNC ativo — executando migração da tabela doacoes...');
+        const qi = sequelize.getQueryInterface();
+
+        // Verificar colunas existentes
+        const cols = await qi.describeTable('doacoes').catch(() => null);
+        if (cols) {
+          // Adicionar coluna quantidade se não existir
+          if (!cols.quantidade) {
+            await sequelize.query("ALTER TABLE doacoes ADD COLUMN quantidade INT NULL");
+            console.log('  ✅ Coluna quantidade adicionada');
+          }
+          // Adicionar coluna alterado_por se não existir
+          if (!cols.alterado_por) {
+            await sequelize.query("ALTER TABLE doacoes ADD COLUMN alterado_por INT NULL");
+            console.log('  ✅ Coluna alterado_por adicionada');
+          }
+          // Expandir ENUM tipo
+          try {
+            await sequelize.query("ALTER TABLE doacoes MODIFY COLUMN tipo ENUM('dinheiro','pix','alimentos','vestuario','material_higiene','material_escolar','brindes','outros') NOT NULL");
+            console.log('  ✅ ENUM tipo expandido');
+          } catch (e) { console.log('  ⚠️ ENUM tipo:', e.message); }
+          // Tornar nome_doador nullable
+          try {
+            await sequelize.query("ALTER TABLE doacoes MODIFY COLUMN nome_doador VARCHAR(150) NULL");
+            console.log('  ✅ nome_doador agora aceita NULL');
+          } catch (e) { console.log('  ⚠️ nome_doador:', e.message); }
+          // Alterar default status para recebida
+          try {
+            await sequelize.query("ALTER TABLE doacoes MODIFY COLUMN status ENUM('pendente','recebida','cancelada') NOT NULL DEFAULT 'recebida'");
+            console.log('  ✅ Status default alterado para recebida');
+          } catch (e) { console.log('  ⚠️ status:', e.message); }
+
+          console.log('✅ Migração da tabela doacoes concluída!');
+        } else {
+          console.log('  ℹ️ Tabela doacoes não encontrada (será criada pelo sync)');
+        }
+      } catch (migErr) {
+        console.error('⚠️ Erro na migração doacoes:', migErr.message);
+      }
     }
 
     // Criar admin padrão se não existir nenhum usuário
