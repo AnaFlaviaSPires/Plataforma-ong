@@ -74,8 +74,8 @@
     const greeting = getGreeting();
 
     let msg = nome
-      ? `${greeting}, **${nome}**! 👋 Eu sou o **Beta**, seu assistente da plataforma.`
-      : `${greeting}! 👋 Eu sou o **Beta**, seu assistente da plataforma.`;
+      ? `${greeting}, **${nome}**! 👋 Sou o **Beta**, seu assistente da plataforma.`
+      : `${greeting}! 👋 Sou o **Beta**, seu assistente da plataforma.`;
 
     // Dica contextual da página
     if (page && typeof assistantPageTips !== 'undefined' && assistantPageTips[page]) {
