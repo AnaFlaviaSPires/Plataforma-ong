@@ -35,11 +35,11 @@ const doacaoValidation = [
     .isIn(tiposValidos)
     .withMessage('Tipo de doação inválido'),
   body('valor')
-    .optional()
+    .optional({ nullable: true })
     .isFloat({ min: 0 })
     .withMessage('Valor deve ser um número positivo'),
   body('quantidade')
-    .optional()
+    .optional({ nullable: true })
     .isInt({ min: 0 })
     .withMessage('Quantidade deve ser um número inteiro positivo')
 ];
