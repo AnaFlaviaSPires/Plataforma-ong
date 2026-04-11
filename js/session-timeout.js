@@ -97,9 +97,22 @@ class SessionTimeout {
             'load'
         ];
 
+        // Throttle: reseta timer no máximo 1x a cada 30s (evita CPU desnecessária)
+        let lastReset = 0;
+        const THROTTLE_MS = 30000;
+        const throttledReset = () => {
+            const now = Date.now();
+            if (now - lastReset > THROTTLE_MS) {
+                lastReset = now;
+                this.resetTimer();
+            } else {
+                this.lastActivity = now;
+            }
+        };
+
         // Adicionar listeners para cada evento
         events.forEach(event => {
-            document.addEventListener(event, () => this.resetTimer());
+            document.addEventListener(event, throttledReset, { passive: true });
         });
     }
 }

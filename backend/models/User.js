@@ -71,13 +71,13 @@ module.exports = (sequelize) => {
     hooks: {
       beforeCreate: async (user) => {
         if (user.senha) {
-          const rounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
+          const rounds = parseInt(process.env.BCRYPT_ROUNDS) || 10;
           user.senha = await bcrypt.hash(user.senha, rounds);
         }
       },
       beforeUpdate: async (user) => {
         if (user.changed('senha')) {
-          const rounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
+          const rounds = parseInt(process.env.BCRYPT_ROUNDS) || 10;
           user.senha = await bcrypt.hash(user.senha, rounds);
         }
       }

@@ -4,68 +4,183 @@ const { Op } = require('sequelize');
 // Obter estatísticas gerais do dashboard
 const getDashboardStats = async (req, res) => {
   try {
-    // Estatísticas básicas
-    const totalAlunos = await Aluno.count(); // Total geral (todos os status)
-    const totalUsuarios = await User.count({ where: { ativo: true } });
-    const alunosInativos = await Aluno.count({ where: { ativo: false } });
-    
-    // Alunos cadastrados nos últimos 30 dias
     const dataLimite = new Date();
     dataLimite.setDate(dataLimite.getDate() - 30);
-    
-    const alunosRecentes = await Aluno.count({
-      where: {
-        ativo: true,
-        created_at: { [Op.gte]: dataLimite }
-      }
-    });
 
-    // === ALUNOS POR STATUS DE MATRÍCULA ===
-    const alunosPorStatus = await Aluno.findAll({
-      attributes: [
-        'status',
-        [Aluno.sequelize.fn('COUNT', Aluno.sequelize.col('id')), 'total']
-      ],
-      group: ['status'],
-      raw: true
-    });
+    const seisAtras = new Date();
+    seisAtras.setMonth(seisAtras.getMonth() - 5);
+    const inicioSeisMeses = new Date(seisAtras.getFullYear(), seisAtras.getMonth(), 1);
 
-    // Distribuição por turma
-    const alunosPorTurma = await Aluno.findAll({
-      attributes: [
-        'turma',
-        [Aluno.sequelize.fn('COUNT', Aluno.sequelize.col('id')), 'total']
-      ],
-      where: { ativo: true },
-      group: ['turma'],
-      order: [[Aluno.sequelize.fn('COUNT', Aluno.sequelize.col('id')), 'DESC']],
-      raw: true
-    });
+    // ======== EXECUTAR TODAS AS QUERIES EM PARALELO ========
+    const [
+      totalAlunos,
+      totalUsuarios,
+      alunosInativos,
+      alunosRecentes,
+      alunosPorStatus,
+      alunosPorTurma,
+      alunosComIdade,
+      alunosComRestricao,
+      ultimosAlunos,
+      crescimentoRaw,
+      totalDoacoes,
+      doacoesConfirmadas,
+      doacoesPendentes,
+      valorDinheiro,
+      valorPix,
+      doacoesPorTipo,
+      doacoesCountRaw,
+      doacoesValorRaw,
+      totalSalas,
+      totalProfessores,
+      salasComAlunos,
+      totalChamadas,
+      totalPresencas,
+      totalFaltas,
+      frequenciaPorSala,
+      frequenciaRaw,
+      totalEventos,
+      eventosProximos
+    ] = await Promise.all([
+      // Estatísticas básicas
+      Aluno.count(),
+      User.count({ where: { ativo: true } }),
+      Aluno.count({ where: { ativo: false } }),
+      Aluno.count({ where: { ativo: true, created_at: { [Op.gte]: dataLimite } } }),
 
-    // Distribuição por faixa etária
-    const alunosComIdade = await Aluno.findAll({
-      where: { ativo: true },
-      attributes: ['data_nasc']
-    });
+      // Alunos por status
+      Aluno.findAll({
+        attributes: ['status', [Aluno.sequelize.fn('COUNT', Aluno.sequelize.col('id')), 'total']],
+        group: ['status'], raw: true
+      }),
 
-    const faixasEtarias = {
-      '0-5': 0,
-      '6-10': 0,
-      '11-15': 0,
-      '16-18': 0,
-      '18+': 0
-    };
+      // Por turma
+      Aluno.findAll({
+        attributes: ['turma', [Aluno.sequelize.fn('COUNT', Aluno.sequelize.col('id')), 'total']],
+        where: { ativo: true }, group: ['turma'],
+        order: [[Aluno.sequelize.fn('COUNT', Aluno.sequelize.col('id')), 'DESC']], raw: true
+      }),
 
+      // Faixa etária
+      Aluno.findAll({ where: { ativo: true }, attributes: ['data_nasc'] }),
+
+      // Restrição alimentar
+      Aluno.count({ where: { ativo: true, restricao_alimentar: { [Op.ne]: null } } }),
+
+      // Últimos alunos
+      Aluno.findAll({
+        where: { ativo: true }, order: [['created_at', 'DESC']], limit: 5,
+        attributes: ['id', 'nome', 'turma', 'data_matricula', 'created_at']
+      }),
+
+      // Crescimento mensal
+      Aluno.findAll({
+        attributes: [
+          [Aluno.sequelize.fn('YEAR', Aluno.sequelize.col('created_at')), 'ano'],
+          [Aluno.sequelize.fn('MONTH', Aluno.sequelize.col('created_at')), 'mes_num'],
+          [Aluno.sequelize.fn('COUNT', Aluno.sequelize.col('id')), 'total']
+        ],
+        where: { created_at: { [Op.gte]: inicioSeisMeses } },
+        group: [
+          Aluno.sequelize.fn('YEAR', Aluno.sequelize.col('created_at')),
+          Aluno.sequelize.fn('MONTH', Aluno.sequelize.col('created_at'))
+        ], raw: true
+      }),
+
+      // Doações
+      Doacao.count(),
+      Doacao.count({ where: { status: 'recebida' } }),
+      Doacao.count({ where: { status: 'pendente' } }),
+      Doacao.sum('valor', { where: { tipo: 'dinheiro' } }),
+      Doacao.sum('valor', { where: { tipo: 'pix' } }),
+
+      Doacao.findAll({
+        attributes: ['tipo', [Doacao.sequelize.fn('COUNT', Doacao.sequelize.col('id')), 'total']],
+        group: ['tipo'], raw: true
+      }),
+
+      Doacao.findAll({
+        attributes: [
+          [Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')), 'ano'],
+          [Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at')), 'mes_num'],
+          [Doacao.sequelize.fn('COUNT', Doacao.sequelize.col('id')), 'total']
+        ],
+        where: { created_at: { [Op.gte]: inicioSeisMeses } },
+        group: [
+          Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')),
+          Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at'))
+        ], raw: true
+      }),
+
+      Doacao.findAll({
+        attributes: [
+          [Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')), 'ano'],
+          [Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at')), 'mes_num'],
+          [Doacao.sequelize.fn('SUM', Doacao.sequelize.col('valor')), 'valor']
+        ],
+        where: { tipo: { [Op.in]: ['dinheiro', 'pix'] }, created_at: { [Op.gte]: inicioSeisMeses } },
+        group: [
+          Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')),
+          Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at'))
+        ], raw: true
+      }),
+
+      // Salas e professores
+      Sala.count({ where: { ativo: true } }),
+      Professor.count({ where: { status: 'ativo' } }),
+
+      Sala.findAll({
+        where: { ativo: true }, attributes: ['id', 'nome', 'professor'],
+        include: [{ model: Aluno, as: 'alunos', attributes: ['id'], through: { attributes: [] } }]
+      }),
+
+      // Frequência
+      Chamada.count(),
+      ChamadaRegistro.count({ where: { presente: true } }),
+      ChamadaRegistro.count({ where: { presente: false } }),
+
+      Chamada.findAll({
+        where: { data: { [Op.gte]: dataLimite } },
+        attributes: ['sala_id'],
+        include: [
+          { model: Sala, as: 'sala', attributes: ['nome'] },
+          { model: ChamadaRegistro, as: 'registros', attributes: ['presente'] }
+        ]
+      }),
+
+      ChamadaRegistro.findAll({
+        attributes: [
+          'presente',
+          [ChamadaRegistro.sequelize.fn('YEAR', ChamadaRegistro.sequelize.col('chamada.data')), 'ano'],
+          [ChamadaRegistro.sequelize.fn('MONTH', ChamadaRegistro.sequelize.col('chamada.data')), 'mes_num'],
+          [ChamadaRegistro.sequelize.fn('COUNT', ChamadaRegistro.sequelize.col('ChamadaRegistro.id')), 'total']
+        ],
+        include: [{
+          model: Chamada, as: 'chamada', attributes: [],
+          where: { data: { [Op.gte]: inicioSeisMeses } }
+        }],
+        group: [
+          ChamadaRegistro.sequelize.fn('YEAR', ChamadaRegistro.sequelize.col('chamada.data')),
+          ChamadaRegistro.sequelize.fn('MONTH', ChamadaRegistro.sequelize.col('chamada.data')),
+          'presente'
+        ], raw: true
+      }),
+
+      // Eventos
+      Evento.count(),
+      Evento.count({ where: { inicio: { [Op.gte]: new Date() } } })
+    ]);
+
+    // ======== PROCESSAR RESULTADOS (CPU, sem I/O) ========
+
+    // Faixa etária
+    const faixasEtarias = { '0-5': 0, '6-10': 0, '11-15': 0, '16-18': 0, '18+': 0 };
+    const hoje = new Date();
     alunosComIdade.forEach(aluno => {
-      const hoje = new Date();
       const nascimento = new Date(aluno.data_nasc);
       let idade = hoje.getFullYear() - nascimento.getFullYear();
       const mes = hoje.getMonth() - nascimento.getMonth();
-      
-      if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-        idade--;
-      }
-
+      if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) idade--;
       if (idade <= 5) faixasEtarias['0-5']++;
       else if (idade <= 10) faixasEtarias['6-10']++;
       else if (idade <= 15) faixasEtarias['11-15']++;
@@ -73,44 +188,9 @@ const getDashboardStats = async (req, res) => {
       else faixasEtarias['18+']++;
     });
 
-    // Alunos com restrições alimentares
-    const alunosComRestricao = await Aluno.count({
-      where: {
-        ativo: true,
-        restricao_alimentar: { [Op.ne]: null }
-      }
-    });
-
-    // Últimos alunos cadastrados
-    const ultimosAlunos = await Aluno.findAll({
-      where: { ativo: true },
-      order: [['created_at', 'DESC']],
-      limit: 5,
-      attributes: ['id', 'nome', 'turma', 'data_matricula', 'created_at']
-    });
-
-    // Crescimento mensal (últimos 6 meses) - query única com GROUP BY
-    const seisAtras = new Date();
-    seisAtras.setMonth(seisAtras.getMonth() - 5);
-    const inicioSeisMeses = new Date(seisAtras.getFullYear(), seisAtras.getMonth(), 1);
-
-    const crescimentoRaw = await Aluno.findAll({
-      attributes: [
-        [Aluno.sequelize.fn('YEAR', Aluno.sequelize.col('created_at')), 'ano'],
-        [Aluno.sequelize.fn('MONTH', Aluno.sequelize.col('created_at')), 'mes_num'],
-        [Aluno.sequelize.fn('COUNT', Aluno.sequelize.col('id')), 'total']
-      ],
-      where: { created_at: { [Op.gte]: inicioSeisMeses } },
-      group: [
-        Aluno.sequelize.fn('YEAR', Aluno.sequelize.col('created_at')),
-        Aluno.sequelize.fn('MONTH', Aluno.sequelize.col('created_at'))
-      ],
-      raw: true
-    });
-
+    // Crescimento mensal
     const crescimentoMap = {};
     crescimentoRaw.forEach(r => { crescimentoMap[`${r.ano}-${r.mes_num}`] = parseInt(r.total); });
-
     const crescimentoMensal = [];
     for (let i = 5; i >= 0; i--) {
       const data = new Date();
@@ -122,63 +202,14 @@ const getDashboardStats = async (req, res) => {
       });
     }
 
-    // === ESTATÍSTICAS DE DOAÇÕES ===
-    const totalDoacoes = await Doacao.count();
-    const doacoesConfirmadas = await Doacao.count({ where: { status: 'recebida' } });
-    const doacoesPendentes = await Doacao.count({ where: { status: 'pendente' } });
-    
-    // Valor total de doações em dinheiro
-    const valorDinheiro = await Doacao.sum('valor', { where: { tipo: 'dinheiro' } }) || 0;
-    const valorPix = await Doacao.sum('valor', { where: { tipo: 'pix' } }) || 0;
-    const valorTotalDoacoes = parseFloat(valorDinheiro) + parseFloat(valorPix);
+    // Doações valor total
+    const valorTotalDoacoes = parseFloat(valorDinheiro || 0) + parseFloat(valorPix || 0);
 
-    // Doações por tipo
-    const doacoesPorTipo = await Doacao.findAll({
-      attributes: [
-        'tipo',
-        [Doacao.sequelize.fn('COUNT', Doacao.sequelize.col('id')), 'total']
-      ],
-      group: ['tipo'],
-      raw: true
-    });
-
-    // Doações dos últimos 6 meses - queries únicas com GROUP BY
-    const doacoesCountRaw = await Doacao.findAll({
-      attributes: [
-        [Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')), 'ano'],
-        [Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at')), 'mes_num'],
-        [Doacao.sequelize.fn('COUNT', Doacao.sequelize.col('id')), 'total']
-      ],
-      where: { created_at: { [Op.gte]: inicioSeisMeses } },
-      group: [
-        Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')),
-        Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at'))
-      ],
-      raw: true
-    });
-
-    const doacoesValorRaw = await Doacao.findAll({
-      attributes: [
-        [Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')), 'ano'],
-        [Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at')), 'mes_num'],
-        [Doacao.sequelize.fn('SUM', Doacao.sequelize.col('valor')), 'valor']
-      ],
-      where: {
-        tipo: { [Op.in]: ['dinheiro', 'pix'] },
-        created_at: { [Op.gte]: inicioSeisMeses }
-      },
-      group: [
-        Doacao.sequelize.fn('YEAR', Doacao.sequelize.col('created_at')),
-        Doacao.sequelize.fn('MONTH', Doacao.sequelize.col('created_at'))
-      ],
-      raw: true
-    });
-
+    // Doações mensal
     const doacoesCountMap = {};
     doacoesCountRaw.forEach(r => { doacoesCountMap[`${r.ano}-${r.mes_num}`] = parseInt(r.total); });
     const doacoesValorMap = {};
     doacoesValorRaw.forEach(r => { doacoesValorMap[`${r.ano}-${r.mes_num}`] = parseFloat(r.valor) || 0; });
-
     const doacoesMensal = [];
     for (let i = 5; i >= 0; i--) {
       const data = new Date();
@@ -191,112 +222,38 @@ const getDashboardStats = async (req, res) => {
       });
     }
 
-    // === ESTATÍSTICAS DE SALAS E PROFESSORES ===
-    const totalSalas = await Sala.count({ where: { ativo: true } });
-    const totalProfessores = await Professor.count({ where: { status: 'ativo' } });
-
-    // === ALUNOS POR SALA ===
-    const salasComAlunos = await Sala.findAll({
-      where: { ativo: true },
-      attributes: ['id', 'nome', 'professor'],
-      include: [{
-        model: Aluno,
-        as: 'alunos',
-        attributes: ['id'],
-        through: { attributes: [] }
-      }]
-    });
-
+    // Alunos por sala
     const alunosPorSala = salasComAlunos.map(sala => ({
-      sala_id: sala.id,
-      sala_nome: sala.nome,
-      professor: sala.professor,
+      sala_id: sala.id, sala_nome: sala.nome, professor: sala.professor,
       total_alunos: sala.alunos ? sala.alunos.length : 0
     }));
 
-    // === ESTATÍSTICAS DE FREQUÊNCIA ===
-    const totalChamadas = await Chamada.count();
-    const totalPresencas = await ChamadaRegistro.count({ where: { presente: true } });
-    const totalFaltas = await ChamadaRegistro.count({ where: { presente: false } });
-    const taxaPresenca = totalPresencas + totalFaltas > 0 
-      ? Math.round((totalPresencas / (totalPresencas + totalFaltas)) * 100) 
-      : 0;
+    // Taxa presença
+    const taxaPresenca = totalPresencas + totalFaltas > 0
+      ? Math.round((totalPresencas / (totalPresencas + totalFaltas)) * 100) : 0;
 
-    // === FREQUÊNCIA POR SALA (últimos 30 dias) ===
-    const frequenciaPorSala = await Chamada.findAll({
-      where: {
-        data: { [Op.gte]: dataLimite }
-      },
-      attributes: ['sala_id'],
-      include: [
-        {
-          model: Sala,
-          as: 'sala',
-          attributes: ['nome']
-        },
-        {
-          model: ChamadaRegistro,
-          as: 'registros',
-          attributes: ['presente']
-        }
-      ]
-    });
-
-    // Processar frequência por sala
+    // Frequência por sala
     const frequenciaSalaMap = {};
     frequenciaPorSala.forEach(chamada => {
       const salaId = chamada.sala_id;
       const salaNome = chamada.sala?.nome || 'Sem nome';
-      
       if (!frequenciaSalaMap[salaId]) {
-        frequenciaSalaMap[salaId] = { 
-          sala_id: salaId, 
-          sala_nome: salaNome, 
-          presencas: 0, 
-          faltas: 0 
-        };
+        frequenciaSalaMap[salaId] = { sala_id: salaId, sala_nome: salaNome, presencas: 0, faltas: 0 };
       }
-      
       if (chamada.registros) {
         chamada.registros.forEach(reg => {
-          if (reg.presente) {
-            frequenciaSalaMap[salaId].presencas++;
-          } else {
-            frequenciaSalaMap[salaId].faltas++;
-          }
+          if (reg.presente) frequenciaSalaMap[salaId].presencas++;
+          else frequenciaSalaMap[salaId].faltas++;
         });
       }
     });
-
     const frequenciaPorSalaArray = Object.values(frequenciaSalaMap).map(sala => ({
       ...sala,
-      taxa: sala.presencas + sala.faltas > 0 
-        ? Math.round((sala.presencas / (sala.presencas + sala.faltas)) * 100) 
-        : 0
+      taxa: sala.presencas + sala.faltas > 0
+        ? Math.round((sala.presencas / (sala.presencas + sala.faltas)) * 100) : 0
     }));
 
-    // === FREQUÊNCIA POR PERÍODO (últimos 6 meses) - query única ===
-    const frequenciaRaw = await ChamadaRegistro.findAll({
-      attributes: [
-        'presente',
-        [ChamadaRegistro.sequelize.fn('YEAR', ChamadaRegistro.sequelize.col('chamada.data')), 'ano'],
-        [ChamadaRegistro.sequelize.fn('MONTH', ChamadaRegistro.sequelize.col('chamada.data')), 'mes_num'],
-        [ChamadaRegistro.sequelize.fn('COUNT', ChamadaRegistro.sequelize.col('ChamadaRegistro.id')), 'total']
-      ],
-      include: [{
-        model: Chamada,
-        as: 'chamada',
-        attributes: [],
-        where: { data: { [Op.gte]: inicioSeisMeses } }
-      }],
-      group: [
-        ChamadaRegistro.sequelize.fn('YEAR', ChamadaRegistro.sequelize.col('chamada.data')),
-        ChamadaRegistro.sequelize.fn('MONTH', ChamadaRegistro.sequelize.col('chamada.data')),
-        'presente'
-      ],
-      raw: true
-    });
-
+    // Frequência mensal
     const freqPresMap = {};
     const freqFaltMap = {};
     frequenciaRaw.forEach(r => {
@@ -304,7 +261,6 @@ const getDashboardStats = async (req, res) => {
       if (r.presente) freqPresMap[key] = parseInt(r.total);
       else freqFaltMap[key] = parseInt(r.total);
     });
-
     const frequenciaMensal = [];
     for (let i = 5; i >= 0; i--) {
       const data = new Date();
@@ -314,21 +270,11 @@ const getDashboardStats = async (req, res) => {
       const faltasMes = freqFaltMap[key] || 0;
       frequenciaMensal.push({
         mes: data.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
-        presencas: presencasMes,
-        faltas: faltasMes,
-        taxa: presencasMes + faltasMes > 0 
-          ? Math.round((presencasMes / (presencasMes + faltasMes)) * 100) 
-          : 0
+        presencas: presencasMes, faltas: faltasMes,
+        taxa: presencasMes + faltasMes > 0
+          ? Math.round((presencasMes / (presencasMes + faltasMes)) * 100) : 0
       });
     }
-
-    // === ESTATÍSTICAS DE EVENTOS ===
-    const totalEventos = await Evento.count();
-    const eventosProximos = await Evento.count({
-      where: {
-        inicio: { [Op.gte]: new Date() }
-      }
-    });
 
     res.json({
       estatisticas_gerais: {

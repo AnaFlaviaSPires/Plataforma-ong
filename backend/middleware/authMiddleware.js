@@ -8,6 +8,29 @@ if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
 }
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-ong-novo-amanha';
 
+// Cache de usuários em memória (evita query no banco a cada request)
+const USER_CACHE_TTL = 2 * 60 * 1000; // 2 minutos
+const userCache = new Map();
+
+function getCachedUser(id) {
+  const entry = userCache.get(id);
+  if (entry && Date.now() - entry.ts < USER_CACHE_TTL) return entry.user;
+  if (entry) userCache.delete(id);
+  return null;
+}
+
+function setCachedUser(user) {
+  userCache.set(user.id, { user, ts: Date.now() });
+  // Limpar cache se ficar grande demais
+  if (userCache.size > 200) {
+    const now = Date.now();
+    for (const [k, v] of userCache) { if (now - v.ts > USER_CACHE_TTL) userCache.delete(k); }
+  }
+}
+
+// Invalidar cache de um usuário específico (chamar após update)
+function invalidateUserCache(id) { userCache.delete(id); }
+
 const authMiddleware = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -19,7 +42,13 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findByPk(decoded.id);
+
+    // Tentar cache primeiro
+    let user = getCachedUser(decoded.id);
+    if (!user) {
+      user = await User.findByPk(decoded.id);
+      if (user) setCachedUser(user);
+    }
     
     if (!user || !user.ativo) {
       return res.status(401).json({
@@ -69,5 +98,6 @@ const requireRole = (roles) => {
 
 module.exports = {
   authMiddleware,
-  requireRole
+  requireRole,
+  invalidateUserCache
 };

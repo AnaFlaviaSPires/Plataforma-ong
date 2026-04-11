@@ -5,6 +5,7 @@ const { User, PasswordReset } = require('../models');
 const { validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 const { logAction } = require('../middleware/auditMiddleware');
+const { invalidateUserCache } = require('../middleware/authMiddleware');
 const { sendEmail, templates } = require('../services/emailService');
 
 if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
@@ -493,6 +494,7 @@ const updateProfile = async (req, res) => {
     }
 
     await user.save();
+    invalidateUserCache(user.id);
 
     await logAction(req, {
       acao: 'UPDATE_PROFILE',
@@ -560,6 +562,7 @@ const changePassword = async (req, res) => {
     // Atualizar
     user.senha = novaSenha; // Hook fará o hash
     await user.save();
+    invalidateUserCache(user.id);
 
     await logAction(req, {
       acao: 'CHANGE_PASSWORD',

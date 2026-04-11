@@ -17,6 +17,13 @@ const sequelize = new Sequelize({
       rejectUnauthorized: true,
     },
   },
+  pool: {
+    max: parseInt(process.env.DB_POOL_MAX) || 10,
+    min: parseInt(process.env.DB_POOL_MIN) || 2,
+    acquire: 30000,
+    idle: 10000,
+    evict: 60000,
+  },
   define: {
     timestamps: true,
     underscored: true,
