@@ -387,40 +387,4 @@ body {
 .gap-3 { gap: var(--spacing-md); }
 .gap-4 { gap: var(--spacing-lg); }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  html {
-    font-size: 14px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-title {
-    font-size: 2rem;
-  }
-
-  .navbar {
-    padding: var(--spacing-sm);
-  }
-
-  .cards-container {
-    gap: var(--spacing-md);
-    padding: var(--spacing-sm);
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-section {
-    height: 300px;
-  }
-
-  .hero-title {
-    font-size: 1.5rem;
-  }
-
-  .btn {
-    width: 100%;
-  }
-}
+/* Responsividade — centralizada em responsive.css */

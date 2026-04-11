@@ -300,9 +300,87 @@
   }
 
   // ========================================================
+  // RESPONSIVE HELPERS
+  // ========================================================
+
+  // Injetar data-label nas tabelas para modo card mobile
+  function setupTableCards() {
+    document.querySelectorAll('.table-responsive').forEach(wrap => {
+      const table = wrap.querySelector('table');
+      if (!table) return;
+      const headers = [];
+      table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
+      if (headers.length === 0) return;
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        tr.querySelectorAll('td').forEach((td, i) => {
+          if (headers[i] && !td.getAttribute('data-label')) {
+            td.setAttribute('data-label', headers[i]);
+          }
+        });
+      });
+      // Adicionar classe para ativar CSS card mobile
+      wrap.classList.add('table-cards-mobile');
+    });
+  }
+
+  // Observar tabelas que são preenchidas dinamicamente
+  function observeTableCards() {
+    const observer = new MutationObserver(() => { setupTableCards(); });
+    document.querySelectorAll('.table-responsive tbody').forEach(tbody => {
+      observer.observe(tbody, { childList: true, subtree: true });
+    });
+    // Também observar novos table-responsive adicionados
+    const bodyObs = new MutationObserver((muts) => {
+      muts.forEach(m => {
+        m.addedNodes.forEach(n => {
+          if (n.nodeType === 1) {
+            const wraps = n.classList?.contains('table-responsive') ? [n] : n.querySelectorAll?.('.table-responsive') || [];
+            wraps.forEach(w => {
+              w.classList.add('table-cards-mobile');
+              const tbody = w.querySelector('tbody');
+              if (tbody) observer.observe(tbody, { childList: true, subtree: true });
+            });
+          }
+        });
+      });
+    });
+    bodyObs.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // Filtros colapsáveis: envolver filtros em wrapper + botão toggle
+  function setupCollapsibleFilters() {
+    // Busca wrappers de filtro comuns: rows com inputs/selects antes de tabelas
+    const filterCandidates = document.querySelectorAll(
+      '.donation-filters, #telaLista .card-body > .row.g-2'
+    );
+    filterCandidates.forEach((filterRow, idx) => {
+      if (filterRow.querySelector('.mobile-filter-toggle')) return;
+      const id = 'mobileFilter' + idx;
+      filterRow.classList.add('mobile-filter-collapse');
+      filterRow.id = id;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn btn-outline-secondary btn-sm mobile-filter-toggle mb-2';
+      btn.innerHTML = '<i class="bi bi-funnel me-1"></i>Filtros';
+      btn.addEventListener('click', () => {
+        filterRow.classList.toggle('show');
+        btn.innerHTML = filterRow.classList.contains('show')
+          ? '<i class="bi bi-x me-1"></i>Fechar filtros'
+          : '<i class="bi bi-funnel me-1"></i>Filtros';
+      });
+      filterRow.parentNode.insertBefore(btn, filterRow);
+    });
+  }
+
+  // ========================================================
   // INIT — executa após navbar ser injetada
   // ========================================================
   function init() {
+    // Responsive helpers (sempre, mesmo sem login)
+    setupTableCards();
+    observeTableCards();
+    setupCollapsibleFilters();
+
     if (!token()) return;
     // Aguardar navbar existir
     const check = setInterval(() => {
