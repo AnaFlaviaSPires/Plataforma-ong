@@ -101,7 +101,161 @@
       .trim();
   }
 
-  function findResponse(input) {
+  function getApiBase() {
+    return (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : 'http://localhost:3003/api';
+  }
+
+  function getToken() {
+    return localStorage.getItem('authToken') || '';
+  }
+
+  // --- Respostas dinâmicas (data, hora, eventos, stats) ---
+  const dynamicHandlers = [
+    {
+      keywords: ['que dia', 'que data', 'dia de hoje', 'data de hoje', 'hoje e que dia', 'qual a data'],
+      handler: () => {
+        const hoje = new Date();
+        const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+        const dia = diasSemana[hoje.getDay()];
+        const dataFormatada = hoje.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+        return { response: `Hoje é **${dia}**, ${dataFormatada}. 📅`, action: null, actionLabel: null };
+      }
+    },
+    {
+      keywords: ['que horas', 'hora agora', 'que hora', 'horario atual'],
+      handler: () => {
+        const hora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        return { response: `Agora são **${hora}**. ⏰`, action: null, actionLabel: null };
+      }
+    },
+    {
+      keywords: ['evento essa semana', 'eventos essa semana', 'eventos da semana', 'evento semana', 'tem evento', 'proximos eventos', 'proximo evento', 'eventos proximos'],
+      handler: async () => {
+        try {
+          const res = await fetch(`${getApiBase()}/eventos`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+          if (!res.ok) throw new Error();
+          const eventos = await res.json();
+
+          const hoje = new Date();
+          hoje.setHours(0, 0, 0, 0);
+          const fimSemana = new Date(hoje);
+          fimSemana.setDate(fimSemana.getDate() + 7);
+
+          const proximos = (Array.isArray(eventos) ? eventos : eventos.data || [])
+            .filter(e => {
+              const d = new Date(e.inicio || e.data_inicio || e.data);
+              return d >= hoje && d <= fimSemana;
+            })
+            .sort((a, b) => new Date(a.inicio || a.data_inicio || a.data) - new Date(b.inicio || b.data_inicio || b.data))
+            .slice(0, 5);
+
+          if (proximos.length === 0) {
+            return { response: 'Não encontrei nenhum evento programado para essa semana. 📅', action: 'calendario.html', actionLabel: 'Ver Calendário' };
+          }
+
+          let msg = `Encontrei **${proximos.length} evento(s)** nos próximos 7 dias:\n\n`;
+          proximos.forEach(e => {
+            const data = new Date(e.inicio || e.data_inicio || e.data).toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' });
+            msg += `📌 **${e.titulo || e.nome}** — ${data}\n`;
+          });
+          return { response: msg, action: 'calendario.html', actionLabel: 'Ver Calendário' };
+        } catch (_) {
+          return { response: 'Não consegui acessar os eventos agora. Tente pelo Calendário! 📅', action: 'calendario.html', actionLabel: 'Abrir Calendário' };
+        }
+      }
+    },
+    {
+      keywords: ['quantos alunos', 'total alunos', 'numero de alunos', 'alunos cadastrados', 'quantas criancas'],
+      handler: async () => {
+        try {
+          const res = await fetch(`${getApiBase()}/dashboard/stats`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          const total = data.estatisticas_gerais?.total_alunos || 0;
+          const inativos = data.estatisticas_gerais?.alunos_inativos || 0;
+          const ativos = total - inativos;
+          return { response: `Temos **${total} alunos** cadastrados no total, sendo **${ativos} ativos** e ${inativos} inativos. 👦`, action: 'alunos.html', actionLabel: 'Ver Alunos' };
+        } catch (_) {
+          return { response: 'Não consegui buscar os dados agora. Tente pelo Dashboard! 📊', action: 'dashboard.html', actionLabel: 'Abrir Dashboard' };
+        }
+      }
+    },
+    {
+      keywords: ['quantas doacoes', 'total doacoes', 'valor doacoes', 'doacoes recebidas', 'quanto arrecadou', 'arrecadacao'],
+      handler: async () => {
+        try {
+          const res = await fetch(`${getApiBase()}/dashboard/stats`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          const d = data.doacoes || {};
+          const valor = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(d.valor_total || 0);
+          return { response: `Temos **${d.total || 0} doações** registradas, com um valor total de **${valor}**. 💰\n\n✅ Confirmadas: ${d.confirmadas || 0}\n⏳ Pendentes: ${d.pendentes || 0}`, action: 'doacoes.html', actionLabel: 'Ver Doações' };
+        } catch (_) {
+          return { response: 'Não consegui buscar as doações agora. Tente pelo módulo de Doações! 💰', action: 'doacoes.html', actionLabel: 'Ver Doações' };
+        }
+      }
+    },
+    {
+      keywords: ['taxa presenca', 'frequencia geral', 'presenca geral', 'como esta a frequencia', 'porcentagem presenca'],
+      handler: async () => {
+        try {
+          const res = await fetch(`${getApiBase()}/dashboard/stats`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          const f = data.frequencia || {};
+          return { response: `A taxa de presença geral está em **${f.taxa_presenca || 0}%**. 📋\n\n✅ Presenças: ${f.total_presencas || 0}\n❌ Faltas: ${f.total_faltas || 0}\n📝 Chamadas registradas: ${f.total_chamadas || 0}`, action: 'chamada.html', actionLabel: 'Ver Chamada' };
+        } catch (_) {
+          return { response: 'Não consegui buscar a frequência agora. Tente pelo módulo de Chamada! 📋', action: 'chamada.html', actionLabel: 'Ver Chamada' };
+        }
+      }
+    },
+    {
+      keywords: ['quantos professores', 'total professores', 'professores ativos'],
+      handler: async () => {
+        try {
+          const res = await fetch(`${getApiBase()}/dashboard/stats`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          const total = data.estatisticas_gerais?.total_professores || 0;
+          return { response: `Temos **${total} professor(es)** ativo(s) cadastrado(s). 👨‍🏫`, action: 'professores.html', actionLabel: 'Ver Professores' };
+        } catch (_) {
+          return { response: 'Não consegui buscar os dados agora.', action: null, actionLabel: null };
+        }
+      }
+    },
+    {
+      keywords: ['quantas salas', 'total salas', 'salas ativas'],
+      handler: async () => {
+        try {
+          const res = await fetch(`${getApiBase()}/dashboard/stats`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          const total = data.estatisticas_gerais?.total_salas || 0;
+          return { response: `Temos **${total} sala(s)** ativa(s) no sistema. 🏫`, action: 'chamada.html', actionLabel: 'Ver Salas' };
+        } catch (_) {
+          return { response: 'Não consegui buscar os dados agora.', action: null, actionLabel: null };
+        }
+      }
+    }
+  ];
+
+  // Verificar se input casa com handler dinâmico
+  function findDynamicHandler(input) {
+    const normalized = normalize(input);
+    if (!normalized) return null;
+    for (const dh of dynamicHandlers) {
+      for (const kw of dh.keywords) {
+        const kwNorm = normalize(kw);
+        if (normalized.includes(kwNorm) || kwNorm.includes(normalized)) {
+          return dh.handler;
+        }
+      }
+    }
+    return null;
+  }
+
+  // Busca estática na base de conhecimento
+  function findStaticResponse(input) {
     const normalized = normalize(input);
     if (!normalized) return null;
 
@@ -122,6 +276,16 @@
     }
 
     return bestMatch;
+  }
+
+  // Busca combinada: dinâmica primeiro, depois estática
+  async function findResponse(input) {
+    const dynamicHandler = findDynamicHandler(input);
+    if (dynamicHandler) {
+      const result = await dynamicHandler();
+      return result;
+    }
+    return findStaticResponse(input);
   }
 
   function resolveAction(action) {
@@ -297,7 +461,7 @@
     }
 
     // --- Enviar mensagem ---
-    function handleSend(overrideText) {
+    async function handleSend(overrideText) {
       const text = overrideText || input.value.trim();
       if (!text) return;
 
@@ -316,10 +480,10 @@
 
       // Simular delay natural (200-500ms)
       const delay = 200 + Math.random() * 300;
-      setTimeout(() => {
+      setTimeout(async () => {
         removeTyping();
 
-        const match = findResponse(text);
+        const match = await findResponse(text);
         let botText, action, actionLabel;
 
         if (match) {
