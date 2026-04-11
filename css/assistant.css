@@ -131,6 +131,7 @@
 .assistant-header-text span {
   font-size: 11px;
   opacity: 0.8;
+  transition: opacity 0.2s ease;
 }
 
 .assistant-header-actions {

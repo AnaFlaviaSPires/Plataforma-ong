@@ -310,6 +310,63 @@
       .replace(/\n/g, '<br>');
   }
 
+  // --- Som sutil (Web Audio API) ---
+  let audioCtx = null;
+  function playSound(type) {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'open') {
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      } else if (type === 'close') {
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      } else if (type === 'message') {
+        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+      }
+    } catch (_) { /* ignora se não suportado */ }
+  }
+
+  // --- Emoji dinâmico baseado na página ---
+  function getContextEmoji() {
+    const page = getCurrentPage();
+    const emojiMap = {
+      'dashboard': '📊',
+      'alunos': '👦',
+      'chamada': '📋',
+      'doacoes': '💰',
+      'professores': '👨‍🏫',
+      'calendario': '📅',
+      'cursos': '📚',
+      'acompanhamento-social': '📝',
+      'documentos': '📄',
+      'ponto': '⏰',
+      'perfil': '👤',
+      'configuracoes': '⚙️',
+      'admin-usuarios': '👥',
+      'auditoria': '🔍',
+      'menu': '🏠'
+    };
+    return emojiMap[page] || '🐾';
+  }
+
   // --- Criar UI ---
   function createUI() {
     // CSS
@@ -332,16 +389,19 @@
     `;
     document.body.appendChild(fab);
 
+    // Emoji dinâmico
+    const contextEmoji = getContextEmoji();
+
     // Janela de chat
     const win = document.createElement('div');
     win.className = 'assistant-window';
     win.innerHTML = `
       <div class="assistant-header">
         <div class="assistant-header-info">
-          <div class="assistant-header-avatar">🐾</div>
+          <div class="assistant-header-avatar">${contextEmoji}</div>
           <div class="assistant-header-text">
             <h4>Beta</h4>
-            <span>Online • Sempre por aqui</span>
+            <span class="assistant-header-status">Online • Sempre por aqui</span>
           </div>
         </div>
         <div class="assistant-header-actions">
@@ -369,6 +429,8 @@
     const closeBtn = win.querySelector('.assistant-header-close');
     const clearBtn = win.querySelector('.assistant-header-clear');
     const badge = fab.querySelector('.assistant-fab-badge');
+    const avatar = win.querySelector('.assistant-header-avatar');
+    const statusSpan = win.querySelector('.assistant-header-status');
 
     // --- Renderizar mensagens ---
     function renderMessages() {
@@ -469,6 +531,10 @@
       const chips = body.querySelector('.assistant-suggestions');
       if (chips) chips.remove();
 
+      // Resetar status
+      statusSpan.textContent = 'Online • Sempre por aqui';
+      statusSpan.style.opacity = '0.8';
+
       // Msg do usuário
       state.messages.push({ role: 'user', text });
       appendMessageEl('user', text, null, null, true);
@@ -510,6 +576,7 @@
       fab.classList.toggle('open', state.open);
 
       if (state.open) {
+        playSound('open');
         badge.classList.remove('show');
         if (state.firstOpen) {
           state.firstOpen = false;
@@ -528,6 +595,7 @@
     });
 
     closeBtn.addEventListener('click', () => {
+      playSound('close');
       state.open = false;
       win.classList.remove('open');
       fab.classList.remove('open');
@@ -541,6 +609,17 @@
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         handleSend();
+      }
+    });
+
+    // Indicador de "digitando"
+    input.addEventListener('input', () => {
+      if (input.value.trim().length > 0) {
+        statusSpan.textContent = 'Digitando...';
+        statusSpan.style.opacity = '0.9';
+      } else {
+        statusSpan.textContent = 'Online • Sempre por aqui';
+        statusSpan.style.opacity = '0.8';
       }
     });
 
