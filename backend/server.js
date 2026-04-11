@@ -29,6 +29,7 @@ const logsRoutes = require('./routes/logs');
 const eventosRoutes = require('./routes/eventos');
 const documentosRoutes = require('./routes/documentos');
 const pontoRoutes = require('./routes/ponto');
+const socialRoutes = require('./routes/social');
 
 // Importar configuração do banco
 const { sequelize, User } = require('./models');
@@ -96,6 +97,7 @@ app.use('/api/logs', logsRoutes);
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/documentos', documentosRoutes);
 app.use('/api/ponto', pontoRoutes);
+app.use('/api/social', socialRoutes);
 
 // Rota de health check
 app.get('/api/health', (req, res) => {

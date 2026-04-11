@@ -14,6 +14,12 @@ const EventoModel = require('./Evento');
 const EventoParticipanteModel = require('./EventoParticipante');
 const DocumentoModel = require('./Documento');
 const PontoModel = require('./Ponto');
+const SocialProntuarioModel = require('./SocialProntuario');
+const SocialFamiliaModel = require('./SocialFamilia');
+const SocialDespesaModel = require('./SocialDespesa');
+const SocialResponsavelModel = require('./SocialResponsavel');
+const SocialHistoricoModel = require('./SocialHistorico');
+const SocialAnexoModel = require('./SocialAnexo');
 
 // Inicializar modelos
 const User = UserModel(sequelize);
@@ -31,6 +37,12 @@ const Evento = EventoModel(sequelize);
 const EventoParticipante = EventoParticipanteModel(sequelize);
 const Documento = DocumentoModel(sequelize);
 const Ponto = PontoModel(sequelize);
+const SocialProntuario = SocialProntuarioModel(sequelize);
+const SocialFamilia = SocialFamiliaModel(sequelize);
+const SocialDespesa = SocialDespesaModel(sequelize);
+const SocialResponsavel = SocialResponsavelModel(sequelize);
+const SocialHistorico = SocialHistoricoModel(sequelize);
+const SocialAnexo = SocialAnexoModel(sequelize);
 
 // Definir associações
 
@@ -229,6 +241,25 @@ Ponto.belongsTo(User, {
   as: 'funcionario'
 });
 
+// Acompanhamento Social — associações
+SocialProntuario.belongsTo(Aluno, { foreignKey: 'aluno_id', as: 'aluno' });
+Aluno.hasMany(SocialProntuario, { foreignKey: 'aluno_id', as: 'prontuarios_sociais' });
+
+SocialProntuario.hasMany(SocialFamilia, { foreignKey: 'prontuario_id', as: 'familia' });
+SocialFamilia.belongsTo(SocialProntuario, { foreignKey: 'prontuario_id', as: 'prontuario' });
+
+SocialProntuario.hasMany(SocialDespesa, { foreignKey: 'prontuario_id', as: 'despesas' });
+SocialDespesa.belongsTo(SocialProntuario, { foreignKey: 'prontuario_id', as: 'prontuario' });
+
+SocialProntuario.hasMany(SocialResponsavel, { foreignKey: 'prontuario_id', as: 'responsaveis' });
+SocialResponsavel.belongsTo(SocialProntuario, { foreignKey: 'prontuario_id', as: 'prontuario' });
+
+SocialProntuario.hasMany(SocialHistorico, { foreignKey: 'prontuario_id', as: 'historico' });
+SocialHistorico.belongsTo(SocialProntuario, { foreignKey: 'prontuario_id', as: 'prontuario' });
+
+SocialProntuario.hasMany(SocialAnexo, { foreignKey: 'prontuario_id', as: 'anexos' });
+SocialAnexo.belongsTo(SocialProntuario, { foreignKey: 'prontuario_id', as: 'prontuario' });
+
 // ============================================================
 // 🛑 TRAVA DE SEGURANÇA DE DADOS 🛑
 // Sobrescreve o método sync para impedir force:true ou alter:true
@@ -282,5 +313,11 @@ module.exports = {
   Evento,
   EventoParticipante,
   Documento,
-  Ponto
+  Ponto,
+  SocialProntuario,
+  SocialFamilia,
+  SocialDespesa,
+  SocialResponsavel,
+  SocialHistorico,
+  SocialAnexo
 };

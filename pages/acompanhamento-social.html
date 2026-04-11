@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Acompanhamento Social - ONG Novo Amanhã</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="../css/themes.css" rel="stylesheet"/>
+<link href="../css/variables.css" rel="stylesheet"/>
+<link href="../css/config-styles.css" rel="stylesheet"/>
+<link href="../css/global.css" rel="stylesheet"/>
+<link href="../css/navbar.css" rel="stylesheet"/>
+<link href="../css/background-pattern.css" rel="stylesheet"/>
+<link href="../css/acompanhamento-social.css" rel="stylesheet"/>
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script defer src="../js/translations.js"></script>
+<script defer src="../js/settings.js"></script>
+<script defer src="../js/session-timeout.js"></script>
+<script defer src="../js/navbar.js"></script>
+</head>
+<body>
+
+<div class="container-fluid py-4 mt-5" id="appSocial">
+
+  <!-- HEADER -->
+  <div class="social-header">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div>
+        <h1 class="mb-1 h3"><i class="bi bi-journal-medical me-2"></i>Acompanhamento Social</h1>
+        <p class="mb-0 opacity-75">Prontuário Social das crianças e adolescentes</p>
+      </div>
+      <div class="d-flex gap-2 no-print">
+        <button class="btn btn-light btn-sm" id="btnVoltar" style="display:none"><i class="bi bi-arrow-left me-1"></i>Voltar</button>
+        <button class="btn btn-warning btn-sm" id="btnNovo"><i class="bi bi-plus-lg me-1"></i>Novo Prontuário</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TELA 1: LISTA ============ -->
+  <div id="telaLista">
+    <div class="card social-card mb-3">
+      <div class="card-body">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-4">
+            <input type="text" class="form-control form-control-sm" id="filtroBusca" placeholder="Buscar por nome...">
+          </div>
+          <div class="col-md-3">
+            <select class="form-select form-select-sm" id="filtroOficina">
+              <option value="">Todas as oficinas</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select form-select-sm" id="filtroVuln">
+              <option value="">Vulnerabilidade</option>
+              <option value="baixa">Baixa</option>
+              <option value="media">Média</option>
+              <option value="alta">Alta</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select form-select-sm" id="filtroStatus">
+              <option value="">Status</option>
+              <option value="ativo" selected>Ativo</option>
+              <option value="inativo">Inativo</option>
+            </select>
+          </div>
+          <div class="col-md-1">
+            <button class="btn btn-primary btn-sm w-100" id="btnFiltrar"><i class="bi bi-search"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card social-card">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover social-table mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Nome</th>
+                <th>Idade</th>
+                <th>Oficina</th>
+                <th>Status</th>
+                <th>Vulnerabilidade</th>
+                <th class="text-end">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaProntuarios">
+              <tr><td colspan="6" class="text-center text-muted py-4">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <nav id="paginacao" class="mt-3"></nav>
+  </div>
+
+  <!-- ============ TELA 2: PRONTUÁRIO ============ -->
+  <div id="telaProntuario" style="display:none">
+    <div class="card social-card">
+      <div class="card-header bg-white p-0">
+        <ul class="nav nav-tabs social-tabs px-2 pt-2" id="prontuarioTabs">
+          <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tabIdent"><i class="bi bi-person me-1"></i>Identificação</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabSaude"><i class="bi bi-heart-pulse me-1"></i>Saúde</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabFamilia"><i class="bi bi-people me-1"></i>Família</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabMoradia"><i class="bi bi-house me-1"></i>Moradia</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabDespesas"><i class="bi bi-cash-stack me-1"></i>Despesas</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabAvaliacao"><i class="bi bi-clipboard-check me-1"></i>Avaliação</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabHistorico"><i class="bi bi-clock-history me-1"></i>Histórico</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabResp"><i class="bi bi-person-check me-1"></i>Responsáveis</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabDeclaracao"><i class="bi bi-file-earmark-check me-1"></i>Declaração</a></li>
+          <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabAnexos"><i class="bi bi-paperclip me-1"></i>Anexos</a></li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <form id="formProntuario" class="social-form">
+          <input type="hidden" id="prontuarioId">
+          <div class="tab-content">
+
+            <!-- ABA 1: IDENTIFICAÇÃO -->
+            <div class="tab-pane fade show active" id="tabIdent">
+              <div class="row g-3">
+                <div class="col-md-6"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="pNome" required></div>
+                <div class="col-md-3"><label class="form-label">Data de nascimento</label><input type="date" class="form-control" id="pDataNasc"></div>
+                <div class="col-md-3"><label class="form-label">Idade</label><input type="text" class="form-control" id="pIdade" readonly></div>
+                <div class="col-md-3"><label class="form-label">RG</label><input type="text" class="form-control" id="pRg"></div>
+                <div class="col-md-3"><label class="form-label">CPF</label><input type="text" class="form-control" id="pCpf"></div>
+                <div class="col-md-3"><label class="form-label">NIS</label><input type="text" class="form-control" id="pNis"></div>
+                <div class="col-md-3"><label class="form-label">Vincular aluno</label><select class="form-select" id="pAlunoId"><option value="">Nenhum</option></select></div>
+                <div class="col-md-4"><label class="form-label">Escola</label><input type="text" class="form-control" id="pEscola"></div>
+                <div class="col-md-2"><label class="form-label">Período escolar</label><select class="form-select" id="pPeriodoEscolar"><option value="">-</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select></div>
+                <div class="col-md-4"><label class="form-label">Oficina</label><input type="text" class="form-control" id="pOficina"></div>
+                <div class="col-md-2"><label class="form-label">Período oficina</label><select class="form-select" id="pPeriodoOficina"><option value="">-</option><option>Manhã</option><option>Tarde</option></select></div>
+                <div class="col-md-6"><label class="form-label">Nome da mãe</label><input type="text" class="form-control" id="pNomeMae"></div>
+                <div class="col-md-6"><label class="form-label">Nome do pai</label><input type="text" class="form-control" id="pNomePai"></div>
+                <div class="col-md-8"><label class="form-label">Endereço completo</label><textarea class="form-control" id="pEndereco" rows="2"></textarea></div>
+                <div class="col-md-4"><label class="form-label">Telefones</label><input type="text" class="form-control" id="pTelefones"></div>
+                <div class="col-md-3"><label class="form-label">Pode sair sozinho?</label><select class="form-select" id="pSairSozinho"><option value="false">Não</option><option value="true">Sim</option></select></div>
+                <div class="col-md-3"><label class="form-label">Quem busca</label><input type="text" class="form-control" id="pQuemBusca"></div>
+                <div class="col-md-2"><label class="form-label">Camiseta</label><input type="text" class="form-control" id="pCamiseta" placeholder="P, M, G..."></div>
+                <div class="col-md-2"><label class="form-label">Short</label><input type="text" class="form-control" id="pShort"></div>
+                <div class="col-md-2"><label class="form-label">Calçado</label><input type="text" class="form-control" id="pCalcado"></div>
+                <div class="col-12"><label class="form-label">Observações</label><textarea class="form-control" id="pObs" rows="3"></textarea></div>
+              </div>
+            </div>
+
+            <!-- ABA 2: SAÚDE -->
+            <div class="tab-pane fade" id="tabSaude">
+              <div class="row g-3">
+                <div class="col-md-6"><label class="form-label">Alergias</label><textarea class="form-control" id="pAlergias" rows="2"></textarea></div>
+                <div class="col-md-6"><label class="form-label">Doenças crônicas</label><textarea class="form-control" id="pDoencas" rows="2"></textarea></div>
+                <div class="col-md-6"><label class="form-label">Uso de medicação (qual)</label><textarea class="form-control" id="pMedicacao" rows="2"></textarea></div>
+                <div class="col-md-6"><label class="form-label">Tratamentos (médico, psicológico, etc.)</label><textarea class="form-control" id="pTratamentos" rows="2"></textarea></div>
+                <div class="col-12"><label class="form-label">Vacinação</label><textarea class="form-control" id="pVacinacao" rows="2"></textarea></div>
+              </div>
+            </div>
+
+            <!-- ABA 3: FAMÍLIA -->
+            <div class="tab-pane fade" id="tabFamilia">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Composição Familiar</h6>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="btnAddFamilia"><i class="bi bi-plus me-1"></i>Adicionar</button>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-sm social-dyn-table">
+                  <thead class="table-light"><tr><th>Nome</th><th>Parentesco</th><th>Nascimento</th><th>Escolaridade</th><th>Profissão</th><th>Situação</th><th>Renda</th><th></th></tr></thead>
+                  <tbody id="tabelaFamilia"></tbody>
+                </table>
+              </div>
+              <div class="mt-2 d-flex gap-3">
+                <span class="fw-bold">Renda total: <span id="rendaTotal" class="text-success">R$ 0,00</span></span>
+                <span class="fw-bold">Renda per capita: <span id="rendaPerCapita" class="text-primary">R$ 0,00</span></span>
+              </div>
+            </div>
+
+            <!-- ABA 4: MORADIA -->
+            <div class="tab-pane fade" id="tabMoradia">
+              <div class="row g-3">
+                <div class="col-md-4"><label class="form-label">Tipo de moradia</label><select class="form-select" id="pTipoMoradia"><option value="">-</option><option>Própria</option><option>Alugada</option><option>Cedida</option><option>Financiada</option><option>Ocupação</option><option>Outros</option></select></div>
+                <div class="col-md-4"><label class="form-label">Número de cômodos</label><input type="number" class="form-control" id="pComodos" min="0"></div>
+                <div class="col-md-4"><label class="form-label">Zona</label><select class="form-select" id="pZona"><option value="">-</option><option>Urbana</option><option>Rural</option></select></div>
+                <div class="col-12"><label class="form-label">Infraestrutura</label>
+                  <div class="d-flex flex-wrap gap-3 mt-1">
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="infraAgua"><label class="form-check-label" for="infraAgua">Água encanada</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="infraLuz"><label class="form-check-label" for="infraLuz">Energia elétrica</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="infraEsgoto"><label class="form-check-label" for="infraEsgoto">Esgoto/Fossa</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="infraLixo"><label class="form-check-label" for="infraLixo">Coleta de lixo</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="infraInternet"><label class="form-check-label" for="infraInternet">Internet</label></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ABA 5: DESPESAS -->
+            <div class="tab-pane fade" id="tabDespesas">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Despesas da família</h6>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="btnAddDespesa"><i class="bi bi-plus me-1"></i>Adicionar</button>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-sm social-dyn-table">
+                  <thead class="table-light"><tr><th>Tipo</th><th>Valor (R$)</th><th></th></tr></thead>
+                  <tbody id="tabelaDespesas"></tbody>
+                </table>
+              </div>
+              <div class="mt-2"><span class="fw-bold">Total de despesas: <span id="despesaTotal" class="text-danger">R$ 0,00</span></span></div>
+            </div>
+
+            <!-- ABA 6: AVALIAÇÃO SOCIAL -->
+            <div class="tab-pane fade" id="tabAvaliacao">
+              <div class="row g-3">
+                <div class="col-12"><label class="form-label">Parecer social</label><textarea class="form-control" id="pParecer" rows="6"></textarea></div>
+                <div class="col-md-4"><label class="form-label">Nível de vulnerabilidade</label>
+                  <select class="form-select" id="pVulnerabilidade"><option value="baixa">Baixa</option><option value="media">Média</option><option value="alta">Alta</option></select>
+                </div>
+                <div class="col-md-8"><label class="form-label">Necessidades identificadas</label>
+                  <div class="d-flex flex-wrap gap-3 mt-1">
+                    <div class="form-check"><input class="form-check-input chk-necessidade" type="checkbox" value="alimentacao"><label class="form-check-label">Alimentação</label></div>
+                    <div class="form-check"><input class="form-check-input chk-necessidade" type="checkbox" value="saude"><label class="form-check-label">Saúde</label></div>
+                    <div class="form-check"><input class="form-check-input chk-necessidade" type="checkbox" value="moradia"><label class="form-check-label">Moradia</label></div>
+                    <div class="form-check"><input class="form-check-input chk-necessidade" type="checkbox" value="educacao"><label class="form-check-label">Educação</label></div>
+                    <div class="form-check"><input class="form-check-input chk-necessidade" type="checkbox" value="vestuario"><label class="form-check-label">Vestuário</label></div>
+                    <div class="form-check"><input class="form-check-input chk-necessidade" type="checkbox" value="psicologico"><label class="form-check-label">Apoio psicológico</label></div>
+                    <div class="form-check"><input class="form-check-input chk-necessidade" type="checkbox" value="juridico"><label class="form-check-label">Apoio jurídico</label></div>
+                    <div class="form-check"><input class="form-check-input chk-necessidade" type="checkbox" value="renda"><label class="form-check-label">Geração de renda</label></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ABA 7: HISTÓRICO -->
+            <div class="tab-pane fade" id="tabHistorico">
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead class="table-light"><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Responsável</th></tr></thead>
+                  <tbody id="tabelaHistorico">
+                    <tr><td colspan="4" class="text-center text-muted py-3">Salve o prontuário para ver o histórico</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ABA 8: RESPONSÁVEIS AUTORIZADOS -->
+            <div class="tab-pane fade" id="tabResp">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Responsáveis autorizados a buscar</h6>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="btnAddResp"><i class="bi bi-plus me-1"></i>Adicionar</button>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-sm social-dyn-table">
+                  <thead class="table-light"><tr><th>Nome</th><th>Relação</th><th>Telefone</th><th></th></tr></thead>
+                  <tbody id="tabelaResponsaveis"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ABA 9: DECLARAÇÃO -->
+            <div class="tab-pane fade" id="tabDeclaracao">
+              <div class="card border-primary">
+                <div class="card-body">
+                  <p>Eu, abaixo identificado(a), declaro para os devidos fins que todas as informações aqui prestadas são verdadeiras e que me comprometo a informar quaisquer alterações.</p>
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="pDeclaracaoAceita">
+                    <label class="form-check-label fw-bold" for="pDeclaracaoAceita">Declaro que as informações são verdadeiras</label>
+                  </div>
+                  <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label">Nome do responsável</label><input type="text" class="form-control" id="pDeclaracaoResp"></div>
+                    <div class="col-md-3"><label class="form-label">Data</label><input type="date" class="form-control" id="pDeclaracaoData"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ABA 10: ANEXOS -->
+            <div class="tab-pane fade" id="tabAnexos">
+              <p class="text-muted small mb-3">Upload de PDF e imagens relacionadas ao prontuário. (funcionalidade de upload depende de serviço de armazenamento configurado)</p>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead class="table-light"><tr><th>Arquivo</th><th>Tipo</th><th>Data</th><th></th></tr></thead>
+                  <tbody id="tabelaAnexos">
+                    <tr><td colspan="4" class="text-center text-muted py-3">Nenhum anexo</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- BOTÕES DE AÇÃO -->
+          <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top no-print">
+            <div>
+              <button type="button" class="btn btn-outline-danger btn-sm" id="btnExcluir" style="display:none"><i class="bi bi-trash me-1"></i>Excluir</button>
+              <button type="button" class="btn btn-outline-info btn-sm ms-2" id="btnRenovar" style="display:none"><i class="bi bi-arrow-repeat me-1"></i>Renovar Matrícula</button>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-secondary btn-sm" id="btnCancelar">Cancelar</button>
+              <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-check-lg me-1"></i>Salvar Prontuário</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal Excluir -->
+<div class="modal fade" id="modalExcluir" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white"><h5 class="modal-title"><i class="bi bi-trash me-2"></i>Excluir Prontuário</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="alert alert-warning"><i class="bi bi-exclamation-triangle me-1"></i>Esta ação é <strong>irreversível</strong>. Todos os dados do prontuário serão perdidos.</div>
+        <p>Deseja realmente excluir o prontuário de <strong id="excluirNome">-</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmarExcluir"><i class="bi bi-trash me-1"></i>Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Renovar -->
+<div class="modal fade" id="modalRenovar" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title"><i class="bi bi-arrow-repeat me-2"></i>Renovar Matrícula</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <p>Será criada uma <strong>nova versão</strong> do prontuário com todos os dados atuais. O prontuário atual será marcado como <strong>inativo</strong>.</p>
+        <p>Você poderá editar os dados na nova versão.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-info" id="btnConfirmarRenovar"><i class="bi bi-arrow-repeat me-1"></i>Renovar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+  <div id="socialToast" class="toast align-items-center border-0" role="alert">
+    <div class="d-flex"><div class="toast-body" id="socialToastMsg"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>
+  </div>
+</div>
+
+<script src="../js/config.js"></script>
+<script defer src="../js/acompanhamento-social.js"></script>
+</body>
+</html>
