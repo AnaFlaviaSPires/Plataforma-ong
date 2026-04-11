@@ -74,8 +74,8 @@
     const greeting = getGreeting();
 
     let msg = nome
-      ? `${greeting}, **${nome}**! 👋 Sou o **Beta**, seu assistente da plataforma.`
-      : `${greeting}! 👋 Sou o **Beta**, seu assistente da plataforma.`;
+      ? `${greeting}, **${nome}**! 👋 Sou o **Beta**, seu guia de funcionalidades da plataforma.`
+      : `${greeting}! 👋 Sou o **Beta**, seu guia de funcionalidades da plataforma.`;
 
     // Dica contextual da página
     if (page && typeof assistantPageTips !== 'undefined' && assistantPageTips[page]) {
@@ -327,9 +327,9 @@
           action = match.action;
           actionLabel = match.actionLabel;
         } else {
-          botText = 'Hmm, não entendi muito bem. 🤔 Tente algo como "como fazer chamada" ou "onde vejo alunos". Posso também te levar ao Guia da plataforma!';
-          action = 'guia.html';
-          actionLabel = 'Abrir Guia';
+          botText = 'Hmm, não entendi muito bem. 🤔 Tente perguntar de outra forma, como "como fazer chamada" ou "onde vejo alunos". Estou aqui pra te ajudar!';
+          action = null;
+          actionLabel = null;
         }
 
         state.messages.push({ role: 'bot', text: botText, action, actionLabel });

@@ -128,9 +128,9 @@ const assistantData = [
   // === AJUDA / GUIA ===
   {
     keywords: ["ajuda", "guia", "tutorial", "como usar", "manual", "instrucao", "suporte"],
-    response: "O Guia da Plataforma explica cada módulo e funcionalidade do sistema.",
-    action: "guia.html",
-    actionLabel: "Abrir Guia"
+    response: "O Guia da Plataforma é um guia ético com normas e diretrizes. Para dúvidas sobre funcionalidades, pode perguntar direto pra mim! Sou seu guia de funcionalidades. 🐾",
+    action: null,
+    actionLabel: null
   },
 
   // === AÇÕES COMUNS ===
@@ -168,7 +168,7 @@ const assistantData = [
   },
   {
     keywords: ["quem e voce", "o que voce faz", "assistente", "bot", "chatbot", "beta"],
-    response: "Sou o **Beta**! 🐾 Seu assistente da plataforma. Posso te ajudar a navegar pelo sistema, encontrar módulos e tirar dúvidas. É só perguntar!",
+    response: "Sou o **Beta**! 🐾 Seu guia de funcionalidades da plataforma. Posso te ajudar a navegar pelo sistema, encontrar módulos e tirar dúvidas sobre como usar tudo. É só perguntar!",
     action: null,
     actionLabel: null
   }
