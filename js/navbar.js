@@ -176,6 +176,20 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(uxScript);
     }
 
+    // Injetar Assistente Inteligente (chatbot interno)
+    if (!document.querySelector('script[src*="assistant.js"]')) {
+        const baseSrc = (document.querySelector('script[src*="navbar"]')?.src || '').replace('navbar.js', '') || '../js/';
+        // Carregar base de conhecimento primeiro, depois o assistente
+        const dataScript = document.createElement('script');
+        dataScript.src = baseSrc + 'assistantData.js';
+        dataScript.onload = function () {
+            const assistScript = document.createElement('script');
+            assistScript.src = baseSrc + 'assistant.js';
+            document.body.appendChild(assistScript);
+        };
+        document.body.appendChild(dataScript);
+    }
+
     // Executar
     injectNavbar();
     // Modal de configurações é gerenciado por settings.js (módulo único)
