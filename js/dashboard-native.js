@@ -128,19 +128,19 @@ Chart.defaults.plugins.legend.labels.pointStyle = 'circle';
 Chart.defaults.plugins.legend.labels.padding = 16;
 
 const CHART_PALETTE = {
-    purple:     '#7c3aed',
-    purpleLight:'#a78bfa',
-    violet:     '#8b5cf6',
-    indigo:     '#6366f1',
-    blue:       '#3b82f6',
-    sky:        '#0ea5e9',
-    teal:       '#14b8a6',
-    green:      '#10b981',
-    amber:      '#f59e0b',
-    orange:     '#f97316',
-    red:        '#ef4444',
-    pink:       '#ec4899',
-    gray:       '#94a3b8'
+    purple:      '#663399',
+    purpleDark:  '#4a2570',
+    purpleLight: '#8B5CF6',
+    lilac:       '#B794F4',
+    lilacLight:  '#D6BCFA',
+    lavender:    '#E9D5FF',
+    gold:        '#F5C842',
+    yellow:      '#FFE066',
+    amber:       '#FFBF47',
+    amberDark:   '#E5A820',
+    rose:        '#D946A8',
+    mauve:       '#9F7AEA',
+    gray:        '#A0AEC0'
 };
 
 const GRID_STYLE = { color: 'rgba(0,0,0,0.04)', drawBorder: false };
@@ -152,10 +152,10 @@ function updateCharts(data) {
     if (!Array.isArray(statusData)) statusData = [statusData];
 
     const statusCfg = {
-        'matriculado':      { label: 'Matriculados',    color: CHART_PALETTE.green },
+        'matriculado':      { label: 'Matriculados',    color: CHART_PALETTE.purple },
         'inativo':          { label: 'Inativos',        color: CHART_PALETTE.gray },
-        'cancelado':        { label: 'Cancelados',      color: CHART_PALETTE.red },
-        'formado':          { label: 'Formados',        color: CHART_PALETTE.blue },
+        'cancelado':        { label: 'Cancelados',      color: CHART_PALETTE.rose },
+        'formado':          { label: 'Formados',        color: CHART_PALETTE.gold },
         'aguardando_vaga':  { label: 'Aguardando Vaga', color: CHART_PALETTE.amber }
     };
     const allStatuses = Object.keys(statusCfg);
@@ -206,7 +206,7 @@ function updateCharts(data) {
             datasets: [{
                 label: 'Alunos',
                 data: salaData,
-                backgroundColor: CHART_PALETTE.violet,
+                backgroundColor: CHART_PALETTE.lilac,
                 borderRadius: 6,
                 borderSkipped: false,
                 maxBarThickness: 40
@@ -241,7 +241,7 @@ function updateCharts(data) {
                 {
                     label: 'Presencas (' + totalPres + ')',
                     data: freqSala.length > 0 ? freqSala.map(s => parseInt(s.presencas) || 0) : [0],
-                    backgroundColor: CHART_PALETTE.green,
+                    backgroundColor: CHART_PALETTE.purple,
                     borderRadius: 6,
                     borderSkipped: false,
                     maxBarThickness: 36
@@ -249,7 +249,7 @@ function updateCharts(data) {
                 {
                     label: 'Faltas (' + totalFalt + ')',
                     data: freqSala.length > 0 ? freqSala.map(s => parseInt(s.faltas) || 0) : [0],
-                    backgroundColor: CHART_PALETTE.red,
+                    backgroundColor: CHART_PALETTE.yellow,
                     borderRadius: 6,
                     borderSkipped: false,
                     maxBarThickness: 36
@@ -273,9 +273,9 @@ const TIPO_LABELS_DASH = {
     'material_escolar': 'Escolar', 'brindes': 'Brindes', 'outros': 'Outros'
 };
 const TIPO_COLORS_DASH = [
-    CHART_PALETTE.purple, CHART_PALETTE.blue, CHART_PALETTE.amber,
-    CHART_PALETTE.green, CHART_PALETTE.red, CHART_PALETTE.teal,
-    CHART_PALETTE.orange, CHART_PALETTE.gray
+    CHART_PALETTE.purple, CHART_PALETTE.gold, CHART_PALETTE.lilac,
+    CHART_PALETTE.amber, CHART_PALETTE.purpleLight, CHART_PALETTE.mauve,
+    CHART_PALETTE.yellow, CHART_PALETTE.gray
 ];
 
 async function loadDoacoesStats(periodo) {
@@ -308,7 +308,7 @@ async function loadDoacoesStats(periodo) {
                     {
                         label: 'Quantidade (' + totalQtd + ')',
                         data: serie.map(s => s.total || 0),
-                        backgroundColor: CHART_PALETTE.violet,
+                        backgroundColor: CHART_PALETTE.lilac,
                         borderRadius: 6,
                         borderSkipped: false,
                         maxBarThickness: 32,
@@ -318,9 +318,9 @@ async function loadDoacoesStats(periodo) {
                         label: 'Valor (' + formatCurrency(totalVal) + ')',
                         data: serie.map(s => s.valor || 0),
                         type: 'line',
-                        borderColor: CHART_PALETTE.green,
-                        backgroundColor: 'rgba(16,185,129,0.08)',
-                        pointBackgroundColor: CHART_PALETTE.green,
+                        borderColor: CHART_PALETTE.gold,
+                        backgroundColor: 'rgba(245,200,66,0.10)',
+                        pointBackgroundColor: CHART_PALETTE.gold,
                         pointRadius: 3,
                         pointHoverRadius: 5,
                         fill: true,
@@ -461,14 +461,14 @@ function showFrequenciaAluno(data) {
                 {
                     label: 'Presente',
                     data: historico.length > 0 ? historico.map(h => h.presente || 0) : [0],
-                    backgroundColor: CHART_PALETTE.green,
+                    backgroundColor: CHART_PALETTE.purple,
                     borderRadius: 6,
                     borderSkipped: false
                 },
                 {
                     label: 'Falta',
                     data: historico.length > 0 ? historico.map(h => h.falta || 0) : [0],
-                    backgroundColor: CHART_PALETTE.red,
+                    backgroundColor: CHART_PALETTE.yellow,
                     borderRadius: 6,
                     borderSkipped: false
                 }
