@@ -55,7 +55,7 @@ async function obter(req, res, next) {
 
     // Calcular renda
     const rendaTotal = (prontuario.familia || []).reduce((s, f) => s + (parseFloat(f.renda) || 0), 0);
-    const membros = (prontuario.familia || []).length || 1;
+    const membros = (prontuario.familia || []).length + 1;
     const despesaTotal = (prontuario.despesas || []).reduce((s, d) => s + (parseFloat(d.valor) || 0), 0);
 
     res.json({

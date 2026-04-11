@@ -399,7 +399,7 @@
 
   function calcRendas() {
     const total = familiaRows.reduce((s, f) => s + (parseFloat(f.renda) || 0), 0);
-    const membros = familiaRows.length || 1;
+    const membros = familiaRows.length + 1;
     document.getElementById('rendaTotal').textContent = fmtMoeda(total);
     document.getElementById('rendaPerCapita').textContent = fmtMoeda(total / membros);
   }
