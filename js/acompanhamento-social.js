@@ -109,12 +109,17 @@
       const statusClass = 'badge-status-' + (p.status || 'ativo');
       const rowClass = p.vulnerabilidade === 'alta' ? 'row-alta-vulnerabilidade' : '';
       const doencaClass = p.saude && (p.saude.doencas || '').trim() ? 'row-doenca-cronica' : '';
+      const safeNome = (p.nome_completo || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeOficina = (p.oficina || '-').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeStatus = (p.status || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeVuln = (p.vulnerabilidade || 'baixa').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
       html += `<tr class="${rowClass} ${doencaClass}" style="cursor:pointer" data-id="${p.id}">
-        <td class="fw-medium">${p.nome_completo}</td>
+        <td class="fw-medium">${safeNome}</td>
         <td>${idade}</td>
-        <td>${p.oficina || '-'}</td>
-        <td><span class="badge ${statusClass}">${p.status}</span></td>
-        <td><span class="badge ${vulnClass}">${p.vulnerabilidade || 'baixa'}</span></td>
+        <td>${safeOficina}</td>
+        <td><span class="badge ${statusClass}">${safeStatus}</span></td>
+        <td><span class="badge ${vulnClass}">${safeVuln}</span></td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-primary btn-abrir" data-id="${p.id}" title="Abrir"><i class="bi bi-eye"></i></button>
         </td>
@@ -153,7 +158,10 @@
     const sel = document.getElementById('filtroOficina');
     const current = sel.value;
     sel.innerHTML = '<option value="">Todas as oficinas</option>';
-    oficinas.forEach(o => { sel.innerHTML += `<option value="${o}" ${o === current ? 'selected' : ''}>${o}</option>`; });
+    oficinas.forEach(o => {
+      const safeOficina = o.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      sel.innerHTML += `<option value="${safeOficina}" ${o === current ? 'selected' : ''}>${safeOficina}</option>`;
+    });
   }
 
   // ---- PRONTUÁRIO ----
@@ -480,13 +488,15 @@
   // Anexos
   function renderAnexos(anexos) {
     const tbody = document.getElementById('tabelaAnexos');
-    if (!anexos.length) {
+    if (!anexos || !anexos.length) {
       tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Nenhum anexo</td></tr>';
       return;
     }
     let html = '';
     anexos.forEach(a => {
-      html += `<tr><td><a href="${a.arquivo_url}" target="_blank">${a.nome_arquivo}</a></td><td>${a.tipo || '-'}</td><td class="small">${fmtDataHora(a.data)}</td><td><button class="btn btn-sm btn-outline-danger" title="Funcionalidade futura"><i class="bi bi-trash"></i></button></td></tr>`;
+      const safeNome = (a.nome_arquivo || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeTipo = (a.tipo || '-').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      html += `<tr><td><a href="${a.arquivo_url}" target="_blank">${safeNome}</a></td><td>${safeTipo}</td><td class="small">${fmtDataHora(a.data)}</td><td><button class="btn btn-sm btn-outline-danger" title="Funcionalidade futura"><i class="bi bi-trash"></i></button></td></tr>`;
     });
     tbody.innerHTML = html;
   }
@@ -498,8 +508,11 @@
       alunosList = data.alunos || [];
       const sel = document.getElementById('pAlunoId');
       sel.innerHTML = '<option value="">Nenhum</option>';
-      alunosList.forEach(a => { sel.innerHTML += `<option value="${a.id}">${a.nome}</option>`; });
-    } catch (e) { console.error('Erro ao carregar alunos:', e); }
+      alunosList.forEach(a => {
+        const safeNome = (a.nome || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        sel.innerHTML += `<option value="${a.id}">${safeNome}</option>`;
+      });
+    } catch (e) { /* erro silencioso */ }
   }
 
   // ---- INIT ----
