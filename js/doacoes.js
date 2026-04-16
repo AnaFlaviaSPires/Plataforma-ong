@@ -139,12 +139,16 @@
         ? formatMoeda(d.valor)
         : (d.quantidade ? d.quantidade + ' un.' : '-');
 
+      const safeDoador = (d.nome_doador || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeObs = (d.observacoes || d.descricao_itens || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeTipo = (TIPO_LABELS[d.tipo] || d.tipo).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
       return `<tr>
         <td>${formatDate(d.data_doacao)}</td>
-        <td>${d.nome_doador || '<span class="text-muted">Anônimo</span>'}</td>
-        <td><span class="badge ${TIPO_BADGES[d.tipo] || 'bg-secondary'}">${TIPO_LABELS[d.tipo] || d.tipo}</span></td>
+        <td>${safeDoador || '<span class="text-muted">Anônimo</span>'}</td>
+        <td><span class="badge ${TIPO_BADGES[d.tipo] || 'bg-secondary'}">${safeTipo}</span></td>
         <td>${valorQtd}</td>
-        <td><small>${d.observacoes || d.descricao_itens || '-'}</small></td>
+        <td><small>${safeObs || '-'}</small></td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-primary me-1 btn-editar" data-id="${d.id}" title="Editar"><i class="bi bi-pencil"></i></button>
           <button class="btn btn-sm btn-outline-danger btn-excluir" data-id="${d.id}" title="Excluir"><i class="bi bi-trash"></i></button>

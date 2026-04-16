@@ -177,9 +177,13 @@
       const savedImg = localStorage.getItem('userAvatarImage');
       const savedEmoji = localStorage.getItem('userAvatar');
       const av = document.getElementById('cfgAvatar');
-      if (savedImg) { av.innerHTML = '<img src="' + savedImg + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'; showImgPreview(savedImg); }
-      else if (savedEmoji) { av.innerHTML = ''; av.textContent = savedEmoji; }
-      else { av.innerHTML = ''; av.textContent = (u.nome || 'U').charAt(0).toUpperCase(); }
+      if (savedImg) {
+        const safeImg = savedImg.replace(/"/g, '&quot;');
+        av.innerHTML = '<img src="' + safeImg + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+        showImgPreview(savedImg);
+      }
+      else if (savedEmoji) { av.textContent = savedEmoji; }
+      else { av.textContent = (u.nome || 'U').charAt(0).toUpperCase(); }
 
       // Mark saved emoji
       const btns = document.querySelectorAll('.cfg-avatar-btn');
@@ -379,8 +383,12 @@
     targets.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
-      if (isImg) { el.innerHTML = '<img src="' + val + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'; }
-      else { el.innerHTML = ''; el.textContent = val; }
+      if (isImg) { 
+        // Sanitizar src para prevenir XSS
+        const safeVal = val.replace(/"/g, '&quot;');
+        el.innerHTML = '<img src="' + safeVal + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'; 
+      }
+      else { el.textContent = val; }
     });
   }
 

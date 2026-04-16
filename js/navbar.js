@@ -114,11 +114,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (savedAvatarImage) {
             // Usar imagem
+            const safeAvatar = savedAvatarImage.replace(/"/g, '&quot;');
             if (els.avatar) {
-                els.avatar.innerHTML = `<img src="${savedAvatarImage}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                els.avatar.innerHTML = `<img src="${safeAvatar}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
             }
             if (els.avatarSmall) {
-                els.avatarSmall.innerHTML = `<img src="${savedAvatarImage}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                els.avatarSmall.innerHTML = `<img src="${safeAvatar}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
             }
         } else if (savedAvatar) {
             // Usar emoji

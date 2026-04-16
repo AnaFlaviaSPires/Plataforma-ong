@@ -174,10 +174,14 @@ async function loadAlunos() {
             </button>`;
       }
 
+      const safeNome = (aluno.nome || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeResponsavel = (aluno.nome_responsavel || 'Não informado').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeTelefone = (aluno.telefone || aluno.telefone_responsavel || 'Não informado').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
       row.innerHTML = `
-        <td>${aluno.nome}</td>
-        <td>${aluno.nome_responsavel || 'Não informado'}</td>
-        <td>${aluno.telefone || aluno.telefone_responsavel || 'Não informado'}</td>
+        <td>${safeNome}</td>
+        <td>${safeResponsavel}</td>
+        <td>${safeTelefone}</td>
         <td>
           ${getStatusBadge(aluno.status)}
         </td>
