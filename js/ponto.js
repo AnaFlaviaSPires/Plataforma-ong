@@ -342,8 +342,8 @@
         <div class="col-md-6 col-lg-4">
           <div class="card admin-func-card h-100" data-func-id="${func.id}">
             <div class="card-body">
-              <h6 class="card-title mb-1">${func.nome}</h6>
-              <small class="text-muted d-block mb-2">${func.cargo || '-'} &middot; ${func.email}</small>
+              <h6 class="card-title mb-1">${(func.nome || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</h6>
+              <small class="text-muted d-block mb-2">${(func.cargo || '-').replace(/</g, '&lt;').replace(/>/g, '&gt;')} &middot; ${(func.email || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</small>
               <div class="d-flex justify-content-between align-items-center">
                 <span class="text-muted">${totalDias} dia(s) registrado(s)</span>
                 <span class="badge bg-primary">${item.totalRegistros} registros</span>
