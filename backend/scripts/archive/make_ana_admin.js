@@ -16,8 +16,9 @@ async function makeAdmin() {
         console.log('🚀 Cargo atualizado para ADMIN.');
     } else {
         console.log('⚠️ Usuário não encontrado. Criando novo...');
-        const hashedPassword = await bcrypt.hash('123456', 10);
-        
+        const defaultPassword = process.env.SEED_PASSWORD || '123456';
+        const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+
         user = await User.create({
             nome: 'Ana Flavia',
             email: emailAlvo,

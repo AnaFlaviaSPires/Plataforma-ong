@@ -24,13 +24,14 @@ const TIPOS_DOACAO = ["alimentos", "dinheiro", "roupas", "higiene", "outros"];
 async function seed() {
   try {
     console.log('🚨 INICIANDO RESGATE DE DADOS (SEED DE EMERGÊNCIA) 🚨');
-    
+
     // Sincronizar forçado para limpar tudo e começar do zero limpo (já que está quebrado mesmo)
-    await sequelize.sync({ force: true }); 
+    await sequelize.sync({ force: true });
     console.log('✅ Banco limpo e estruturas recriadas.');
 
     // 1. Criar Usuários (Admin + Professores)
-    const hashedPassword = await bcrypt.hash('123456', 10);
+    const defaultPassword = process.env.SEED_PASSWORD || '123456';
+    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
     
     const admin = await User.create({
       nome: 'Administrador',

@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 
 async function createTestUsers() {
   try {
-    const hashedPassword = await bcrypt.hash('123456', 10);
+    const defaultPassword = process.env.SEED_PASSWORD || '123456';
+    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
     
     const users = [
         { nome: 'Prof Teste', email: 'prof_teste@ong.com', cargo: 'professor' },
