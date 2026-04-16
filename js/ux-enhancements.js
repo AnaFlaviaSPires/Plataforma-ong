@@ -68,8 +68,14 @@
     carregarNotificacoes();
     // Gerar automáticas
     gerarNotificacoes();
-    setInterval(carregarNotificacoes, 60000);
-    setInterval(gerarNotificacoes, 300000);
+    const intervalNotif = setInterval(carregarNotificacoes, 60000);
+    const intervalGerar = setInterval(gerarNotificacoes, 300000);
+
+    // Cleanup quando a página for descarregada
+    window.addEventListener('beforeunload', () => {
+      clearInterval(intervalNotif);
+      clearInterval(intervalGerar);
+    });
   }
 
   async function gerarNotificacoes() {

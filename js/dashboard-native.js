@@ -11,9 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDashboardData();
     loadAlunosLista();
     loadDoacoesStats('mes');
-    
-    setInterval(loadDashboardData, 60000);
-    
+
+    const intervalDashboard = setInterval(loadDashboardData, 60000);
+
+    // Cleanup quando a página for descarregada
+    window.addEventListener('beforeunload', () => {
+      clearInterval(intervalDashboard);
+    });
+
     const btnRefresh = document.getElementById('btnRefresh');
     if (btnRefresh) {
         btnRefresh.addEventListener('click', () => {

@@ -557,7 +557,12 @@
 
     // Relógio
     atualizarRelogio();
-    setInterval(atualizarRelogio, 1000);
+    const intervalRelogio = setInterval(atualizarRelogio, 1000);
+
+    // Cleanup quando a página for descarregada
+    window.addEventListener('beforeunload', () => {
+      clearInterval(intervalRelogio);
+    });
 
     // Setar mês atual no filtro
     const filtroMes = document.getElementById('filtroMes');
