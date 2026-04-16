@@ -303,7 +303,7 @@
       renderTabela(listData.doacoes || []);
       renderStats(statsData);
     } catch (e) {
-      console.error('Erro ao carregar doações:', e);
+      /* erro silencioso */
       showToast('Erro ao carregar dados.', 'danger');
     }
   }

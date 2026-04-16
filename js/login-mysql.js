@@ -40,7 +40,7 @@ async function verifyToken(token) {
             localStorage.removeItem('authToken');
         }
     } catch (error) {
-        console.error('Erro ao verificar token:', error);
+        /* erro silencioso */
         localStorage.removeItem('authToken');
     }
 }
@@ -93,7 +93,7 @@ async function handleLogin(event) {
         }
         
     } catch (error) {
-        console.error('Erro no login:', error);
+        /* erro silencioso */
         showMessage('Erro de conexão. Verifique se o servidor está rodando.', 'error');
     } finally {
         // Esconder loading

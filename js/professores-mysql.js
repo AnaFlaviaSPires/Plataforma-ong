@@ -65,9 +65,7 @@ async function loadProfessores() {
         // Atualizar estatísticas
         updateStatistics();
         
-        console.log('Professores carregados:', professores.length);
     } catch (error) {
-        console.error('Erro ao carregar professores:', error);
         showToast('Erro ao carregar professores', 'error');
     } finally {
         showLoading(false);
@@ -197,7 +195,7 @@ async function salvarProfessor() {
         );
         
     } catch (error) {
-        console.error('Erro ao salvar professor:', error);
+        /* erro silencioso */
         showToast('Erro ao salvar professor: ' + error.message, 'error');
     } finally {
         showLoading(false);
@@ -276,7 +274,7 @@ async function editarProfessor(id) {
         modal.show();
         
     } catch (error) {
-        console.error('Erro ao editar professor:', error);
+        /* erro silencioso */
         showToast('Erro ao carregar dados do professor', 'error');
     }
 }
@@ -315,7 +313,7 @@ async function visualizarProfessor(id) {
         modal.show();
         
     } catch (error) {
-        console.error('Erro ao visualizar professor:', error);
+        /* erro silencioso */
         showToast('Erro ao carregar detalhes do professor', 'error');
     }
 }
@@ -347,7 +345,7 @@ async function excluirProfessor(id) {
         showToast('Professor excluído com sucesso!', 'success');
         
     } catch (error) {
-        console.error('Erro ao excluir professor:', error);
+        /* erro silencioso */
         showToast('Erro ao excluir professor: ' + error.message, 'error');
     } finally {
         showLoading(false);

@@ -189,7 +189,7 @@
       originalData = { nome: u.nome || '', email: u.email || '', telefone: u.telefone || '' };
       isDirty = false;
       updateSaveBtn();
-    } catch (e) { console.error('Erro ao carregar perfil:', e); }
+    } catch (e) { /* erro silencioso */ }
   }
 
   // ========== DIRTY TRACKING ==========

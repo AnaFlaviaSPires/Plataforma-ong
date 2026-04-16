@@ -61,7 +61,7 @@
       try {
         await fetch(API + '/notificacoes/marcar-lida', { method: 'POST', headers: headers(), body: JSON.stringify({}) });
         carregarNotificacoes();
-      } catch (e) { console.error(e); }
+      } catch (e) { /* erro silencioso */ }
     });
 
     // Carregar ao iniciar + polling
@@ -73,7 +73,7 @@
   }
 
   async function gerarNotificacoes() {
-    try { await fetch(API + '/notificacoes/gerar', { method: 'POST', headers: headers() }); } catch (e) { /* silencioso */ }
+    try { await fetch(API + '/notificacoes/gerar', { method: 'POST', headers: headers() }); } catch (e) { /* erro silencioso */ }
   }
 
   async function carregarNotificacoes() {

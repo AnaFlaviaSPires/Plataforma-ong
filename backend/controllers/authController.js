@@ -239,8 +239,6 @@ const forgotPassword = async (req, res) => {
       novos: { email, status: 'SENT' }
     });
 
-    console.log('Link de recuperação de senha (DEV):', resetLink);
-
     res.json({
       message: 'Se o e-mail estiver cadastrado, enviaremos instruções para recuperação de senha.',
       // resetLink apenas em dev
@@ -248,7 +246,6 @@ const forgotPassword = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erro no esqueci a senha:', error);
     res.status(500).json({
       error: 'Erro interno do servidor'
     });

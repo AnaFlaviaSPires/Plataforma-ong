@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         currentUser = JSON.parse(localStorage.getItem('userData'));
     } catch (e) {
-        console.error('Erro ao ler dados do usuário', e);
+        /* erro silencioso */
     }
 
     // Setup inicial
@@ -71,7 +71,7 @@ async function carregarDocumentos() {
         renderizarDocumentos(documentos);
 
     } catch (error) {
-        console.error(error);
+        /* erro silencioso */
         alert('Erro ao carregar lista de documentos');
     } finally {
         toggleLoading(false);
@@ -203,7 +203,7 @@ async function handleNovoDocumento(e) {
         alert('Documento adicionado com sucesso!');
 
     } catch (error) {
-        console.error(error);
+        /* erro silencioso */
         alert('Erro ao salvar documento: ' + error.message);
     } finally {
         toggleLoading(false);
@@ -232,7 +232,7 @@ window.deletarDocumento = async (id) => {
         await carregarDocumentos();
 
     } catch (error) {
-        console.error(error);
+        /* erro silencioso */
         alert('Erro ao excluir: ' + error.message);
     } finally {
         toggleLoading(false);

@@ -482,7 +482,7 @@
       updateButtons(status.acoesDisponiveis || (status.proximaAcao ? [status.proximaAcao] : []));
       renderTimeline(status.registrosDoDia);
     } catch (e) {
-      console.error('Erro ao carregar status:', e);
+      /* erro silencioso */
       document.getElementById('statusTexto').textContent = 'Erro ao carregar';
     }
 
@@ -513,7 +513,7 @@
       const data = await apiMeusPontos(dataInicio, dataFim);
       renderHistorico(data.pontos || []);
     } catch (e) {
-      console.error('Erro ao carregar histórico:', e);
+      /* erro silencioso */
     }
   }
 

@@ -7,7 +7,7 @@ if (typeof API_BASE_URL === 'undefined') {
 let chartsInstances = {};
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Dashboard carregando...');
+    /* debug silencioso */
     loadDashboardData();
     loadAlunosLista();
     loadDoacoesStats('mes');
@@ -59,24 +59,21 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadDashboardData() {
     const token = localStorage.getItem('authToken');
     if (!token) {
-        console.log('Sem token, redirecionando...');
+        /* debug silencioso */
         window.location.href = '../index.html';
         return;
     }
 
     try {
-        console.log('Buscando dados do dashboard...');
         const response = await fetch(`${API_BASE_URL}/dashboard/stats`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
         if (!response.ok) {
-            console.error('Erro na resposta:', response.status);
-            throw new Error('Erro ao carregar dados');
+            throw new Error('Erro ao carregar dashboard');
         }
 
         const data = await response.json();
-        console.log('Dados recebidos:', data);
         
         updateCards(data);
         updateCharts(data);
@@ -87,7 +84,6 @@ async function loadDashboardData() {
         }
 
     } catch (error) {
-        console.error('Erro ao carregar dashboard:', error);
         showToast('Erro ao carregar dados', 'danger');
     }
 }
@@ -383,7 +379,7 @@ async function loadDoacoesStats(periodo) {
             }
         });
     } catch (error) {
-        console.error('Erro ao carregar estatisticas de doacoes:', error);
+        /* erro silencioso */
     }
 }
 
@@ -411,7 +407,7 @@ async function loadAlunosLista() {
             });
         }
     } catch (error) {
-        console.error('Erro ao carregar lista de alunos:', error);
+        /* erro silencioso */
     }
 }
 
@@ -429,7 +425,6 @@ async function loadFrequenciaAluno(alunoId, periodo) {
         const data = await response.json();
         showFrequenciaAluno(data);
     } catch (error) {
-        console.error('Erro ao carregar frequencia do aluno:', error);
         showToast('Erro ao carregar frequencia', 'danger');
     }
 }
@@ -498,7 +493,6 @@ function hideFrequenciaAluno() {
 function createOrUpdateChart(canvasId, config) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) {
-        console.error('Canvas nao encontrado:', canvasId);
         return;
     }
 

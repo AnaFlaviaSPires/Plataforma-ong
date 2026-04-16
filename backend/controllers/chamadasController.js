@@ -78,9 +78,6 @@ async function createChamada(req, res, next) {
           { where: { id: todosIds } }
         );
       }
-      
-      // Log para debug de persistência
-      console.log(`[CHAMADA] ID ${chamada.id} gravada. Total: ${registrosData.length}, Presentes: ${registrosData.filter(r=>r.presente).length}, Faltas: ${registrosData.filter(r=>!r.presente).length}`);
     }
 
     const chamadaCompleta = await Chamada.findByPk(chamada.id, {

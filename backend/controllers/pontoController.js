@@ -32,7 +32,6 @@ async function registrarPonto(req, res, next) {
 
     const distancia = calcularDistanciaMetros(latitude, longitude, ONG_LAT, ONG_LNG);
     if (distancia > ONG_RAIO_METROS) {
-      console.log(`[PONTO] BLOQUEADO - ${req.user.nome} tentou registrar ponto a ${Math.round(distancia)}m da ONG (máx: ${ONG_RAIO_METROS}m)`);
       return res.status(403).json({
         error: `Você está a ${Math.round(distancia)} metros da ONG. O registro de ponto só é permitido dentro de um raio de ${ONG_RAIO_METROS} metros.`,
         distancia: Math.round(distancia),
@@ -112,8 +111,6 @@ async function registrarPonto(req, res, next) {
       registroId: ponto.id,
       novos: ponto.toJSON()
     });
-
-    console.log(`[PONTO] ${tipo} registrado por ${req.user.nome} (ID ${funcionarioId})`);
 
     res.status(201).json({
       message: `${tipo.charAt(0).toUpperCase() + tipo.slice(1).replace('_', ' ')} registrada com sucesso`,
@@ -293,8 +290,6 @@ async function corrigirPonto(req, res, next) {
       novos: { pontoCorrigidoId: pontoCriado.id, motivo: motivo.trim() }
     });
 
-    console.log(`[PONTO] Registro #${pontoOriginal.id} corrigido por ${req.user.nome} -> novo #${pontoCriado.id}`);
-
     res.json({
       message: 'Registro corrigido com sucesso',
       pontoOriginal: pontoOriginal.toJSON(),
@@ -348,8 +343,6 @@ async function editarPonto(req, res, next) {
       novos: ponto.toJSON()
     });
 
-    console.log(`[PONTO] Registro #${ponto.id} editado por ${req.user.nome}: ${motivo.trim()}`);
-
     res.json({ message: 'Registro atualizado com sucesso', ponto: ponto.toJSON() });
   } catch (err) {
     next(err);
@@ -382,8 +375,6 @@ async function excluirPonto(req, res, next) {
       antigos: dadosAntigos,
       novos: { motivo: motivo.trim() }
     });
-
-    console.log(`[PONTO] Registro #${id} excluído por ${req.user.nome}: ${motivo.trim()}`);
 
     res.json({ message: 'Registro excluído com sucesso' });
   } catch (err) {
