@@ -160,8 +160,8 @@ const translations = {
         'ip_address': 'Endereço IP',
         
         // Guia
-        'user_guide': 'Guia do Usuário',
-        'guide_desc': 'Aprenda a usar a plataforma',
+        'user_guide': 'Guia de Conduta',
+        'guide_desc': 'Guia de conduta e boas práticas',
         'getting_started': 'Primeiros Passos',
         'faq': 'Perguntas Frequentes',
         
@@ -203,8 +203,8 @@ const translations = {
         'menu_logs_desc': 'Histórico de segurança e ações',
         'menu_calendar': 'Calendário',
         'menu_calendar_desc': 'Agenda de eventos e atividades',
-        'menu_guide': 'Guia do Usuário',
-        'menu_guide_desc': 'Aprenda a usar a plataforma',
+        'menu_guide': 'Guia de Conduta',
+        'menu_guide_desc': 'Guia de conduta e boas práticas',
         
         // Doações
         'donations_title': 'Controle de Doações',
