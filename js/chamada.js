@@ -26,9 +26,12 @@ const Utils = {
   genId(prefix = '') { return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2,8); },
 
   formatDateIso(date = new Date()) {
-    // Returns YYYY-MM-DD
+    // Returns YYYY-MM-DD (usando fuso horário local, não UTC)
     const d = new Date(date);
-    return d.toISOString().split('T')[0];
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   },
 
   formatDateDisplay(isoDate) {
