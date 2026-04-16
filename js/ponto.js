@@ -105,7 +105,10 @@
     const grouped = {};
     pontos.forEach(p => {
       const d = new Date(p.timestamp);
-      const key = d.toISOString().split('T')[0];
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const key = `${year}-${month}-${day}`;
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(p);
     });

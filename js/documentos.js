@@ -169,7 +169,13 @@ async function handleNovoDocumento(e) {
         categoria: document.getElementById('docCategoria').value,
         url_arquivo: document.getElementById('docUrl').value,
         descricao: document.getElementById('docDescricao').value,
-        data_referencia: document.getElementById('docData').value || new Date().toISOString().split('T')[0]
+        data_referencia: document.getElementById('docData').value || (() => {
+            const dt = new Date();
+            const year = dt.getFullYear();
+            const month = String(dt.getMonth() + 1).padStart(2, '0');
+            const day = String(dt.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        })()
     };
 
     try {

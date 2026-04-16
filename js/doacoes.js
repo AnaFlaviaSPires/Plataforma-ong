@@ -41,7 +41,10 @@
   function formatDateInput(d) {
     if (!d) return '';
     const dt = new Date(d);
-    return dt.toISOString().split('T')[0];
+    const year = dt.getFullYear();
+    const month = String(dt.getMonth() + 1).padStart(2, '0');
+    const day = String(dt.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   const TIPO_LABELS = {
@@ -190,7 +193,11 @@
   function limparFormulario() {
     document.getElementById('doacaoId').value = '';
     document.getElementById('formDoacao').reset();
-    document.getElementById('doacaoData').value = new Date().toISOString().split('T')[0];
+    const dt = new Date();
+    const year = dt.getFullYear();
+    const month = String(dt.getMonth() + 1).padStart(2, '0');
+    const day = String(dt.getDate()).padStart(2, '0');
+    document.getElementById('doacaoData').value = `${year}-${month}-${day}`;
     toggleCamposFormulario('');
     document.getElementById('modalDoacaoTitulo').innerHTML = '<i class="bi bi-plus-circle me-2"></i>Cadastrar Doação';
   }
@@ -320,7 +327,11 @@
     document.getElementById('conteudoPrincipal').classList.remove('d-none');
 
     // Data padrão no formulário
-    document.getElementById('doacaoData').value = new Date().toISOString().split('T')[0];
+    const dt = new Date();
+    const year = dt.getFullYear();
+    const month = String(dt.getMonth() + 1).padStart(2, '0');
+    const day = String(dt.getDate()).padStart(2, '0');
+    document.getElementById('doacaoData').value = `${year}-${month}-${day}`;
 
     // Máscara monetária
     aplicarMascaraMonetaria(document.getElementById('doacaoValor'));
