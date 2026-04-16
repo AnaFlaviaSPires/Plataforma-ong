@@ -287,19 +287,25 @@ async function visualizarProfessor(id) {
             return;
         }
         
+        const safeNome = (professor.nome || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const safeEmail = (professor.email || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const safeTelefone = (professor.telefone || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const safeEndereco = (professor.endereco || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const safeEspecialidade = (professor.especialidade || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
         const detalhes = `
             <div class="row">
                 <div class="col-md-6">
                     <h6>Informações Pessoais</h6>
-                    <p><strong>Nome:</strong> ${professor.nome || '-'}</p>
-                    <p><strong>Email:</strong> ${professor.email || '-'}</p>
-                    <p><strong>Telefone:</strong> ${professor.telefone || '-'}</p>
+                    <p><strong>Nome:</strong> ${safeNome || '-'}</p>
+                    <p><strong>Email:</strong> ${safeEmail || '-'}</p>
+                    <p><strong>Telefone:</strong> ${safeTelefone || '-'}</p>
                     <p><strong>Data de Nascimento:</strong> ${formatDate(professor.data_nasc) || '-'}</p>
-                    <p><strong>Endereço:</strong> ${professor.endereco || '-'}</p>
+                    <p><strong>Endereço:</strong> ${safeEndereco || '-'}</p>
                 </div>
                 <div class="col-md-6">
                     <h6>Informações Profissionais</h6>
-                    <p><strong>Especialidade:</strong> ${professor.especialidade || '-'}</p>
+                    <p><strong>Especialidade:</strong> ${safeEspecialidade || '-'}</p>
                     <p><strong>Data de Contratação:</strong> ${formatDate(professor.data_contratacao) || '-'}</p>
                     <p><strong>Salário:</strong> ${professor.salario ? 'R$ ' + parseFloat(professor.salario).toFixed(2) : '-'}</p>
                     <p><strong>Status:</strong> ${getStatusText(professor.status)}</p>
